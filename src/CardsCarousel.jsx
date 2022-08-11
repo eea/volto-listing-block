@@ -1,71 +1,10 @@
 import React from 'react';
 import Slider from 'react-slick';
-import { Button, Icon, Card as UiCard } from 'semantic-ui-react';
-import config from '@plone/volto/registry';
-import { ConditionalLink } from '@plone/volto/components';
-import { formatDate } from '@plone/volto/helpers/Utils/Date';
-import PreviewImage from './PreviewImage';
-import { truncate } from 'lodash';
-import cx from 'classnames';
+import { Button, Icon } from 'semantic-ui-react';
+import Card from './UniversalCard';
 
 const tabletBreakpoint = 768;
 const mobileBreakpoint = 480;
-
-const Card = ({
-  item,
-  isEditMode,
-  hasDate,
-  hasDescription,
-  maxDescription,
-  styles,
-}) => {
-  const { title, description, EffectiveDate } = item;
-  const locale = config.settings.dateLocale || 'en-gb';
-
-  return (
-    <UiCard fluid={true} className={cx(styles?.theme)}>
-      <ConditionalLink className="image" item={item} condition={!isEditMode}>
-        <PreviewImage item={item} alt={item.title} />
-      </ConditionalLink>
-      <UiCard.Content>
-        {hasDate && EffectiveDate !== 'None' && (
-          <UiCard.Meta>
-            {formatDate({
-              date: EffectiveDate,
-              format: {
-                year: 'numeric',
-                month: 'short',
-                day: '2-digit',
-              },
-              locale: locale,
-            })}
-          </UiCard.Meta>
-        )}
-        {title && (
-          <UiCard.Header>
-            <ConditionalLink
-              className="header-link"
-              item={item}
-              condition={!isEditMode}
-            >
-              {title}
-            </ConditionalLink>
-          </UiCard.Header>
-        )}
-        {hasDescription && description && (
-          <UiCard.Description>
-            {maxDescription
-              ? truncate(description, {
-                  length: maxDescription,
-                  separator: ' ',
-                })
-              : description}
-          </UiCard.Description>
-        )}
-      </UiCard.Content>
-    </UiCard>
-  );
-};
 
 const getSlidesToShow = (items, _slidesToShow) => {
   if (_slidesToShow <= 0) return 1;
