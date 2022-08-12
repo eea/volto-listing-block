@@ -1,28 +1,38 @@
+import cx from 'classnames';
 import { Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
+
 import { ConditionalLink } from '@plone/volto/components';
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
+
 import PreviewImage from './../PreviewImage';
-import { truncate } from 'lodash';
-import cx from 'classnames';
 import schemaEnhancer from './schema';
+import { Item } from './model';
 
 const CardMeta = (props) => {
-  const { item, hasDate } = props;
+  const { item, cardModel = {} } = props;
   const { EffectiveDate } = item;
   const locale = config.settings.dateLocale || 'en-gb';
+  const showDate = cardModel?.hasDate && EffectiveDate !== 'None';
+  const showMeta = cardModel?.hasMetaType && item['@type'];
+  const show = showDate;
 
-  return hasDate && EffectiveDate !== 'None' ? (
+  return show ? (
     <UiCard.Meta>
-      {formatDate({
-        date: EffectiveDate,
-        format: {
-          year: 'numeric',
-          month: 'short',
-          day: '2-digit',
-        },
-        locale: locale,
-      })}
+      {showMeta && <span class="text-left">{item['@type']}</span>}
+      {showDate && (
+        <span class="text-right">
+          {formatDate({
+            date: EffectiveDate,
+            format: {
+              year: 'numeric',
+              month: 'short',
+              day: '2-digit',
+            },
+            locale: locale,
+          })}
+        </span>
+      )}
     </UiCard.Meta>
   ) : null;
 };
@@ -45,21 +55,12 @@ const CardTitle = (props) => {
 };
 
 const CardDescription = (props) => {
-  // const { item, hasDescription, maxDescription } = props;
-  // const { description } = item;
-  const hasDescription = true;
-  const description = 'asdasdjkasdjkasjk djkasdj kasjkdjkasdjkas jkdjkas';
-  const maxDescription = 200;
+  const { item, cardModel = {} } = props;
+  const { description } = item;
+  const { hasDescription } = cardModel;
 
   return hasDescription && description ? (
-    <UiCard.Description>
-      {maxDescription
-        ? truncate(description, {
-            length: maxDescription,
-            separator: ' ',
-          })
-        : description}
-    </UiCard.Description>
+    <UiCard.Description content={description} />
   ) : null;
 };
 
@@ -69,33 +70,47 @@ const CardImage = ({ item, isEditMode, label }) => (
   </ConditionalLink>
 );
 
-const CardExtra = ({ item }) => <UiCard.Content extra>extra</UiCard.Content>;
+// const CardExtra = ({ item }) => <UiCard.Content extra>extra</UiCard.Content>;
 
 const getStyles = (props) => {
+  const { cardModel = {} } = props;
   const res = {};
-  if (props.maxDescription) {
-    res[`max-${props.maxDescription}-lines`] = true;
+  if (cardModel.maxDescription) {
+    res[`max-${cardModel.maxDescription}-lines`] = true;
   }
   return res;
 };
 
+const getLabel = (props) => {
+  // { text: 'new', side: 'left', color: 'green' }
+  const { item, cardModel = {} } = props;
+  const text = item.isNew ? 'New' : item.isExpired ? 'Archived' : null;
+
+  return cardModel?.hasLabel && text
+    ? {
+        text,
+        side: 'left',
+        color: item.review_state === 'archived' ? 'yellow' : 'green',
+      }
+    : null;
+};
+
 const BasicCard = (props) => {
   const { styles } = props;
+  const item = new Item(props.item);
+  const cardProps = { ...props, item };
 
   return (
     <UiCard
       fluid={true}
-      className={cx('u-card', styles?.theme, getStyles(props))}
+      className={cx('u-card', styles?.theme, getStyles(cardProps))}
     >
-      <CardImage
-        {...props}
-        label={{ text: 'new', side: 'left', color: 'green' }}
-      />
+      <CardImage {...cardProps} label={getLabel(cardProps)} />
       <UiCard.Content>
-        <CardMeta hasDate={true} {...props} />
-        <CardTitle {...props} />
-        <CardDescription {...props} />
-        <CardExtra {...props} />
+        <CardMeta {...cardProps} />
+        <CardTitle {...cardProps} />
+        <CardDescription {...cardProps} />
+        {/* <CardExtra {...props} /> */}
       </UiCard.Content>
     </UiCard>
   );

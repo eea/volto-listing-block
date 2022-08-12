@@ -1,16 +1,19 @@
-export default function ({ schema }) {
+const CardSchema = () => {
   return {
-    ...schema,
     fieldsets: [
-      ...schema.fieldsets,
       {
         id: 'cardDesigner',
         title: 'Card',
-        fields: ['hasDate', 'hasDescription', 'maxDescription'], // 'cardModel'
+        fields: [
+          'hasDate',
+          'hasDescription',
+          'maxDescription',
+          'hasMetaType',
+          'hasLabel',
+        ], // 'cardModel'
       },
     ],
     properties: {
-      ...schema.properties,
       cardModel: {
         title: 'Card model',
       },
@@ -30,6 +33,37 @@ export default function ({ schema }) {
         default: 2,
         minimum: 0,
         maximum: 5,
+      },
+      hasMetaType: {
+        title: 'Show portal type',
+        type: 'boolean',
+      },
+      hasLabel: {
+        title: 'Show label',
+        type: 'boolean',
+      },
+    },
+    required: [],
+  };
+};
+
+export default function ({ schema }) {
+  return {
+    ...schema,
+    fieldsets: [
+      ...schema.fieldsets,
+      {
+        id: 'cardDesigner',
+        title: 'Card',
+        fields: ['cardModel'],
+      },
+    ],
+    properties: {
+      ...schema.properties,
+      cardModel: {
+        title: 'Card model',
+        widget: 'object',
+        schema: CardSchema(),
       },
     },
   };
