@@ -6,6 +6,8 @@ import { ListingStylingSchema } from './Schema';
 
 import './less/listing-cards.less';
 
+export { default as UniversalCard } from './UniversalCard';
+
 const applyConfig = (config) => {
   config.blocks.blocksConfig.listing.variations = [
     ...config.blocks.blocksConfig.listing.variations,

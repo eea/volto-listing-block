@@ -47,7 +47,7 @@ const CardSchema = () => {
   };
 };
 
-export default function ({ schema }) {
+export default function ({ schema, ...rest }) {
   return {
     ...schema,
     fieldsets: [
@@ -63,7 +63,7 @@ export default function ({ schema }) {
       cardModel: {
         title: 'Card model',
         widget: 'object',
-        schema: CardSchema(),
+        schema: CardSchema({ ...rest }),
       },
     },
   };

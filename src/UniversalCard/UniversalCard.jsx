@@ -56,11 +56,11 @@ const CardTitle = (props) => {
 
 const CardDescription = (props) => {
   const { item, cardModel = {} } = props;
-  const { description } = item;
+  const { Description } = item;
   const { hasDescription } = cardModel;
 
-  return hasDescription && description ? (
-    <UiCard.Description content={description} />
+  return hasDescription && Description ? (
+    <UiCard.Description content={Description} />
   ) : null;
 };
 
@@ -96,14 +96,16 @@ const getLabel = (props) => {
 };
 
 const BasicCard = (props) => {
-  const { styles } = props;
+  const { styles, className } = props;
   const item = new Item(props.item);
   const cardProps = { ...props, item };
 
   return (
     <UiCard
       fluid={true}
-      className={cx('u-card', styles?.theme, getStyles(cardProps))}
+      className={cx('u-card', styles?.theme, getStyles(cardProps), {
+        [className]: className,
+      })}
     >
       <CardImage {...cardProps} label={getLabel(cardProps)} />
       <UiCard.Content>
