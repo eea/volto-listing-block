@@ -2,11 +2,12 @@ import { Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import { ConditionalLink } from '@plone/volto/components';
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
-import PreviewImage from './PreviewImage';
+import PreviewImage from './../PreviewImage';
 import { truncate } from 'lodash';
 import cx from 'classnames';
+import schemaEnhancer from './schema';
 
-const CardMetaDate = (props) => {
+const CardMeta = (props) => {
   const { item, hasDate } = props;
   const { EffectiveDate } = item;
   const locale = config.settings.dateLocale || 'en-gb';
@@ -44,8 +45,11 @@ const CardTitle = (props) => {
 };
 
 const CardDescription = (props) => {
-  const { item, hasDescription, maxDescription } = props;
-  const { description } = item;
+  // const { item, hasDescription, maxDescription } = props;
+  // const { description } = item;
+  const hasDescription = true;
+  const description = 'asdasdjkasdjkasjk djkasdj kasjkdjkasdjkas jkdjkas';
+  const maxDescription = 200;
 
   return hasDescription && description ? (
     <UiCard.Description>
@@ -59,22 +63,39 @@ const CardDescription = (props) => {
   ) : null;
 };
 
-const CardImage = ({ item, isEditMode }) => (
+const CardImage = ({ item, isEditMode, label }) => (
   <ConditionalLink className="image" item={item} condition={!isEditMode}>
-    <PreviewImage item={item} alt={item.title} />
+    <PreviewImage item={item} alt={item.title} label={label} />
   </ConditionalLink>
 );
+
+const CardExtra = ({ item }) => <UiCard.Content extra>extra</UiCard.Content>;
+
+const getStyles = (props) => {
+  const res = {};
+  if (props.maxDescription) {
+    res[`max-${props.maxDescription}-lines`] = true;
+  }
+  return res;
+};
 
 const BasicCard = (props) => {
   const { styles } = props;
 
   return (
-    <UiCard fluid={true} className={cx(styles?.theme)}>
-      <CardImage {...props} />
+    <UiCard
+      fluid={true}
+      className={cx('u-card', styles?.theme, getStyles(props))}
+    >
+      <CardImage
+        {...props}
+        label={{ text: 'new', side: 'left', color: 'green' }}
+      />
       <UiCard.Content>
-        <CardMetaDate {...props} />
+        <CardMeta hasDate={true} {...props} />
         <CardTitle {...props} />
         <CardDescription {...props} />
+        <CardExtra {...props} />
       </UiCard.Content>
     </UiCard>
   );
@@ -91,5 +112,7 @@ const UniversalCard = ({ item, cardsRegistry, ...rest }) => {
 
   return <Card item={item} {...rest} />;
 };
+
+UniversalCard.schemaEnhancer = schemaEnhancer;
 
 export default UniversalCard;

@@ -107,7 +107,9 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   );
 };
 
-CardsCarousel.schemaEnhancer = ({ schema }) => {
+CardsCarousel.schemaEnhancer = (args) => {
+  const schema = Card.schemaEnhancer(args);
+
   return {
     ...schema,
     fieldsets: [
@@ -115,13 +117,7 @@ CardsCarousel.schemaEnhancer = ({ schema }) => {
       {
         id: 'carousel',
         title: 'Carousel',
-        fields: [
-          'slidesToShow',
-          'slidesToScroll',
-          'hasDate',
-          'hasDescription',
-          'maxDescription',
-        ],
+        fields: ['slidesToShow', 'slidesToScroll'],
       },
     ],
     properties: {
@@ -137,22 +133,6 @@ CardsCarousel.schemaEnhancer = ({ schema }) => {
         type: 'number',
         default: 1,
         minimum: 1,
-      },
-      hasDate: {
-        title: 'Publication date',
-        type: 'boolean',
-      },
-      hasDescription: {
-        title: 'Description',
-        type: 'boolean',
-      },
-      maxDescription: {
-        title: 'Description max characters',
-        description:
-          "Limit description to a maximum number of characters by adding trailing '...'",
-        type: 'number',
-        default: 200,
-        minimum: 0,
       },
     },
   };

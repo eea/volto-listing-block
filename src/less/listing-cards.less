@@ -1,3 +1,5 @@
+// TODO: the classes here have to be properly namespaced
+
 .category {
   font-size: 12px;
 }
@@ -32,4 +34,20 @@
 .info-prefix {
   color: #9a9a9a;
   font-size: 12px;
+}
+
+each(range(5), {
+  .max-@{value}-lines {
+    --max-lines: @value;
+  }
+});
+
+.u-card {
+  .description {
+    display: -webkit-box;
+    overflow: hidden;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--max-lines, 5);
+  }
 }

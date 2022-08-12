@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { Image } from 'semantic-ui-react';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 import DefaultImageSVG from './default-image.svg';
@@ -10,12 +11,28 @@ import DefaultImageSVG from './default-image.svg';
  *
  */
 function PreviewImage(props) {
-  const { item, size = 'preview', ...rest } = props;
+  const { item, size = 'preview', label, ...rest } = props;
   const src = item.image_field
     ? flattenToAppURL(`${item['@id']}/@@images/${item.image_field}/${size}`)
     : DefaultImageSVG;
 
-  return <img src={src} alt={item.title} {...rest} />;
+  return (
+    <Image
+      src={src}
+      alt={item.title}
+      {...rest}
+      label={
+        label
+          ? {
+              as: 'a',
+              ribbon: label.side,
+              content: label.text,
+              color: label.color,
+            }
+          : null
+      }
+    />
+  );
 }
 
 PreviewImage.propTypes = {

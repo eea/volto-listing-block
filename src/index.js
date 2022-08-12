@@ -4,6 +4,8 @@ import CustomNewsListTemplate from './CustomNewsListTemplate';
 import CustomSummaryListingBlockTemplate from './CustomSummaryListingBlockTemplate';
 import { ListingStylingSchema } from './Schema';
 
+import './less/listing-cards.less';
+
 const applyConfig = (config) => {
   config.blocks.blocksConfig.listing.variations = [
     ...config.blocks.blocksConfig.listing.variations,

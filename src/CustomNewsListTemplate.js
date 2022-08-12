@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import config from '@plone/volto/registry';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import './less/editor.less';
 
 const CustomNewsListTemplate = ({
   items,

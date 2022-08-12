@@ -6,7 +6,6 @@ import React from 'react';
 import PreviewImage from './PreviewImage';
 import config from '@plone/volto/registry';
 import cx from 'classnames';
-import './less/editor.less';
 
 const CustomCardsGalleryTemplate = ({
   items,
