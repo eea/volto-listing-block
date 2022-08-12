@@ -53,6 +53,23 @@ const CustomNewsListTemplate = ({
   );
 };
 
+CustomNewsListTemplate.schemaEnhancer = ({ schema, formData, intl }) => {
+  schema.fieldsets[0].fields = [...schema.fieldsets[0].fields, 'hasDate'];
+
+  schema.properties = {
+    ...schema.properties,
+    hasDate: {
+      title: 'Publication date',
+      type: 'boolean',
+    },
+    hasDescription: {
+      title: 'Description',
+      type: 'boolean',
+    },
+  };
+  return schema;
+};
+
 CustomNewsListTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkMore: PropTypes.any,

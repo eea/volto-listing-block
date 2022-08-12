@@ -107,4 +107,55 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   );
 };
 
+CardsCarousel.schemaEnhancer = ({ schema }) => {
+  return {
+    ...schema,
+    fieldsets: [
+      ...schema.fieldsets,
+      {
+        id: 'carousel',
+        title: 'Carousel',
+        fields: [
+          'slidesToShow',
+          'slidesToScroll',
+          'hasDate',
+          'hasDescription',
+          'maxDescription',
+        ],
+      },
+    ],
+    properties: {
+      ...schema.properties,
+      slidesToShow: {
+        title: 'Slides to show',
+        type: 'number',
+        default: 4,
+        minimum: 1,
+      },
+      slidesToScroll: {
+        title: 'Slides to scroll',
+        type: 'number',
+        default: 1,
+        minimum: 1,
+      },
+      hasDate: {
+        title: 'Publication date',
+        type: 'boolean',
+      },
+      hasDescription: {
+        title: 'Description',
+        type: 'boolean',
+      },
+      maxDescription: {
+        title: 'Description max characters',
+        description:
+          "Limit description to a maximum number of characters by adding trailing '...'",
+        type: 'number',
+        default: 200,
+        minimum: 0,
+      },
+    },
+  };
+};
+
 export default CardsCarousel;

@@ -92,6 +92,41 @@ const CustomSummaryListingBlockTemplate = ({
   );
 };
 
+CustomSummaryListingBlockTemplate.schemaEnhancer = ({
+  schema,
+  formData,
+  intl,
+}) => {
+  schema.fieldsets[0].fields = [
+    ...schema.fieldsets[0].fields,
+    'imageOnRightSide',
+    'hasImage',
+    'hasDate',
+    'hasDescription',
+  ];
+
+  schema.properties = {
+    ...schema.properties,
+    hasImage: {
+      title: 'Image',
+      type: 'boolean',
+    },
+    imageOnRightSide: {
+      title: 'Image on Right (Default is Left)',
+      type: 'boolean',
+    },
+    hasDate: {
+      title: 'Publication date',
+      type: 'boolean',
+    },
+    hasDescription: {
+      title: 'Description',
+      type: 'boolean',
+    },
+  };
+  return schema;
+};
+
 CustomSummaryListingBlockTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkMore: PropTypes.any,

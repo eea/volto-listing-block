@@ -59,6 +59,37 @@ const CustomCardsGalleryTemplate = ({
   );
 };
 
+CustomCardsGalleryTemplate.schemaEnhancer = ({ schema, formData, intl }) => {
+  schema.fieldsets[0].fields = [
+    ...schema.fieldsets[0].fields,
+    'gridSize',
+    'hasDate',
+    'hasDescription',
+  ];
+
+  schema.properties = {
+    ...schema.properties,
+    gridSize: {
+      title: 'Grid Size',
+      choices: [
+        ['three', 'Three'],
+        ['four', 'Four'],
+      ],
+      factory: 'Choice',
+      type: 'string',
+    },
+    hasDate: {
+      title: 'Publication date',
+      type: 'boolean',
+    },
+    hasDescription: {
+      title: 'Description',
+      type: 'boolean',
+    },
+  };
+  return schema;
+};
+
 CustomCardsGalleryTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkMore: PropTypes.any,
