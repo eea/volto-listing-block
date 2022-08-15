@@ -1,6 +1,7 @@
 import cx from 'classnames';
-import { Card as UiCard } from 'semantic-ui-react';
+import { Button, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
+import { flattenToAppURL } from '@plone/volto/helpers';
 
 import { ConditionalLink } from '@plone/volto/components';
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
@@ -70,7 +71,27 @@ const CardImage = ({ item, isEditMode, label }) => (
   </ConditionalLink>
 );
 
-// const CardExtra = ({ item }) => <UiCard.Content extra>extra</UiCard.Content>;
+const getCallToAction = (item, options) => {
+  const { urlTemplate } = options;
+  return urlTemplate
+    ? urlTemplate
+        .replace('$PORTAL_URL', config.settings.publicURL)
+        .replace('$URL', flattenToAppURL(item['@id']))
+    : options.href?.[0]?.['@id'];
+};
+
+const CallToAction = ({ item, cardModel }) => (
+  <Button as="a" href={getCallToAction(item, cardModel.callToAction)}>
+    {cardModel.callToAction.label}
+  </Button>
+);
+
+const CardExtra = ({ item, cardModel, ...rest }) =>
+  cardModel?.callToAction?.enable ? (
+    <UiCard.Content extra>
+      <CallToAction item={item} cardModel={cardModel} {...rest} />
+    </UiCard.Content>
+  ) : null;
 
 const getStyles = (props) => {
   const { cardModel = {} } = props;
@@ -112,7 +133,7 @@ const BasicCard = (props) => {
         <CardMeta {...cardProps} />
         <CardTitle {...cardProps} />
         <CardDescription {...cardProps} />
-        {/* <CardExtra {...props} /> */}
+        <CardExtra {...props} />
       </UiCard.Content>
     </UiCard>
   );
