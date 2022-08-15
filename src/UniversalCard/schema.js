@@ -21,14 +21,15 @@ const CallToActionSchema = ({ formData }) => {
         title: 'Label',
       },
       href: {
-        title: 'Fixed URL',
+        title: 'Internal URL',
+        description: 'For listings, use the URL Template field',
         widget: 'object_browser',
         mode: 'link',
         selectedItemAttrs: ['Title', 'Description'],
         allowExternals: true,
       },
       urlTemplate: {
-        title: 'URL template',
+        title: 'URL Template',
         description: 'Enter a path. Available placeholders: $URL, $PORTAL_URL',
       },
     },

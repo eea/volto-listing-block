@@ -77,7 +77,7 @@ const getCallToAction = (item, options) => {
     ? urlTemplate
         .replace('$PORTAL_URL', config.settings.publicURL)
         .replace('$URL', flattenToAppURL(item['@id']))
-    : options.href?.[0]?.['@id'];
+    : options.href?.[0]?.['@id'] || item['@id'];
 };
 
 const CallToAction = ({ item, cardModel }) => (
