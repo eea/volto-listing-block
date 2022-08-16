@@ -37,3 +37,5 @@ const CardExtra = ({ item, cardModel, ...rest }) => {
     </UiCard.Content>
   ) : null;
 };
+
+export default CardExtra;

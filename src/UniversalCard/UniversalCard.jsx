@@ -21,21 +21,6 @@ const getStyles = (props) => {
   return res;
 };
 
-const getLabel = (props) => {
-  // { text: 'new', side: 'left', color: 'green' }
-  const { item, cardModel = {} } = props;
-  const text = item.isNew ? 'New' : item.isExpired ? 'Archived' : null;
-
-  return cardModel?.hasLabel && text
-    ? {
-        text,
-        side: 'left',
-        // TODO: set the colors from css?
-        color: item.review_state === 'archived' ? 'yellow' : 'green',
-      }
-    : null;
-};
-
 const BasicCard = (props) => {
   const { styles, className } = props;
   const item = new Item(props.item);
