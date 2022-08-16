@@ -5,13 +5,14 @@ import CustomSummaryListingBlockTemplate from './CustomSummaryListingBlockTempla
 import { ListingStylingSchema } from './Schema';
 
 import './less/listing-cards.less';
+import {
+  DefaultCardLayout,
+  ImageCardLayout,
+  LeftImageCardLayout,
+  RightImageCardLayout,
+} from './UniversalCard';
 
 export { default as UniversalCard } from './UniversalCard';
-
-const DefaultCardLayout = () => null;
-const LeftImageCardLayout = () => null;
-const RightImageCardLayout = () => null;
-const ImageCardLayout = () => null;
 
 const applyConfig = (config) => {
   const { listing } = config.blocks.blocksConfig;

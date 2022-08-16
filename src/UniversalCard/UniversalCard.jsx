@@ -49,13 +49,18 @@ const BasicCard = (props) => {
 const UniversalCard = ({ item, cardModel, ...rest }) => {
   const extension = resolveExtension(
     '@type',
-    cardModel,
     config.blocks.blocksConfig.listing.extensions.cardTemplates,
+    cardModel,
   );
   const CardTemplate = extension.view;
 
   return <CardTemplate item={item} cardModel={cardModel} {...rest} />;
 };
+
+export const DefaultCardLayout = () => null;
+export const LeftImageCardLayout = () => null;
+export const RightImageCardLayout = () => null;
+export const ImageCardLayout = () => null;
 
 UniversalCard.schemaEnhancer = schemaEnhancer;
 
