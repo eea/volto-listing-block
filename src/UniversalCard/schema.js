@@ -49,6 +49,7 @@ const CardSchema = ({ formData }) => {
           'maxDescription',
           'hasMetaType',
           'hasLabel',
+          'hasTags',
           'callToAction',
         ],
       },
@@ -79,7 +80,11 @@ const CardSchema = ({ formData }) => {
         type: 'boolean',
       },
       hasLabel: {
-        title: 'Show label',
+        title: 'Show new/archived label',
+        type: 'boolean',
+      },
+      hasTags: {
+        title: 'Show tags',
         type: 'boolean',
       },
       callToAction: {

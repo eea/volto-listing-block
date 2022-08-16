@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import { Button, Card as UiCard } from 'semantic-ui-react';
+import { Button, Label, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
@@ -86,12 +86,26 @@ const CallToAction = ({ item, cardModel }) => (
   </Button>
 );
 
-const CardExtra = ({ item, cardModel, ...rest }) =>
-  cardModel?.callToAction?.enable ? (
+const Tags = ({ item }) => {
+  return !!item?.Subject
+    ? item.Subject.map((tag, i) => <Label key={i}>{tag}</Label>)
+    : null;
+};
+
+const CardExtra = ({ item, cardModel, ...rest }) => {
+  const showCallToAction = cardModel?.callToAction?.enable;
+  const showTags = cardModel.hasTags;
+  const show = showCallToAction || showTags;
+
+  return show ? (
     <UiCard.Content extra>
-      <CallToAction item={item} cardModel={cardModel} {...rest} />
+      {showTags && <Tags item={item} cardModel={cardModel} {...rest} />}
+      {showCallToAction && (
+        <CallToAction item={item} cardModel={cardModel} {...rest} />
+      )}
     </UiCard.Content>
   ) : null;
+};
 
 const getStyles = (props) => {
   const { cardModel = {} } = props;
@@ -111,6 +125,7 @@ const getLabel = (props) => {
     ? {
         text,
         side: 'left',
+        // TODO: set the colors from css?
         color: item.review_state === 'archived' ? 'yellow' : 'green',
       }
     : null;
