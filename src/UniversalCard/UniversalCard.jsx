@@ -16,7 +16,7 @@ const CardMeta = (props) => {
   const locale = config.settings.dateLocale || 'en-gb';
   const showDate = cardModel?.hasDate && EffectiveDate !== 'None';
   const showMeta = cardModel?.hasMetaType && item['@type'];
-  const show = showDate;
+  const show = showDate || showMeta;
 
   return show ? (
     <UiCard.Meta>
