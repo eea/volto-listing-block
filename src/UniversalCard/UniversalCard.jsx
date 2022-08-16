@@ -1,111 +1,16 @@
+import React from 'react';
 import cx from 'classnames';
-import { Button, Label, Card as UiCard } from 'semantic-ui-react';
-import config from '@plone/volto/registry';
-import { flattenToAppURL } from '@plone/volto/helpers';
 
-import { ConditionalLink } from '@plone/volto/components';
-import { formatDate } from '@plone/volto/helpers/Utils/Date';
+import { Card as UiCard } from 'semantic-ui-react';
 
-import PreviewImage from './../PreviewImage';
+import CardDescription from './CardDescription';
+import CardExtra from './CardExtra';
+import CardImage from './CardImage';
+import CardMeta from './CardMeta';
+import CardTitle from './CardTitle';
+
 import schemaEnhancer from './schema';
 import { Item } from './model';
-
-const CardMeta = (props) => {
-  const { item, cardModel = {} } = props;
-  const { EffectiveDate } = item;
-  const locale = config.settings.dateLocale || 'en-gb';
-  const showDate = cardModel?.hasDate && EffectiveDate !== 'None';
-  const showMeta = cardModel?.hasMetaType && item['@type'];
-  const show = showDate || showMeta;
-
-  return show ? (
-    <UiCard.Meta>
-      {showMeta && <span class="text-left">{item['@type']}</span>}
-      {showDate && (
-        <span class="text-right">
-          {formatDate({
-            date: EffectiveDate,
-            format: {
-              year: 'numeric',
-              month: 'short',
-              day: '2-digit',
-            },
-            locale: locale,
-          })}
-        </span>
-      )}
-    </UiCard.Meta>
-  ) : null;
-};
-
-const CardTitle = (props) => {
-  const { item, isEditMode } = props;
-  const { title } = item;
-
-  return title ? (
-    <UiCard.Header>
-      <ConditionalLink
-        className="header-link"
-        item={item}
-        condition={!isEditMode}
-      >
-        {title}
-      </ConditionalLink>
-    </UiCard.Header>
-  ) : null;
-};
-
-const CardDescription = (props) => {
-  const { item, cardModel = {} } = props;
-  const { Description } = item;
-  const { hasDescription } = cardModel;
-
-  return hasDescription && Description ? (
-    <UiCard.Description content={Description} />
-  ) : null;
-};
-
-const CardImage = ({ item, isEditMode, label }) => (
-  <ConditionalLink className="image" item={item} condition={!isEditMode}>
-    <PreviewImage item={item} alt={item.title} label={label} />
-  </ConditionalLink>
-);
-
-const getCallToAction = (item, options) => {
-  const { urlTemplate } = options;
-  return urlTemplate
-    ? urlTemplate
-        .replace('$PORTAL_URL', config.settings.publicURL)
-        .replace('$URL', flattenToAppURL(item['@id']))
-    : options.href?.[0]?.['@id'] || item['@id'];
-};
-
-const CallToAction = ({ item, cardModel }) => (
-  <Button as="a" href={getCallToAction(item, cardModel.callToAction)}>
-    {cardModel.callToAction.label}
-  </Button>
-);
-
-const Tags = ({ item }) => {
-  return !!item?.Subject
-    ? item.Subject.map((tag, i) => <Label key={i}>{tag}</Label>)
-    : null;
-};
-
-const CardExtra = ({ item, cardModel, ...rest }) => {
-  const showCallToAction = cardModel?.callToAction?.enable;
-  const showTags = cardModel.hasTags;
-  const show = showCallToAction || showTags;
-
-  return show ? (
-    <UiCard.Content extra>
-      {showTags && <Tags item={item} cardModel={cardModel} {...rest} />}
-      {showCallToAction && (
-        <CallToAction item={item} cardModel={cardModel} {...rest} />
-      )}
-    </UiCard.Content>
-  ) : null;
-};
 
 const getStyles = (props) => {
   const { cardModel = {} } = props;
@@ -143,7 +48,7 @@ const BasicCard = (props) => {
         [className]: className,
       })}
     >
-      <CardImage {...cardProps} label={getLabel(cardProps)} />
+      <CardImage {...cardProps} />
       <UiCard.Content>
         <CardMeta {...cardProps} />
         <CardTitle {...cardProps} />
