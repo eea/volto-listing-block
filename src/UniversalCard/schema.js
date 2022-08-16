@@ -96,7 +96,7 @@ const CardSchema = ({ formData }) => {
   };
 };
 
-export default function ({ schema, ...rest }) {
+export default function universalCardSchemaEnhancer({ schema, ...rest }) {
   return {
     ...schema,
     fieldsets: [

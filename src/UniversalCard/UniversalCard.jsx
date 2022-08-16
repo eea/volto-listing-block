@@ -1,7 +1,9 @@
-import React from 'react';
+// import React from 'react';
 import cx from 'classnames';
 
 import { Card as UiCard } from 'semantic-ui-react';
+import config from '@plone/volto/registry';
+import { resolveExtension } from '@plone/volto/helpers/Extensions/withBlockExtensions';
 
 import CardDescription from './CardDescription';
 import CardExtra from './CardExtra';
@@ -44,16 +46,15 @@ const BasicCard = (props) => {
   );
 };
 
-export const defaultCardsRegistry = {
-  _default: BasicCard,
-};
+const UniversalCard = ({ item, cardModel, ...rest }) => {
+  const extension = resolveExtension(
+    '@type',
+    cardModel,
+    config.blocks.blocksConfig.listing.extensions.cardTemplates,
+  );
+  const CardTemplate = extension.view;
 
-const UniversalCard = ({ item, cardsRegistry, ...rest }) => {
-  cardsRegistry = cardsRegistry || defaultCardsRegistry;
-
-  const Card = cardsRegistry[item['@type']] || cardsRegistry['_default'];
-
-  return <Card item={item} {...rest} />;
+  return <CardTemplate item={item} cardModel={cardModel} {...rest} />;
 };
 
 UniversalCard.schemaEnhancer = schemaEnhancer;
