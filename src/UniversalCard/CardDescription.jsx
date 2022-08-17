@@ -2,13 +2,13 @@ import React from 'react';
 import { Card as UiCard } from 'semantic-ui-react';
 
 const CardDescription = (props) => {
-  const { item, cardModel = {} } = props;
+  const { item, cardModel = {}, description } = props;
   const { Description } = item;
   const { hasDescription } = cardModel;
+  const show = hasDescription ? !!Description : !!description;
+  const desc = description || Description;
 
-  return hasDescription && Description ? (
-    <UiCard.Description content={Description} />
-  ) : null;
+  return show ? <UiCard.Description content={desc} /> : null;
 };
 
 export default CardDescription;
