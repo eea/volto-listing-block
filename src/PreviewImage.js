@@ -6,14 +6,19 @@ import { flattenToAppURL } from '@plone/volto/helpers';
 
 import DefaultImageSVG from './default-image.svg';
 
+const getSrc = (item, size) =>
+  flattenToAppURL(`${item['@id']}/@@images/${item.image_field}/${size}`);
+
 /**
  * Renders a preview image for a catalog brain result item.
  *
  */
 function PreviewImage(props) {
-  const { item, size = 'preview', label, ...rest } = props;
-  const src = item.image_field
-    ? flattenToAppURL(`${item['@id']}/@@images/${item.image_field}/${size}`)
+  const { item, preview_image, size = 'preview', label, ...rest } = props;
+  const src = preview_image?.[0]
+    ? getSrc(preview_image[0], size)
+    : item.image_field
+    ? getSrc(item, size)
     : DefaultImageSVG;
 
   return (

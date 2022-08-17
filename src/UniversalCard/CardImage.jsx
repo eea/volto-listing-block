@@ -19,11 +19,16 @@ const getLabel = (props) => {
 };
 
 const CardImage = (props) => {
-  const { item, isEditMode } = props;
+  const { item, isEditMode, preview_image } = props;
   const label = getLabel(props);
   return (
     <ConditionalLink className="image" item={item} condition={!isEditMode}>
-      <PreviewImage item={item} alt={item.title} label={label} />
+      <PreviewImage
+        item={item}
+        preview_image={preview_image}
+        alt={item.title}
+        label={label}
+      />
     </ConditionalLink>
   );
 };
