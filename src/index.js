@@ -10,7 +10,7 @@ import {
   ImageCardLayout,
   LeftImageCardLayout,
   RightImageCardLayout,
-} from './UniversalCard';
+} from './UniversalCard/Cards';
 
 export { default as UniversalCard } from './UniversalCard';
 

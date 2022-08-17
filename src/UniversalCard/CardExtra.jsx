@@ -23,7 +23,7 @@ const Tags = ({ item }) => {
     : null;
 };
 
-const CardExtra = ({ item, cardModel, ...rest }) => {
+const CardExtra = ({ item, cardModel = {}, ...rest }) => {
   const showCallToAction = cardModel?.callToAction?.enable;
   const showTags = cardModel.hasTags;
   const show = showCallToAction || showTags;

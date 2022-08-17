@@ -42,12 +42,20 @@ each(range(5), {
   }
 });
 
-.u-card {
+.ui.card.u-card {
   .description {
     display: -webkit-box;
     overflow: hidden;
 
     -webkit-box-orient: vertical;
     -webkit-line-clamp: var(--max-lines, 5);
+  }
+
+  &.left-image-card {
+    flex-direction: row;
+  }
+
+  &.right-image-card {
+    flex-direction: row-reverse;
   }
 }
