@@ -21,6 +21,7 @@ const getLabel = (props) => {
 const CardImage = (props) => {
   const { item, isEditMode, preview_image } = props;
   const label = getLabel(props);
+
   return (
     <ConditionalLink className="image" item={item} condition={!isEditMode}>
       <PreviewImage

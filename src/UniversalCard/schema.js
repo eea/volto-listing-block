@@ -21,6 +21,8 @@ const CallToActionSchema = ({ formData }) => {
       },
       label: {
         title: 'Label',
+        default: 'Read more',
+        defaultValue: 'Read more',
       },
       href: {
         title: 'Internal URL',
