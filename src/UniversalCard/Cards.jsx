@@ -7,7 +7,6 @@ import CardExtra from './CardExtra';
 import CardImage from './CardImage';
 import CardMeta from './CardMeta';
 import CardTitle from './CardTitle';
-import { Item } from './model';
 
 const getStyles = (props) => {
   const { cardModel = {} } = props;
@@ -20,19 +19,17 @@ const getStyles = (props) => {
 
 const BasicCard = (props) => {
   const { styles, className } = props;
-  const item = new Item(props.item);
-  const cardProps = { ...props, item };
 
   return (
     <UiCard
       fluid={true}
-      className={cx('u-card', styles?.theme, getStyles(cardProps), className)}
+      className={cx('u-card', styles?.theme, getStyles(props), className)}
     >
-      <CardImage {...cardProps} />
+      <CardImage {...props} />
       <UiCard.Content>
-        <CardMeta {...cardProps} />
-        <CardTitle {...cardProps} />
-        <CardDescription {...cardProps} />
+        <CardMeta {...props} />
+        <CardTitle {...props} />
+        <CardDescription {...props} />
         <CardExtra {...props} />
       </UiCard.Content>
     </UiCard>

@@ -13,7 +13,7 @@ const getCallToAction = (item, options) => {
 
 const CallToAction = ({ item, cardModel }) => (
   <Button as="a" href={getCallToAction(item, cardModel.callToAction)}>
-    {cardModel.callToAction.label}
+    {cardModel.callToAction.label || 'Read more'}
   </Button>
 );
 

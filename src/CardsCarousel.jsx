@@ -1,7 +1,7 @@
 import React from 'react';
 import Slider from 'react-slick';
 import { Button, Icon } from 'semantic-ui-react';
-import Card from './UniversalCard';
+import UniversalCard from './UniversalCard/UniversalCard';
 
 const tabletBreakpoint = 768;
 const mobileBreakpoint = 480;
@@ -87,14 +87,14 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   return rest.isEditMode ? (
     <div className="fluid-card-row">
       {items.map((item, index) => (
-        <Card key={`card-${block}-${index}`} {...rest} item={item} />
+        <UniversalCard key={`card-${block}-${index}`} {...rest} item={item} />
       ))}
     </div>
   ) : (
     <div className="cards-carousel">
       <Slider {...settings} ref={slider}>
         {items.map((item, index) => (
-          <Card
+          <UniversalCard
             key={`card-${block}-${index}`}
             {...rest}
             block={block}
@@ -108,7 +108,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
 };
 
 CardsCarousel.schemaEnhancer = (args) => {
-  const schema = Card.schemaEnhancer(args);
+  const schema = UniversalCard.schemaEnhancer(args);
 
   return {
     ...schema,

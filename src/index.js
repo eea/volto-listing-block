@@ -3,45 +3,14 @@ import CustomCardsGalleryTemplate from './CustomCardsGalleryTemplate';
 import CustomNewsListTemplate from './CustomNewsListTemplate';
 import CustomSummaryListingBlockTemplate from './CustomSummaryListingBlockTemplate';
 import { ListingStylingSchema } from './Schema';
+import installUniversalCard from './UniversalCard';
 
 import './less/listing-cards.less';
-import {
-  DefaultCardLayout,
-  ImageCardLayout,
-  LeftImageCardLayout,
-  RightImageCardLayout,
-} from './UniversalCard/Cards';
 
-export { default as UniversalCard } from './UniversalCard';
+export { default as UniversalCard } from './UniversalCard/UniversalCard';
 
 const applyConfig = (config) => {
   const { listing } = config.blocks.blocksConfig;
-  listing.extensions = {
-    ...listing.extensions,
-    cardTemplates: [
-      {
-        id: 'card',
-        isDefault: true,
-        title: 'Card (default)',
-        view: DefaultCardLayout,
-      },
-      {
-        id: 'imageCard',
-        title: 'Image Card',
-        view: ImageCardLayout,
-      },
-      {
-        id: 'imageOnLeft',
-        title: 'Image on left',
-        view: LeftImageCardLayout,
-      },
-      {
-        id: 'imageOnRight',
-        title: 'Image on right',
-        view: RightImageCardLayout,
-      },
-    ],
-  };
 
   listing.variations = [
     ...listing.variations,
@@ -83,7 +52,7 @@ const applyConfig = (config) => {
 
   // moment date locale. See https://momentjs.com/ - Multiple Locale Support
   config.settings.dateLocale = config.settings.dateLocale || 'en';
-  return config;
+  return installUniversalCard(config);
 };
 
 export default applyConfig;
