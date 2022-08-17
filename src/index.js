@@ -5,12 +5,46 @@ import CustomSummaryListingBlockTemplate from './CustomSummaryListingBlockTempla
 import { ListingStylingSchema } from './Schema';
 
 import './less/listing-cards.less';
+import {
+  DefaultCardLayout,
+  ImageCardLayout,
+  LeftImageCardLayout,
+  RightImageCardLayout,
+} from './UniversalCard/Cards';
 
 export { default as UniversalCard } from './UniversalCard';
 
 const applyConfig = (config) => {
-  config.blocks.blocksConfig.listing.variations = [
-    ...config.blocks.blocksConfig.listing.variations,
+  const { listing } = config.blocks.blocksConfig;
+  listing.extensions = {
+    ...listing.extensions,
+    cardTemplates: [
+      {
+        id: 'card',
+        isDefault: true,
+        title: 'Card (default)',
+        view: DefaultCardLayout,
+      },
+      {
+        id: 'imageCard',
+        title: 'Image Card',
+        view: ImageCardLayout,
+      },
+      {
+        id: 'imageOnLeft',
+        title: 'Image on left',
+        view: LeftImageCardLayout,
+      },
+      {
+        id: 'imageOnRight',
+        title: 'Image on right',
+        view: RightImageCardLayout,
+      },
+    ],
+  };
+
+  listing.variations = [
+    ...listing.variations,
     {
       id: 'cardsCarousel',
       isDefault: false,
@@ -42,9 +76,9 @@ const applyConfig = (config) => {
   ];
 
   // Theming
-  if (!config.blocks.blocksConfig.listing.enableStyling) {
-    config.blocks.blocksConfig.listing.enableStyling = true;
-    config.blocks.blocksConfig.listing.stylesSchema = ListingStylingSchema;
+  if (!listing.enableStyling) {
+    listing.enableStyling = true;
+    listing.stylesSchema = ListingStylingSchema;
   }
 
   // moment date locale. See https://momentjs.com/ - Multiple Locale Support

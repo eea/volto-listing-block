@@ -1,3 +1,5 @@
+import { enhanceSchema } from './utils';
+
 const CallToActionSchema = ({ formData }) => {
   return {
     fieldsets: [
@@ -55,9 +57,6 @@ const CardSchema = ({ formData }) => {
       },
     ],
     properties: {
-      cardModel: {
-        title: 'Card model',
-      },
       hasDate: {
         title: 'Publication date',
         type: 'boolean',
@@ -96,7 +95,8 @@ const CardSchema = ({ formData }) => {
   };
 };
 
-export default function ({ schema, ...rest }) {
+export default function universalCardSchemaEnhancer(props) {
+  const { schema } = props;
   return {
     ...schema,
     fieldsets: [
@@ -112,7 +112,7 @@ export default function ({ schema, ...rest }) {
       cardModel: {
         title: 'Card model',
         widget: 'object',
-        schema: CardSchema({ ...rest }),
+        schema: enhanceSchema({ ...props, schema: CardSchema(props) }),
       },
     },
   };
