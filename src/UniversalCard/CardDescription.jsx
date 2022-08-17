@@ -5,8 +5,8 @@ const CardDescription = (props) => {
   const { item, cardModel = {}, description } = props;
   const { Description } = item;
   const { hasDescription } = cardModel;
-  const show = hasDescription ? !!Description : !!description;
   const desc = description || Description;
+  const show = hasDescription && desc;
 
   return show ? <UiCard.Description content={desc} /> : null;
 };
