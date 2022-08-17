@@ -4,16 +4,17 @@ import { ConditionalLink } from '@plone/volto/components';
 
 const CardTitle = (props) => {
   const { item, isEditMode } = props;
-  const { title } = item;
+  const { title, Title } = item;
+  const t = title || Title;
 
-  return title ? (
+  return t ? (
     <UiCard.Header>
       <ConditionalLink
         className="header-link"
         item={item}
         condition={!isEditMode}
       >
-        {title}
+        {t}
       </ConditionalLink>
     </UiCard.Header>
   ) : null;
