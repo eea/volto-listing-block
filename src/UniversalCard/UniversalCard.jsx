@@ -6,7 +6,7 @@ import { Item } from './model';
 import schemaEnhancer from './schema';
 
 const UniversalCard = (props) => {
-  const { cardModel, item, ...rest } = props;
+  const { cardModel = {}, item, ...rest } = props;
   const extension = resolveExtension(
     '@type',
     config.blocks.blocksConfig.listing.extensions.cardTemplates,
