@@ -54,17 +54,15 @@ export const RightImageCardLayout = (props) => (
 
 export const ImageCardLayout = (props) => {
   const { styles, className } = props;
-  const item = new Item(props.item);
-  const cardProps = { ...props, item };
 
   return (
     <UiCard
       fluid={true}
-      className={cx('u-card', styles?.theme, getStyles(cardProps), {
+      className={cx('u-card', styles?.theme, getStyles(props), {
         [className]: className,
       })}
     >
-      <CardImage {...cardProps} />
+      <CardImage {...props} />
     </UiCard>
   );
 };

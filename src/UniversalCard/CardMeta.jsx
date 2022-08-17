@@ -4,7 +4,7 @@ import config from '@plone/volto/registry';
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
 
 const CardMeta = (props) => {
-  const { item, cardModel = {} } = props;
+  const { item, cardModel = {}, head_title } = props;
   const { EffectiveDate } = item;
   const locale = config.settings.dateLocale || 'en-gb';
   const showDate = cardModel?.hasDate && EffectiveDate !== 'None';
@@ -13,7 +13,7 @@ const CardMeta = (props) => {
 
   return show ? (
     <UiCard.Meta>
-      {showMeta && <span class="text-left">{item['@type']}</span>}
+      {showMeta && <span class="text-left">{head_title || item['@type']}</span>}
       {showDate && (
         <span class="text-right">
           {formatDate({
