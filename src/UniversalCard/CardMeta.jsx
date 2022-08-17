@@ -8,7 +8,7 @@ const CardMeta = (props) => {
   const { EffectiveDate } = item;
   const locale = config.settings.dateLocale || 'en-gb';
   const showDate = cardModel?.hasDate && EffectiveDate !== 'None';
-  const showMeta = cardModel?.hasMetaType && item['@type'];
+  const showMeta = !!(head_title || (cardModel?.hasMetaType && item['@type']));
   const show = showDate || showMeta;
 
   return show ? (
