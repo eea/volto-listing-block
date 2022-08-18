@@ -8,7 +8,10 @@ const CallToActionSchema = ({ formData }) => {
         fields: [
           'enable',
           ...(formData.cardModel?.callToAction?.enable
-            ? ['label', 'href', 'urlTemplate']
+            ? [
+                'label',
+                formData['@type'] === 'listing' ? 'urlTemplate' : 'href',
+              ]
             : []),
         ], //
         title: 'Default',
@@ -17,24 +20,24 @@ const CallToActionSchema = ({ formData }) => {
     properties: {
       enable: {
         type: 'boolean',
-        title: 'Show call to action',
+        title: 'Show action',
       },
       label: {
-        title: 'Label',
+        title: 'Action label',
         default: 'Read more',
         defaultValue: 'Read more',
       },
       href: {
-        title: 'Internal URL',
-        description: 'For listings, use the URL Template field',
+        title: 'Action URL',
         widget: 'object_browser',
         mode: 'link',
         selectedItemAttrs: ['Title', 'Description'],
         allowExternals: true,
       },
       urlTemplate: {
-        title: 'URL Template',
-        description: 'Enter a path. Available placeholders: $URL, $PORTAL_URL',
+        title: 'Action URL Template',
+        description:
+          'Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.',
       },
     },
     required: [],
