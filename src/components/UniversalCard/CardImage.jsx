@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConditionalLink } from '@plone/volto/components';
 
-import PreviewImage from './../PreviewImage';
+import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
 
 const getLabel = (props) => {
   // { text: 'new', side: 'left', color: 'green' }

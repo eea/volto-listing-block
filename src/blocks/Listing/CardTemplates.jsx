@@ -2,11 +2,13 @@ import cx from 'classnames';
 
 import { Card as UiCard } from 'semantic-ui-react';
 
-import CardDescription from './CardDescription';
-import CardExtra from './CardExtra';
-import CardImage from './CardImage';
-import CardMeta from './CardMeta';
-import CardTitle from './CardTitle';
+import {
+  CardDescription,
+  CardExtra,
+  CardImage,
+  CardMeta,
+  CardTitle,
+} from '@eeacms/volto-listing-block/components/UniversalCard';
 
 const getStyles = (props) => {
   const { cardModel = {} } = props;

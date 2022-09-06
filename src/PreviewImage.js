@@ -1,3 +1,4 @@
+// TODO: see if possible to replace with Volto's PreviewImage component
 import React from 'react';
 import PropTypes from 'prop-types';
 

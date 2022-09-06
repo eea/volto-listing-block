@@ -1,7 +1,7 @@
 import React from 'react';
 import Slider from 'react-slick';
 import { Button, Icon } from 'semantic-ui-react';
-import UniversalCard from './UniversalCard/UniversalCard';
+import { UniversalCard } from '@eeacms/volto-listing-block';
 
 const tabletBreakpoint = 768;
 const mobileBreakpoint = 480;

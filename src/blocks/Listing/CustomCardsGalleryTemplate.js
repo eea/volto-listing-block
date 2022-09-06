@@ -3,7 +3,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import { Card } from 'semantic-ui-react';
 import React from 'react';
-import PreviewImage from './PreviewImage';
+import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
 import config from '@plone/volto/registry';
 import cx from 'classnames';
 
