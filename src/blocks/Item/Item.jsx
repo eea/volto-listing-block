@@ -1,6 +1,11 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { serializeText } from '@eeacms/volto-eea-website-policy/helpers';
+import { isArray } from 'lodash';
+import { serializeNodes } from 'volto-slate/editor/render';
+
+export const serializeText = (text) => {
+  return isArray(text) ? serializeNodes(text) : text;
+};
 
 function Item({
   assetType,
