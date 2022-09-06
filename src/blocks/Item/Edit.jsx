@@ -1,15 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { isArray } from 'lodash';
 import config from '@plone/volto/registry';
 import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 import SlateEditor from 'volto-slate/editor/SlateEditor';
 import { handleKey } from 'volto-slate/blocks/Text/keyboard';
 import { uploadContent, saveSlateBlockSelection } from 'volto-slate/actions';
 
-import { createSlateParagraph } from '@eeacms/volto-eea-website-policy/helpers';
-
 import Item from './Item';
 import getSchema from './schema';
+
+export const createSlateParagraph = (text) => {
+  return isArray(text) ? text : config.settings.slate.defaultValue();
+};
 
 const Edit = (props) => {
   const { slate } = config.settings;
