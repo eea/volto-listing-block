@@ -18,7 +18,6 @@ const CustomCardsGalleryTemplate = ({
   moment.locale(config.settings.dateLocale);
   const makeTextBody = (item) => (
     <Card.Content>
-      <Card.Header>{item.title ? item.title : item.id}</Card.Header>
       <Card.Meta>
         {hasDate && item.effective && (
           <span className="category">
@@ -26,6 +25,7 @@ const CustomCardsGalleryTemplate = ({
           </span>
         )}
       </Card.Meta>
+      <Card.Header>{item.title ? item.title : item.id}</Card.Header>
       {hasDescription && (
         <Card.Description>
           <p>{item.description}</p>
