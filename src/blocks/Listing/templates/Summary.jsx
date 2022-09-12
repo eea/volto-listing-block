@@ -7,17 +7,8 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const SummaryListing = ({
-  block,
-  items,
-  linkTitle,
-  linkHref,
-  isEditMode,
-  imageOnRightSide,
-  hasImage,
-  hasDate,
-  hasDescription,
-}) => {
+const SummaryListing = (props) => {
+  const { block, items, linkTitle, linkHref, isEditMode } = props;
   let href = linkHref?.[0]?.['@id'] || '';
 
   moment.locale(config.settings.dateLocale);
@@ -34,7 +25,11 @@ const SummaryListing = ({
       <div className="items">
         {items && items.length > 0 ? (
           items.map((item, index) => (
-            <UniversalItem key={`item-${block}-${index}`} item={item} />
+            <UniversalItem
+              {...props}
+              key={`item-${block}-${index}`}
+              item={item}
+            />
           ))
         ) : (
           <p>There are no items to show in this view.</p>

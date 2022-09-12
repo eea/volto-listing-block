@@ -8,6 +8,7 @@ import {
   LeftImageCardLayout,
   RightImageCardLayout,
 } from './CardTemplates';
+import { DefaultItemLayout } from './ItemTemplates';
 
 import { ListingStylingSchema } from './schema';
 
@@ -52,6 +53,14 @@ const applyConfig = (config) => {
 
   listing.extensions = {
     ...listing.extensions,
+    itemTemplates: [
+      {
+        id: 'item',
+        isDefault: true,
+        title: 'Summary (default)',
+        view: DefaultItemLayout,
+      },
+    ],
     cardTemplates: [
       {
         id: 'card',
