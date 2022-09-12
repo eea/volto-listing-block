@@ -1,21 +1,12 @@
 import { cloneDeep } from 'lodash';
 import config from '@plone/volto/registry';
-import { defineMessages } from 'react-intl';
 
-const messages = defineMessages({
-  cardType: {
-    id: 'Card type',
-    defaultMessage: 'Card type',
-  },
-});
-
-const addTypeSelect = ({ intl, schema }) => {
+const addTypeSelect = ({ intl, schema, extensionName, messages }) => {
   const field = '@type';
-  const extensionName = 'cardTemplates';
   const extensions = config.blocks.blocksConfig.listing.extensions;
   const variations = extensions[extensionName];
   schema.properties[field] = {
-    title: intl.formatMessage(messages.cardType),
+    title: intl.formatMessage(messages.title),
     choices: variations.map(({ id, title }) => [id, title]),
     defaultValue: variations.find(({ isDefault }) => isDefault).id,
   };
@@ -24,8 +15,12 @@ const addTypeSelect = ({ intl, schema }) => {
   return schema;
 };
 
-export const enhanceSchema = ({ schema: originalSchema, formData, intl }) => {
-  const extensionName = 'cardTemplates';
+export const enhanceSchema = ({ extensionName, messages }) => ({
+  schema: originalSchema,
+  formData,
+  intl,
+}) => {
+  // const extensionName = 'itemTemplates';
   const extensionType = '@type'; // property name in stored block data
   const extensions = config.blocks.blocksConfig.listing.extensions;
   const variations = extensions[extensionName];
@@ -40,5 +35,5 @@ export const enhanceSchema = ({ schema: originalSchema, formData, intl }) => {
     ? schemaEnhancer({ schema: cloneDeep(originalSchema), formData, intl })
     : cloneDeep(originalSchema);
 
-  return addTypeSelect({ schema, intl });
+  return addTypeSelect({ schema, intl, extensionName, messages });
 };

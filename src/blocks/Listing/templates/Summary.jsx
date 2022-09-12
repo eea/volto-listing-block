@@ -43,33 +43,6 @@ const SummaryListing = (props) => {
 
 SummaryListing.schemaEnhancer = (args) => {
   const schema = UniversalItem.schemaEnhancer(args);
-  schema.fieldsets[0].fields = [
-    ...schema.fieldsets[0].fields,
-    'imageOnRightSide',
-    'hasImage',
-    'hasDate',
-    'hasDescription',
-  ];
-
-  schema.properties = {
-    ...schema.properties,
-    hasImage: {
-      title: 'Image',
-      type: 'boolean',
-    },
-    imageOnRightSide: {
-      title: 'Image on Right (Default is Left)',
-      type: 'boolean',
-    },
-    hasDate: {
-      title: 'Publication date',
-      type: 'boolean',
-    },
-    hasDescription: {
-      title: 'Description',
-      type: 'boolean',
-    },
-  };
   return schema;
 };
 

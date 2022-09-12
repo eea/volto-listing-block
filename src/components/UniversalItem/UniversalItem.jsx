@@ -13,7 +13,7 @@ const UniversalItem = (props) => {
   );
   const ItemTemplate = extension.view;
 
-  return <ItemTemplate item={new Item(item)} cardModel={itemModel} {...rest} />;
+  return <ItemTemplate item={new Item(item)} itemModel={itemModel} {...rest} />;
 };
 
 UniversalItem.schemaEnhancer = schemaEnhancer;

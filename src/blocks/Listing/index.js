@@ -57,7 +57,7 @@ const applyConfig = (config) => {
       {
         id: 'item',
         isDefault: true,
-        title: 'Summary (default)',
+        title: 'Basic Item',
         view: DefaultItemLayout,
       },
     ],

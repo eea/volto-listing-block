@@ -36,16 +36,9 @@ const getStyles = (props) => {
 };
 
 const BasicItem = (props) => {
-  const {
-    item,
-    styles,
-    className,
-    hasImage,
-    imageOnRightSide,
-    hasDate,
-    hasDescription,
-    isEditMode = false,
-  } = props;
+  const { item, styles, className, itemModel = {}, isEditMode = false } = props;
+  const { hasImage, imageOnRightSide, hasDate, hasDescription } = itemModel;
+
   return (
     <div
       className={cx(

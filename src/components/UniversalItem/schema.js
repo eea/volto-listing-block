@@ -1,15 +1,25 @@
-import { enhanceSchema } from './utils';
+import { enhanceSchema } from '@eeacms/volto-listing-block/schema-utils';
+import { defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  title: {
+    id: 'Item type',
+    defaultMessage: 'Item type',
+  },
+});
 
 const ItemSchema = ({ formData }) => {
   return {
     fieldsets: [
       {
-        id: 'cardDesigner',
-        title: 'Card',
+        id: 'itemDesigner',
+        title: 'Item',
         fields: [
           'hasDate',
           'hasDescription',
           'maxDescription',
+          'hasImage',
+          ...(formData.itemModel?.hasImage ? ['imageOnRightSide'] : []),
           // 'hasMetaType',
           // 'hasLabel',
           // 'hasTags',
@@ -35,6 +45,14 @@ const ItemSchema = ({ formData }) => {
         minimum: 0,
         maximum: 5,
       },
+      hasImage: {
+        title: 'Image',
+        type: 'boolean',
+      },
+      imageOnRightSide: {
+        title: 'Image on Right (Default is Left)',
+        type: 'boolean',
+      },
       // hasMetaType: {
       //   title: 'Show portal type',
       //   type: 'boolean',
@@ -54,6 +72,7 @@ const ItemSchema = ({ formData }) => {
 
 export default function universalItemSchemaEnhancer(props) {
   const { schema } = props;
+  const enhancer = enhanceSchema({ extensionName: 'itemTemplates', messages });
   return {
     ...schema,
     fieldsets: [
@@ -69,7 +88,10 @@ export default function universalItemSchemaEnhancer(props) {
       itemModel: {
         title: 'Item model',
         widget: 'object',
-        schema: enhanceSchema({ ...props, schema: ItemSchema(props) }),
+        schema: enhancer({
+          ...props,
+          schema: ItemSchema(props),
+        }),
       },
     },
   };

@@ -1,4 +1,3 @@
-// import React from 'react';
 import config from '@plone/volto/registry';
 import { resolveExtension } from '@plone/volto/helpers/Extensions/withBlockExtensions';
 import { Item } from './model';
