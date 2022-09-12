@@ -1,7 +1,7 @@
-import CardsCarousel from './CardsCarousel';
-import CustomCardsGalleryTemplate from './CustomCardsGalleryTemplate';
-import CustomNewsListTemplate from './CustomNewsListTemplate';
-import CustomSummaryListingBlockTemplate from './CustomSummaryListingBlockTemplate';
+import CardsCarousel from './templates/Carousel';
+import CustomCardsGalleryTemplate from './templates/Gallery';
+import CustomNewsListTemplate from './templates/NewsList';
+import CustomSummaryListingBlockTemplate from './templates/Summary';
 import {
   DefaultCardLayout,
   ImageCardLayout,
@@ -16,8 +16,17 @@ const applyConfig = (config) => {
   config.settings.dateLocale = config.settings.dateLocale || 'en';
   const { listing } = config.blocks.blocksConfig;
 
+  const blacklist = ['summary'];
+
   listing.variations = [
-    ...listing.variations,
+    ...listing.variations.filter(({ id }) => blacklist.indexOf(id) === -1),
+    {
+      id: 'summary',
+      isDefault: false,
+      title: 'Summary',
+      template: CustomSummaryListingBlockTemplate,
+      schemaEnhancer: CustomSummaryListingBlockTemplate.schemaEnhancer,
+    },
     {
       id: 'cardsCarousel',
       isDefault: false,
@@ -26,23 +35,16 @@ const applyConfig = (config) => {
       schemaEnhancer: CardsCarousel.schemaEnhancer,
     },
     {
-      id: 'customSummaryVariationId',
-      isDefault: false,
-      title: 'Custom summary',
-      template: CustomSummaryListingBlockTemplate,
-      schemaEnhancer: CustomSummaryListingBlockTemplate.schemaEnhancer,
-    },
-    {
       id: 'customCardsGalleryVariationId',
       isDefault: false,
-      title: 'Custom cards gallery',
+      title: 'Cards gallery',
       template: CustomCardsGalleryTemplate,
       schemaEnhancer: CustomCardsGalleryTemplate.schemaEnhancer,
     },
     {
       id: 'customNewsListVariationId',
       isDefault: false,
-      title: 'Custom news list',
+      title: 'News List',
       template: CustomNewsListTemplate,
       schemaEnhancer: CustomNewsListTemplate.schemaEnhancer,
     },

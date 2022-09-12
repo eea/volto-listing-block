@@ -1,11 +1,5 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { isArray } from 'lodash';
-import { serializeNodes } from 'volto-slate/editor/render';
-
-export const serializeText = (text) => {
-  return isArray(text) ? serializeNodes(text) : text;
-};
 
 function Item({
   assetType,
@@ -40,9 +34,7 @@ function Item({
           {header && <UiItem.Header>{header}</UiItem.Header>}
           {meta && <UiItem.Meta>{meta}</UiItem.Meta>}
           {description && mode === 'view' && (
-            <UiItem.Description>
-              {serializeText(description)}
-            </UiItem.Description>
+            <UiItem.Description>{description}</UiItem.Description>
           )}
           {mode === 'edit' && children}
           {extra && <UiItem.Extra>{extra}</UiItem.Extra>}

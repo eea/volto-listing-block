@@ -1,11 +1,25 @@
 import { ConditionalLink } from '@plone/volto/components';
-import DefaultImageSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
+import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
 import { flattenToAppURL } from '@plone/volto/helpers';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+const BodyText = ({ item, hasDate, hasDescription }) => {
+  return (
+    <div className="listing-body">
+      <h3 className={'listing-header'}>{item.title ? item.title : item.id}</h3>
+      {hasDate && item.effective && (
+        <p className={'listing-date'}>{moment(item.effective).format('ll')}</p>
+      )}
+      {hasDescription && (
+        <p className={'listing-description'}>{item.description}</p>
+      )}
+    </div>
+  );
+};
 
 const CustomSummaryListingBlockTemplate = ({
   items,
@@ -19,7 +33,6 @@ const CustomSummaryListingBlockTemplate = ({
 }) => {
   let href = linkHref?.[0]?.['@id'] || '';
 
-  const { settings } = config;
   moment.locale(config.settings.dateLocale);
   const link = isInternalURL(href) ? (
     <ConditionalLink to={flattenToAppURL(href)} condition={!isEditMode}>
@@ -28,34 +41,6 @@ const CustomSummaryListingBlockTemplate = ({
   ) : href ? (
     <a href={href}>{linkTitle || href}</a>
   ) : null;
-
-  const makeTextBody = (item) => (
-    <div className="listing-body">
-      <h3 className={'listing-header'}>{item.title ? item.title : item.id}</h3>
-      {hasDate && item.effective && (
-        <p className={'listing-date'}>{moment(item.effective).format('ll')}</p>
-      )}
-      {hasDescription && (
-        <p className={'listing-description'}>{item.description}</p>
-      )}
-    </div>
-  );
-
-  const makeImage = (item, style) => (
-    <img
-      style={style}
-      src={
-        item[settings.listingPreviewImageField]
-          ? flattenToAppURL(
-              item[settings.listingPreviewImageField].scales.preview.download,
-            )
-          : settings.depiction
-          ? flattenToAppURL(item['@id'] + settings.depiction)
-          : DefaultImageSVG
-      }
-      alt={item.title}
-    />
-  );
 
   return (
     <>
@@ -67,17 +52,32 @@ const CustomSummaryListingBlockTemplate = ({
                 {hasImage ? (
                   imageOnRightSide ? (
                     <>
-                      {makeTextBody(item)}
-                      {makeImage(item, { marginLeft: 'auto' })}
+                      <BodyText
+                        item={item}
+                        hasDescription={hasDescription}
+                        hasDate={hasDate}
+                      />
+                      <PreviewImage
+                        item={item}
+                        style={{ marginLeft: 'auto' }}
+                      />
                     </>
                   ) : (
                     <>
-                      {makeImage(item, null)}
-                      {makeTextBody(item)}
+                      <PreviewImage item={item} />
+                      <BodyText
+                        item={item}
+                        hasDescription={hasDescription}
+                        hasDate={hasDate}
+                      />
                     </>
                   )
                 ) : (
-                  <>{makeTextBody(item)}</>
+                  <BodyText
+                    item={item}
+                    hasDescription={hasDescription}
+                    hasDate={hasDate}
+                  />
                 )}
               </ConditionalLink>
             </div>
@@ -134,3 +134,20 @@ CustomSummaryListingBlockTemplate.propTypes = {
 };
 
 export default CustomSummaryListingBlockTemplate;
+
+// import DefaultImageSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
+// const makeImage = (item, style) => (
+//   <img
+//     style={style}
+//     src={
+//       item[settings.listingPreviewImageField]
+//         ? flattenToAppURL(
+//             item[settings.listingPreviewImageField].scales.preview.download,
+//           )
+//         : settings.depiction
+//         ? flattenToAppURL(item['@id'] + settings.depiction)
+//         : DefaultImageSVG
+//     }
+//     alt={item.title}
+//   />
+// );
