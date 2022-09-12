@@ -1,5 +1,5 @@
-import CardsCarousel from './templates/Carousel';
-import CustomCardsGalleryTemplate from './templates/Gallery';
+import CardsCarousel from './templates/CardsCarousel';
+import CustomCardsGalleryTemplate from './templates/CardsGallery';
 import CustomNewsListTemplate from './templates/NewsList';
 import CustomSummaryListingBlockTemplate from './templates/Summary';
 import {

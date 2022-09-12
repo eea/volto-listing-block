@@ -7,6 +7,7 @@ import customizeListingBlock from './blocks/Listing';
 import './less/listing-cards.less';
 
 export { default as UniversalCard } from './components/UniversalCard/UniversalCard';
+export { default as UniversalItem } from './components/UniversalItem/UniversalItem';
 
 const applyConfig = (config) => {
   // moment date locale. See https://momentjs.com/ - Multiple Locale Support

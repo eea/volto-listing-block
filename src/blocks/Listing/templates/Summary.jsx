@@ -1,5 +1,5 @@
 import { ConditionalLink } from '@plone/volto/components';
-import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
+import { UniversalItem } from '@eeacms/volto-listing-block';
 import { flattenToAppURL } from '@plone/volto/helpers';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
@@ -7,21 +7,8 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-const BodyText = ({ item, hasDate, hasDescription }) => {
-  return (
-    <div className="listing-body">
-      <h3 className={'listing-header'}>{item.title ? item.title : item.id}</h3>
-      {hasDate && item.effective && (
-        <p className={'listing-date'}>{moment(item.effective).format('ll')}</p>
-      )}
-      {hasDescription && (
-        <p className={'listing-description'}>{item.description}</p>
-      )}
-    </div>
-  );
-};
-
-const CustomSummaryListingBlockTemplate = ({
+const SummaryListing = ({
+  block,
   items,
   linkTitle,
   linkHref,
@@ -46,41 +33,8 @@ const CustomSummaryListingBlockTemplate = ({
     <>
       <div className="items">
         {items && items.length > 0 ? (
-          items.map((item) => (
-            <div className="listing-item" key={item['@id']}>
-              <ConditionalLink item={item} condition={!isEditMode}>
-                {hasImage ? (
-                  imageOnRightSide ? (
-                    <>
-                      <BodyText
-                        item={item}
-                        hasDescription={hasDescription}
-                        hasDate={hasDate}
-                      />
-                      <PreviewImage
-                        item={item}
-                        style={{ marginLeft: 'auto' }}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <PreviewImage item={item} />
-                      <BodyText
-                        item={item}
-                        hasDescription={hasDescription}
-                        hasDate={hasDate}
-                      />
-                    </>
-                  )
-                ) : (
-                  <BodyText
-                    item={item}
-                    hasDescription={hasDescription}
-                    hasDate={hasDate}
-                  />
-                )}
-              </ConditionalLink>
-            </div>
+          items.map((item, index) => (
+            <UniversalItem key={`item-${block}-${index}`} item={item} />
           ))
         ) : (
           <p>There are no items to show in this view.</p>
@@ -92,11 +46,8 @@ const CustomSummaryListingBlockTemplate = ({
   );
 };
 
-CustomSummaryListingBlockTemplate.schemaEnhancer = ({
-  schema,
-  formData,
-  intl,
-}) => {
+SummaryListing.schemaEnhancer = (args) => {
+  const schema = UniversalItem.schemaEnhancer(args);
   schema.fieldsets[0].fields = [
     ...schema.fieldsets[0].fields,
     'imageOnRightSide',
@@ -127,27 +78,10 @@ CustomSummaryListingBlockTemplate.schemaEnhancer = ({
   return schema;
 };
 
-CustomSummaryListingBlockTemplate.propTypes = {
+SummaryListing.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkMore: PropTypes.any,
   isEditMode: PropTypes.bool,
 };
 
-export default CustomSummaryListingBlockTemplate;
-
-// import DefaultImageSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
-// const makeImage = (item, style) => (
-//   <img
-//     style={style}
-//     src={
-//       item[settings.listingPreviewImageField]
-//         ? flattenToAppURL(
-//             item[settings.listingPreviewImageField].scales.preview.download,
-//           )
-//         : settings.depiction
-//         ? flattenToAppURL(item['@id'] + settings.depiction)
-//         : DefaultImageSVG
-//     }
-//     alt={item.title}
-//   />
-// );
+export default SummaryListing;
