@@ -72,7 +72,7 @@ export const StylingSchema = ({ intl }) => ({
 export const adjustTeaserSchema = (schema) => {
   // const fieldset = schema.fieldsets.find(({fields}) => fields?.indexOf('title') > -1);
 
-  // make the title required for accessility reasons
+  // make the title required for accessibility reasons
   if (schema.properties?.title && schema.required?.indexOf('title') === -1) {
     schema.required.push('title');
   }

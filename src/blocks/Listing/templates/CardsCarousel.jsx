@@ -87,7 +87,12 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   return rest.isEditMode ? (
     <div className="fluid-card-row">
       {items.map((item, index) => (
-        <UniversalCard key={`card-${block}-${index}`} {...rest} item={item} />
+        <UniversalCard
+          key={`card-${block}-${index}`}
+          {...rest}
+          block={block}
+          item={item}
+        />
       ))}
     </div>
   ) : (

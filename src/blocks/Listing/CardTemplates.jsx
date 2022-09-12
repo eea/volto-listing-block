@@ -19,13 +19,30 @@ const getStyles = (props) => {
   return res;
 };
 
+const getVoltoStyles = (props) => {
+  const styles = props ? props : {};
+  const output = {};
+  for (const [key, value] of Object.entries(styles)) {
+    if (styles[key] === true) {
+      output[key] = key;
+    } else {
+      output[value] = value;
+    }
+  }
+  return output;
+};
+
 const BasicCard = (props) => {
   const { styles, className } = props;
-
   return (
     <UiCard
       fluid={true}
-      className={cx('u-card', styles?.theme, getStyles(props), className)}
+      className={cx(
+        'u-card',
+        getStyles(props),
+        getVoltoStyles(styles),
+        className,
+      )}
     >
       <CardImage {...props} />
       <UiCard.Content>
@@ -60,7 +77,7 @@ export const ImageCardLayout = (props) => {
   return (
     <UiCard
       fluid={true}
-      className={cx('u-card', styles?.theme, getStyles(props), {
+      className={cx('u-card', getVoltoStyles(styles), getStyles(props), {
         [className]: className,
       })}
     >

@@ -24,12 +24,23 @@ const CardImage = (props) => {
 
   return (
     <ConditionalLink className="image" item={item} condition={!isEditMode}>
-      <PreviewImage
-        item={item}
-        preview_image={preview_image}
-        alt={item.title}
-        label={label}
-      />
+      {!isEditMode ? (
+        <PreviewImage
+          item={item}
+          preview_image={preview_image}
+          alt={item.title}
+          label={label}
+        />
+      ) : (
+        <div className={'image'}>
+          <PreviewImage
+            item={item}
+            preview_image={preview_image}
+            alt={item.title}
+            label={label}
+          />
+        </div>
+      )}
     </ConditionalLink>
   );
 };
