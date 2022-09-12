@@ -42,6 +42,20 @@ each(range(5), {
   }
 });
 
+.useMaxLines() {
+  display: -webkit-box;
+  overflow: hidden;
+
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--max-lines, 5);
+}
+
+.u-item {
+  .listing-description {
+    .useMaxLines();
+  }
+}
+
 .ui.card.u-card {
   .description {
     display: -webkit-box;
