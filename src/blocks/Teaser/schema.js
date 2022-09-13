@@ -37,6 +37,14 @@ const messages = defineMessages({
     id: 'Rounded Image',
     defaultMessage: 'Rounded Image',
   },
+  Inverted: {
+    id: 'Inverted',
+    defaultMessage: 'Inverted',
+  },
+  InvertedHelp: {
+    id: 'InvertedHelp',
+    defaultMessage: 'Inverted theme',
+  },
 });
 
 export const StylingSchema = ({ intl }) => ({
@@ -46,7 +54,7 @@ export const StylingSchema = ({ intl }) => ({
     {
       id: 'default',
       title: 'Default',
-      fields: ['theme', 'rounded'],
+      fields: ['theme', 'rounded', 'inverted'],
     },
   ],
   properties: {
@@ -59,6 +67,11 @@ export const StylingSchema = ({ intl }) => ({
         ['secondary', intl.formatMessage(messages.ThemeSecondary)],
         ['tertiary', intl.formatMessage(messages.ThemeTertiary)],
       ],
+    },
+    inverted: {
+      title: intl.formatMessage(messages.Inverted),
+      description: intl.formatMessage(messages.InvertedHelp),
+      type: 'boolean',
     },
     rounded: {
       title: intl.formatMessage(messages.Rounded),

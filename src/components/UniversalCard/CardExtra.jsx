@@ -11,8 +11,12 @@ const getCallToAction = (item, options) => {
     : options.href?.[0]?.['@id'] || item['@id'];
 };
 
-const CallToAction = ({ item, cardModel }) => (
-  <Button as="a" href={getCallToAction(item, cardModel.callToAction)}>
+const CallToAction = ({ item, cardModel, styles }) => (
+  <Button
+    as="a"
+    href={getCallToAction(item, cardModel.callToAction)}
+    className={styles?.theme ? ' inverted' : ''}
+  >
     {cardModel.callToAction.label || 'Read more'}
   </Button>
 );
