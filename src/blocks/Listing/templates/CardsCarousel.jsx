@@ -1,7 +1,11 @@
 import React from 'react';
-import Slider from 'react-slick';
 import { Button, Icon } from 'semantic-ui-react';
+import loadable from '@loadable/component';
+
 import { UniversalCard } from '@eeacms/volto-listing-block';
+import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
+
+const Slider = loadable(() => import('react-slick'));
 
 const tabletBreakpoint = 768;
 const mobileBreakpoint = 480;
@@ -55,9 +59,10 @@ const Arrows = (props) => {
 const CardsCarousel = ({ block, items, ...rest }) => {
   const slider = React.useRef(null);
   const [settings] = React.useState({
-    dots: true,
+    dots: false,
     infinite: true,
     arrows: false,
+    lazyLoad: 'progressive',
     slidesToShow: getSlidesToShow(items, rest.slidesToShow || 4),
     slidesToScroll: getSlidesToScroll(
       items,
@@ -84,31 +89,29 @@ const CardsCarousel = ({ block, items, ...rest }) => {
     ],
   });
 
-  return rest.isEditMode ? (
-    <div className="fluid-card-row">
-      {items.map((item, index) => (
-        <UniversalCard
-          key={`card-${block}-${index}`}
-          {...rest}
-          block={block}
-          item={item}
-        />
-      ))}
-    </div>
-  ) : (
-    <div className="cards-carousel">
-      <Slider {...settings} ref={slider}>
-        {items.map((item, index) => (
-          <UniversalCard
-            key={`card-${block}-${index}`}
-            {...rest}
-            block={block}
-            item={item}
-          />
-        ))}
-      </Slider>
-      {items.length > settings.slidesToShow && <Arrows slider={slider} />}
-    </div>
+  return (
+    <ResponsiveContainer>
+      {({ parentWidth }) =>
+        parentWidth ? (
+          <div
+            className="cards-carousel"
+            style={{ width: `${parentWidth}px`, margin: '0 auto' }}
+          >
+            <Slider {...settings} ref={slider}>
+              {items.map((item, index) => (
+                <UniversalCard
+                  key={`card-${block}-${index}`}
+                  {...rest}
+                  block={block}
+                  item={item}
+                />
+              ))}
+            </Slider>
+            {items.length > settings.slidesToShow && <Arrows slider={slider} />}
+          </div>
+        ) : null
+      }
+    </ResponsiveContainer>
   );
 };
 
