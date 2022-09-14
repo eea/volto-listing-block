@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isEqual } from 'lodash';
 import config from '@plone/volto/registry';
 
 const addTypeSelect = ({ intl, schema, extensionName, messages }) => {
@@ -36,4 +36,28 @@ export const enhanceSchema = ({ extensionName, messages }) => ({
     : cloneDeep(originalSchema);
 
   return addTypeSelect({ schema, intl, extensionName, messages });
+};
+
+export const applySchemaDefaults = (schema, props) => {
+  const { data } = props;
+  const objectSchema = typeof schema === 'function' ? schema(props) : schema;
+  const initialData = {
+    ...Object.keys(objectSchema.properties).reduce(
+      (accumulator, currentField) =>
+        objectSchema.properties[currentField].default
+          ? {
+              ...accumulator,
+              [currentField]: objectSchema.properties[currentField].default,
+            }
+          : accumulator,
+      {},
+    ),
+    ...data,
+  };
+
+  Object.keys(initialData).forEach((k) => {
+    if (!isEqual(initialData[k], data?.[k])) {
+      // onChangeField(k, initialData[k]);
+    }
+  });
 };

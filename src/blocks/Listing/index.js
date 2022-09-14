@@ -24,7 +24,7 @@ const applyConfig = (config) => {
     {
       id: 'summary',
       isDefault: false,
-      title: 'Summary',
+      title: 'Item listing',
       template: CustomSummaryListingBlockTemplate,
       schemaEnhancer: CustomSummaryListingBlockTemplate.schemaEnhancer,
     },

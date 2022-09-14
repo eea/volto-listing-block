@@ -35,6 +35,7 @@ const ItemSchema = ({ formData }) => {
       hasDescription: {
         title: 'Description',
         type: 'boolean',
+        default: true,
       },
       maxDescription: {
         title: 'Description max lines',
@@ -48,6 +49,7 @@ const ItemSchema = ({ formData }) => {
       hasImage: {
         title: 'Image',
         type: 'boolean',
+        default: true,
       },
       imageOnRightSide: {
         title: 'Image on Right (Default is Left)',
