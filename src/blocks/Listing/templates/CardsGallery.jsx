@@ -95,4 +95,4 @@ export default CardsGallery;
 // import { Card } from 'semantic-ui-react';
 // import cx from 'classnames';
 // styles,
-// cardModel,
+// itemModel,

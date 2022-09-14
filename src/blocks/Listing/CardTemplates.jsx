@@ -11,10 +11,10 @@ import {
 } from '@eeacms/volto-listing-block/components/UniversalCard';
 
 const getStyles = (props) => {
-  const { cardModel = {} } = props;
+  const { itemModel = {} } = props;
   const res = {};
-  if (cardModel.maxDescription) {
-    res[`max-${cardModel.maxDescription}-lines`] = true;
+  if (itemModel.maxDescription) {
+    res[`max-${itemModel.maxDescription}-lines`] = true;
   }
   return res;
 };

@@ -8,11 +8,11 @@ import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
 import schemaEnhancer from './schema';
 
 const UniversalCard = (props) => {
-  const { cardModel = {}, styles, item, ...rest } = props;
+  const { itemModel = {}, styles, item, ...rest } = props;
   const extension = resolveExtension(
     '@type',
     config.blocks.blocksConfig.listing.extensions.cardTemplates,
-    cardModel,
+    itemModel,
   );
   // const CardTemplate = BasicCard;
   const CardTemplate = extension.view;
@@ -22,7 +22,7 @@ const UniversalCard = (props) => {
     <CardTemplate
       className={cx(classNames)}
       item={new Item(item)}
-      cardModel={cardModel}
+      itemModel={itemModel}
       {...rest}
     />
   );

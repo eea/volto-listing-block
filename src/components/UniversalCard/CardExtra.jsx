@@ -11,13 +11,13 @@ const getCallToAction = (item, options) => {
     : options.href?.[0]?.['@id'] || item['@id'];
 };
 
-const CallToAction = ({ item, cardModel, styles }) => (
+const CallToAction = ({ item, itemModel, styles }) => (
   <Button
     as="a"
-    href={getCallToAction(item, cardModel.callToAction)}
+    href={getCallToAction(item, itemModel.callToAction)}
     className={styles?.theme ? ' inverted' : ''}
   >
-    {cardModel.callToAction.label || 'Read more'}
+    {itemModel.callToAction.label || 'Read more'}
   </Button>
 );
 
@@ -27,16 +27,16 @@ const Tags = ({ item }) => {
     : null;
 };
 
-const CardExtra = ({ item, cardModel = {}, ...rest }) => {
-  const showCallToAction = cardModel?.callToAction?.enable;
-  const showTags = cardModel.hasTags;
+const CardExtra = ({ item, itemModel = {}, ...rest }) => {
+  const showCallToAction = itemModel?.callToAction?.enable;
+  const showTags = itemModel.hasTags;
   const show = showCallToAction || showTags;
 
   return show ? (
     <UiCard.Content extra>
-      {showTags && <Tags item={item} cardModel={cardModel} {...rest} />}
+      {showTags && <Tags item={item} itemModel={itemModel} {...rest} />}
       {showCallToAction && (
-        <CallToAction item={item} cardModel={cardModel} {...rest} />
+        <CallToAction item={item} itemModel={itemModel} {...rest} />
       )}
     </UiCard.Content>
   ) : null;

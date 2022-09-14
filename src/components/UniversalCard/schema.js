@@ -15,7 +15,7 @@ const CallToActionSchema = ({ formData }) => {
         id: 'default',
         fields: [
           'enable',
-          ...(formData.cardModel?.callToAction?.enable
+          ...(formData.itemModel?.callToAction?.enable
             ? [
                 'label',
                 formData['@type'] === 'listing' ? 'urlTemplate' : 'href',
@@ -61,7 +61,7 @@ const CardSchema = ({ formData }) => {
         fields: [
           'hasDate',
           'hasDescription',
-          ...(formData?.cardModel?.hasDescription ? ['maxDescription'] : []),
+          ...(formData?.itemModel?.hasDescription ? ['maxDescription'] : []),
           'hasMetaType',
           'hasLabel',
           'hasTags',
@@ -118,12 +118,12 @@ export default function universalCardSchemaEnhancer(props) {
       {
         id: 'cardDesigner',
         title: 'Card',
-        fields: ['cardModel'],
+        fields: ['itemModel'],
       },
     ],
     properties: {
       ...schema.properties,
-      cardModel: {
+      itemModel: {
         title: 'Card model',
         widget: 'object',
         schema: enhancer({

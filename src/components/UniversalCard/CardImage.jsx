@@ -5,10 +5,10 @@ import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
 
 const getLabel = (props) => {
   // { text: 'new', side: 'left', color: 'green' }
-  const { item, cardModel = {} } = props;
+  const { item, itemModel = {} } = props;
   const text = item.isNew ? 'New' : item.isExpired ? 'Archived' : null;
 
-  return cardModel?.hasLabel && text
+  return itemModel?.hasLabel && text
     ? {
         text,
         side: 'left',

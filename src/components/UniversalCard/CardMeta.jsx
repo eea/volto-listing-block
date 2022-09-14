@@ -4,11 +4,11 @@ import config from '@plone/volto/registry';
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
 
 const CardMeta = (props) => {
-  const { item, cardModel = {}, head_title } = props;
+  const { item, itemModel = {}, head_title } = props;
   const { EffectiveDate } = item;
   const locale = config.settings.dateLocale || 'en-gb';
-  const showDate = cardModel?.hasDate && EffectiveDate !== 'None';
-  const showMeta = !!(head_title || (cardModel?.hasMetaType && item['@type']));
+  const showDate = itemModel?.hasDate && EffectiveDate !== 'None';
+  const showMeta = !!(head_title || (itemModel?.hasMetaType && item['@type']));
   const show = showDate || showMeta;
 
   return show ? (
