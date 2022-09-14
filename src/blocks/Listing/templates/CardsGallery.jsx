@@ -4,19 +4,12 @@ import React from 'react';
 import { UniversalCard } from '@eeacms/volto-listing-block';
 import config from '@plone/volto/registry';
 
-// import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
-// import { ConditionalLink } from '@plone/volto/components';
-// import { Card } from 'semantic-ui-react';
-// import cx from 'classnames';
-
 const CardsGallery = ({
   items,
   gridSize,
   isEditMode,
   hasDate,
   hasDescription,
-  // styles,
-  // cardModel,
   ...rest
 }) => {
   moment.locale(config.settings.dateLocale);
@@ -91,3 +84,10 @@ export default CardsGallery;
 //   {makeImage(item)}
 //   {makeTextBody(item)}
 // </Card>
+
+// import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
+// import { ConditionalLink } from '@plone/volto/components';
+// import { Card } from 'semantic-ui-react';
+// import cx from 'classnames';
+// styles,
+// cardModel,

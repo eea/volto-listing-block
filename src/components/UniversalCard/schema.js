@@ -61,7 +61,7 @@ const CardSchema = ({ formData }) => {
         fields: [
           'hasDate',
           'hasDescription',
-          'maxDescription',
+          ...(formData?.cardModel?.hasDescription ? ['maxDescription'] : []),
           'hasMetaType',
           'hasLabel',
           'hasTags',
