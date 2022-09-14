@@ -28,7 +28,12 @@ const CardsGallery = ({
 
 CardsGallery.schemaEnhancer = (args) => {
   const schema = UniversalCard.schemaEnhancer(args);
-  schema.fieldsets[0].fields.push('gridSize');
+  // schema.fieldsets[0].fields.push('gridSize');
+  schema.fieldsets.splice(1, 0, {
+    id: 'cardsGallery',
+    title: 'Gallery',
+    fields: ['gridSize'],
+  });
 
   schema.properties = {
     ...schema.properties,

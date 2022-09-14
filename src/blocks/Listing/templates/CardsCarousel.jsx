@@ -115,16 +115,15 @@ const CardsCarousel = ({ block, items, ...rest }) => {
 CardsCarousel.schemaEnhancer = (args) => {
   const schema = UniversalCard.schemaEnhancer(args);
 
+  schema.fieldsets.splice(1, 0, {
+    id: 'carousel',
+    title: 'Carousel',
+    fields: ['slidesToShow', 'slidesToScroll'],
+  });
+
   return {
     ...schema,
-    fieldsets: [
-      ...schema.fieldsets,
-      {
-        id: 'carousel',
-        title: 'Carousel',
-        fields: ['slidesToShow', 'slidesToScroll'],
-      },
-    ],
+    // fieldsets: [...schema.fieldsets, ,],
     properties: {
       ...schema.properties,
       slidesToShow: {

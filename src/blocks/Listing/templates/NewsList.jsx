@@ -53,7 +53,11 @@ const CustomNewsListTemplate = ({
 };
 
 CustomNewsListTemplate.schemaEnhancer = ({ schema, formData, intl }) => {
-  schema.fieldsets[0].fields = [...schema.fieldsets[0].fields, 'hasDate'];
+  schema.fieldsets.splice(1, 0, {
+    id: 'newsList',
+    title: 'News item',
+    fields: ['hasDate', 'hasDescription'],
+  });
 
   schema.properties = {
     ...schema.properties,
