@@ -19,6 +19,24 @@ const applyConfig = (config) => {
 
   const blacklist = ['summary'];
 
+  const { schemaEnhancer } = listing;
+
+  listing.schemaEnhancer = (props) => {
+    const schema = schemaEnhancer ? schemaEnhancer(props) : props.schema;
+    //
+    // move querystring to its own fieldset;
+    schema.fieldsets[0].fields = schema.fieldsets[0].fields.filter(
+      (f) => f !== 'querystring',
+    );
+    schema.fieldsets.splice(1, 0, {
+      id: 'querystring',
+      title: 'Query',
+      fields: ['querystring'],
+    });
+
+    return schema;
+  };
+
   listing.variations = [
     ...listing.variations.filter(({ id }) => blacklist.indexOf(id) === -1),
     {
