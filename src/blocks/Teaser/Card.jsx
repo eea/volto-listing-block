@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { omit } from 'lodash';
 import { Message } from 'semantic-ui-react';
 import { defineMessages, useIntl } from 'react-intl';
-import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
+
 import { UniversalCard } from '@eeacms/volto-listing-block';
-import { omit } from 'lodash';
+
+import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
 
 const messages = defineMessages({
   PleaseChooseContent: {
@@ -15,13 +17,14 @@ const messages = defineMessages({
 });
 
 const TeaserCardTemplate = (props) => {
-  const { data, isEditMode } = props;
+  const { data, isEditMode, ...rest } = props;
   const intl = useIntl();
   const item = data.href?.[0];
 
   return item ? (
     <UniversalCard
       isEditMode={isEditMode}
+      {...rest}
       {...data}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
       cardModel={data.cardModel || {}}

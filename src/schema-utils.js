@@ -61,3 +61,16 @@ export const applySchemaDefaults = (schema, props) => {
     }
   });
 };
+
+export const getVoltoStyles = (props) => {
+  const styles = props ? props : {};
+  const output = {};
+  for (const [key, value] of Object.entries(styles)) {
+    if (styles[key] === true) {
+      output[key] = key;
+    } else {
+      output[value] = value;
+    }
+  }
+  return output;
+};
