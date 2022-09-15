@@ -23,6 +23,7 @@ const UniversalCard = (props) => {
       className={cx(classNames)}
       item={new Item(item)}
       itemModel={itemModel}
+      styles={styles}
       {...rest}
     />
   );
