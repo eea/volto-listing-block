@@ -15,7 +15,13 @@ const CallToAction = ({ item, itemModel, styles }) => (
   <Button
     as="a"
     href={getCallToAction(item, itemModel.callToAction)}
-    className={styles?.theme ? ' inverted' : ''}
+    className={
+      styles?.theme
+        ? styles.inverted
+          ? styles.theme + ' inverted'
+          : 'inverted'
+        : 'tertiary inverted'
+    }
   >
     {itemModel.callToAction.label || 'Read more'}
   </Button>
