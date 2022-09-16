@@ -5,6 +5,7 @@ import { UniversalCard } from '@eeacms/volto-listing-block';
 import config from '@plone/volto/registry';
 
 const CardsGallery = ({
+  block,
   items,
   gridSize,
   isEditMode,
@@ -18,7 +19,7 @@ const CardsGallery = ({
       {items && items.length > 0 && (
         <div className={`ui fluid ${gridSize || ''} cards`}>
           {items.map((item, i) => (
-            <UniversalCard key={i} {...rest} item={item} className="centered" />
+            <UniversalCard key={i} {...rest} block={block} item={item} />
           ))}
         </div>
       )}
