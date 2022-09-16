@@ -28,8 +28,8 @@ const BasicCard = (props) => {
         <CardMeta {...props} />
         <CardTitle {...props} />
         <CardDescription {...props} />
-        <CardExtra {...props} />
       </UiCard.Content>
+      <CardExtra {...props} />
     </UiCard>
   );
 };
