@@ -48,35 +48,40 @@ const BasicItem = (props) => {
         className,
       )}
     >
-      <ConditionalLink item={item} condition={!isEditMode}>
-        {hasImage ? (
-          imageOnRightSide ? (
-            <>
+      <div className="wrapper">
+        <div className="slot-top">
+          <ConditionalLink item={item} condition={!isEditMode}>
+            {hasImage ? (
+              imageOnRightSide ? (
+                <>
+                  <BodyText
+                    item={item}
+                    hasDescription={hasDescription}
+                    hasDate={hasDate}
+                  />
+                  <PreviewImage item={item} style={{ marginLeft: 'auto' }} />
+                </>
+              ) : (
+                <>
+                  <PreviewImage item={item} />
+                  <BodyText
+                    item={item}
+                    hasDescription={hasDescription}
+                    hasDate={hasDate}
+                  />
+                </>
+              )
+            ) : (
               <BodyText
                 item={item}
                 hasDescription={hasDescription}
                 hasDate={hasDate}
               />
-              <PreviewImage item={item} style={{ marginLeft: 'auto' }} />
-            </>
-          ) : (
-            <>
-              <PreviewImage item={item} />
-              <BodyText
-                item={item}
-                hasDescription={hasDescription}
-                hasDate={hasDate}
-              />
-            </>
-          )
-        ) : (
-          <BodyText
-            item={item}
-            hasDescription={hasDescription}
-            hasDate={hasDate}
-          />
-        )}
-      </ConditionalLink>
+            )}
+          </ConditionalLink>
+        </div>
+        <div className="slot-bottom">{item?.extra}</div>
+      </div>
     </div>
   );
 };
