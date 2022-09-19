@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-listing-block",
-  "version": "0.4.4",
+  "version": "0.5.0",
   "description": "@eeacms/volto-listing-block: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -16,6 +16,9 @@
     "type": "git",
     "url": "git@github.com:eea/volto-listing-block.git"
   },
+  "addons": [
+    "volto-slate"
+  ],
   "dependencies": {
     "react-slick": "0.29.0",
     "slick-carousel": "1.8.1",
