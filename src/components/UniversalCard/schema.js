@@ -144,8 +144,8 @@ export default function universalCardSchemaEnhancer(props) {
 
   const styledSchema = enhanceStylingSchema({
     ...props,
-    schema: baseSchema,
-    // schema: baseSchema.properties.styles.schema,
+    // schema: baseSchema,
+    schema: baseSchema.properties.styles.schema,
     formData: props.formData,
   });
 
