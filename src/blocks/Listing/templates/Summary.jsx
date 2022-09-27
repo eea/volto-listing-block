@@ -7,7 +7,6 @@ import UniversalItem from '@eeacms/volto-listing-block/components/UniversalItem/
 import { flattenToAppURL } from '@plone/volto/helpers';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
-import messages from '@eeacms/volto-listing-block/messages';
 
 const SummaryListing = (props) => {
   const { block, items, linkTitle, linkHref, isEditMode } = props;

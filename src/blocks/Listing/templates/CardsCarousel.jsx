@@ -4,7 +4,7 @@ import loadable from '@loadable/component';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
-import { ALIGN_VALUE_MAP, CardStylingSchemaEnhancer } from '../schema';
+import { CardStylingSchemaEnhancer } from '../schema';
 
 const Slider = loadable(() => import('react-slick'));
 
