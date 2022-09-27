@@ -111,9 +111,13 @@ export const enhanceStylingSchema = ({
 
   // TODO: not needed when we will use latest Volto
   const variationStyleSchema = activeVariation?.stylesSchema;
-  schema = variationStyleSchema
-    ? variationStyleSchema({ schema: cloneDeep(schema), formData, intl })
-    : schema;
+  if (variationStyleSchema) {
+    schema.properties.styles.schema = variationStyleSchema({
+      schema: cloneDeep(schema.properties.styles.schema),
+      formData,
+      intl,
+    });
+  }
   // end TODO
 
   const extensionType = '@type'; // the attribute name that's stored in the block data
@@ -124,9 +128,13 @@ export const enhanceStylingSchema = ({
   );
 
   const stylingSchema = activeItem?.['stylesSchema'];
-  schema = stylingSchema
-    ? stylingSchema({ schema: cloneDeep(schema), formData, intl })
-    : schema;
+  if (stylingSchema) {
+    schema.properties.styles.schema = stylingSchema({
+      schema: cloneDeep(schema.properties.styles.schema),
+      formData,
+      intl,
+    });
+  }
 
   return schema;
 };

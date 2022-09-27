@@ -61,7 +61,8 @@ export const SearchItemLayout = (props) => {
   return <BasicItem {...props} />;
 };
 SearchItemLayout.styleSchemaEnhancer = ({ schema, intl }) => {
-  const styleSchema = schema.properties.styles.schema;
+  // const styleSchema = schema.properties.styles.schema;
+  const styleSchema = schema;
   styleSchema.fieldsets[0].fields.push('rounded');
   styleSchema.properties = {
     ...styleSchema.properties,

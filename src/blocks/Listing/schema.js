@@ -12,7 +12,8 @@ export const ALIGN_VALUE_MAP = [
 ];
 
 export const CardStylingSchemaEnhancer = ({ schema }) => {
-  const styleSchema = schema.properties.styles.schema;
+  const styleSchema = schema;
+  // const styleSchema = schema.properties.styles.schema;
   styleSchema.fieldsets[0].fields.push('text_align');
   styleSchema.properties = {
     ...styleSchema.properties,
