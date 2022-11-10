@@ -50,11 +50,33 @@ export const DefaultCardModelSchema = {
   fieldsets: [
     {
       id: 'default',
-      title: 'Default',
+      title: 'Settings',
       fields: [],
     },
+    {
+      id: 'styling',
+      title: 'Styling',
+      fields: ['styles'],
+    },
   ],
-  properties: {},
+  properties: {
+    styles: {
+      widget: 'object',
+      title: 'Card styling',
+      schema: {
+        title: 'Card Styling',
+        fieldsets: [
+          {
+            id: 'default',
+            title: 'Default',
+            fields: [],
+          },
+        ],
+        properties: {},
+        required: [],
+      },
+    },
+  },
   required: [],
 };
 

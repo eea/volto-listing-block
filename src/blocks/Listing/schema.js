@@ -209,11 +209,34 @@ export const setItemModelSchema = (args) => {
   return schema;
 };
 
-export const setCardStylingSchema = ({ schema }) => {
-  const styleSchema = schema.properties.styles.schema;
-  styleSchema.fieldsets[0].fields.push('text_align');
+export const setCardStylingSchema = ({ schema, intl }) => {
+  // populate the 'styling' fieldset of the cards
+  const itemModelSchema = schema.properties.itemModel;
+  const styleSchema = itemModelSchema.schema.properties.styles.schema;
+  const fieldset = styleSchema.fieldsets.find(({ id }) => id === 'default');
+  fieldset.fields.push('theme', 'inverted', 'rounded', 'text_align');
   styleSchema.properties = {
     ...styleSchema.properties,
+    theme: {
+      title: intl.formatMessage(messages.Theme),
+      description: intl.formatMessage(messages.ThemeHelp),
+      choices: [
+        ['', intl.formatMessage(messages.ThemeDefault)],
+        ['primary', intl.formatMessage(messages.ThemePrimary)],
+        ['secondary', intl.formatMessage(messages.ThemeSecondary)],
+        ['tertiary', intl.formatMessage(messages.ThemeTertiary)],
+      ],
+    },
+    inverted: {
+      title: intl.formatMessage(messages.Inverted),
+      description: intl.formatMessage(messages.InvertedHelp),
+      type: 'boolean',
+    },
+    rounded: {
+      title: intl.formatMessage(messages.Rounded),
+      description: intl.formatMessage(messages.RoundedHelp),
+      type: 'boolean',
+    },
     text_align: {
       title: 'Text align',
       widget: 'style_text_align',
