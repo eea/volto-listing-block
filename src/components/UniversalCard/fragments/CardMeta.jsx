@@ -11,6 +11,8 @@ const CardMeta = (props) => {
   const showMeta = !!(head_title || (itemModel?.hasMetaType && item['@type']));
   const show = showDate || showMeta;
 
+  // TODO: <EEAFormattedDate data={EffectiveDate} />
+
   return show ? (
     <UiCard.Meta>
       {showMeta && (
