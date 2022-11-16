@@ -1,4 +1,4 @@
-import { compose } from 'redux';
+import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 import { addStyling } from '@plone/volto/helpers';
 
 import TeaserCardTemplate from './Card';
@@ -13,7 +13,7 @@ export default (config) => {
         isDefault: true,
         title: 'Card (top image)',
         template: TeaserCardTemplate,
-        schemaEnhancer: compose(
+        schemaEnhancer: composeSchema(
           addStyling,
           adjustTeaserSchema,
           setCardStylingSchema,
