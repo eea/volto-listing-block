@@ -203,6 +203,15 @@ each(range(5), {
   }
 }
 
+@media only screen and (max-width: (@largestMobileScreen)) {
+  .listing-item {
+    .image-wrapper,
+    .image-wrapper .ui.image {
+      margin: 0;
+    }
+  }
+}
+
 // Search item listing
 
 .result-item .listing-body {

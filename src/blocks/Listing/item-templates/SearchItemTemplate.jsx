@@ -9,11 +9,7 @@ const BodyText = ({ item, hasDescription }) => {
         <p className={'listing-description'}>{item.description}</p>
       )}
 
-      {item?.extra && (
-        <div className="slot-bottom" style={{ marginTop: 'auto' }}>
-          {item?.extra}
-        </div>
-      )}
+      {item?.extra && <div className="slot-bottom">{item?.extra}</div>}
     </div>
   );
 };
