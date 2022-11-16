@@ -1,4 +1,4 @@
-import { compose } from 'redux';
+import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 import { addStyling } from '@plone/volto/helpers';
 
 import ItemEdit from './Edit';
@@ -23,7 +23,7 @@ export default (config) => {
       addPermission: [],
       view: [],
     },
-    schemaEnhancer: compose(addStyling, setItemStyling),
+    schemaEnhancer: composeSchema(addStyling, setItemStyling),
   };
 
   config.settings.blocksWithFootnotesSupport = {
