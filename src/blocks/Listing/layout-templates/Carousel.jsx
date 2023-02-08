@@ -64,6 +64,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   const [settings] = React.useState({
     dots: true,
     infinite: true,
+    centerMode: true,
     arrows: false,
     lazyLoad: 'progressive',
     slidesToShow: getSlidesToShow(items, rest.slidesToShow || 4),
