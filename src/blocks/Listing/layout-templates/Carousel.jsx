@@ -78,6 +78,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
         breakpoint: tabletBreakpoint,
         settings: {
           slidesToShow: 3,
+          centerMode: false,
           slidesToScroll: 1,
           arrows: false,
         },
@@ -85,6 +86,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
       {
         breakpoint: mobileBreakpoint,
         settings: {
+          centerMode: false,
           slidesToShow: 1,
           slidesToScroll: 1,
           arrows: false,
