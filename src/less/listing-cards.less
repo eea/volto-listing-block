@@ -213,11 +213,14 @@ each(range(5), {
   }
 
   &.left-image-card {
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 50% 50%;
   }
 
   &.right-image-card {
-    flex-direction: row-reverse;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    direction: rtl;
   }
 }
 
