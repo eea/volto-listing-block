@@ -24,7 +24,6 @@ const getStyles = (props) => {
 
 const BasicCard = (props) => {
   const { className } = props;
-  console.log(props);
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
       <CardImage {...props} />
