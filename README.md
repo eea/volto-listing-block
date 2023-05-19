@@ -24,6 +24,8 @@ generic component governed by a designated "itemModel".
 
 It provides several views and integrates with the Teaser Grid.
 
+![Listing Block](https://github.com/eea/volto-listing-block/raw/docs/docs/volto-listing-block.gif)
+
 ## Upgrade
 
 ### Upgrading to 1.x
