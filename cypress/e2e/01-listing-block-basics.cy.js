@@ -1,5 +1,4 @@
 import { slateBeforeEach, slateAfterEach } from '../support/e2e';
-import '../support/commands';
 
 describe('Blocks Tests', () => {
   beforeEach(slateBeforeEach);
@@ -7,6 +6,8 @@ describe('Blocks Tests', () => {
 
   it('Add Block: Empty', () => {
     // Change page title
+    cy.get('[contenteditable=true]').first().click();
+
     cy.get('[contenteditable=true]').first().clear();
 
     cy.get('[contenteditable=true]').first().type('Listing Block Demo');
@@ -43,6 +44,8 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
 
+    cy.get('[contenteditable=true]').first().click();
+
     cy.get('[contenteditable=true]').first().clear();
 
     cy.get('[contenteditable=true]').first().type('Page with Description');
@@ -59,9 +62,7 @@ describe('Blocks Tests', () => {
     cy.get('.button.description').click();
 
     // Add some text to the description block
-    cy.get('.documentDescription div[role="textbox"]')
-      .click()
-      .type('lorem ipsum dolor sit amet');
+    cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
 
     cy.get('#toolbar-save').click();
 
