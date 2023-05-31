@@ -1,13 +1,9 @@
-import { cloneDeep } from 'lodash';
-import config from '@plone/volto/registry';
 import {
   addTypeSelect,
   schemaEnhancerFactory,
-  DefaultCardModelSchema,
   getVoltoStyles,
   composeSchema,
 } from './schema-utils';
-import { formatDate } from '../../../../omelette/src/helpers/Utils/Date';
 
 jest.mock('@plone/volto/registry', () => ({
   blocks: {
