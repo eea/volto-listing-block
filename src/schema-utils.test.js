@@ -12,7 +12,11 @@ jest.mock('@plone/volto/registry', () => ({
         extensions: {
           myExtension: [
             { id: 'default', title: 'Default', isDefault: true },
-            { id: 'custom', title: 'Custom' },
+            {
+              id: 'custom',
+              title: 'Custom',
+              schemaEnhancer: ({ schema }) => ({ ...schema, custom: true }),
+            },
           ],
         },
       },
@@ -57,6 +61,20 @@ describe('schemaEnhancerFactory', () => {
     });
     expect(schema).toEqual({ properties: {}, fieldsets: [] });
   });
+
+  it('returns schema with custom extension when custom is selected', () => {
+    const enhancer = schemaEnhancerFactory({
+      extensionName: 'myExtension',
+      messages,
+    });
+    const schema = enhancer({
+      schema: { properties: {}, fieldsets: [] },
+      formData: { itemModel: { '@type': 'custom' } },
+      intl,
+    });
+
+    expect(schema).toEqual({ properties: {}, fieldsets: [], custom: true });
+  });
 });
 
 describe('getVoltoStyles', () => {
@@ -71,6 +89,11 @@ describe('getVoltoStyles', () => {
       red: 'red',
       background: 'background',
     });
+  });
+
+  it('return output object with no style keys', () => {
+    const output = getVoltoStyles();
+    expect(output).toEqual({});
   });
 });
 
@@ -87,6 +110,20 @@ describe('composeSchema', () => {
       fieldsets: [],
       enhancer1: true,
       enhancer2: true,
+    });
+  });
+
+  it('return schema with one schema enhancer', () => {
+    const enhancer1 = ({ schema }) => ({ ...schema, enhancer1: true });
+    const enhancer2 = undefined;
+
+    const composer = composeSchema(enhancer1, enhancer2);
+    const schema = composer({ schema: { properties: {}, fieldsets: [] } });
+
+    expect(schema).toEqual({
+      properties: {},
+      fieldsets: [],
+      enhancer1: true,
     });
   });
 });
