@@ -65,13 +65,4 @@ function PreviewImage(props) {
   );
 }
 
-// PreviewImage.propTypes = {
-//   size: PropTypes.string,
-//   item: PropTypes.shape({
-//     '@id': PropTypes.string.isRequired,
-//     image_field: PropTypes.string,
-//     title: PropTypes.string.isRequired,
-//   }),
-// };
-
 export default PreviewImage;

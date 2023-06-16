@@ -9,44 +9,6 @@ const ALIGN_INFO_MAP = {
   center: [alignCenterSVG, 'Center'],
 };
 
-// export const setBasicStylingSchema = (args) => {
-//   const { schema, intl } = args;
-//   schema.properties.styles.schema = {
-//     fieldsets: [
-//       {
-//         id: 'styling',
-//         title: 'Styling',
-//         fields: ['theme', 'inverted', 'rounded'],
-//       },
-//     ],
-//     properties: {
-//       theme: {
-//         title: intl.formatMessage(messages.Theme),
-//         description: intl.formatMessage(messages.ThemeHelp),
-//         choices: [
-//           ['', intl.formatMessage(messages.ThemeDefault)],
-//           ['primary', intl.formatMessage(messages.ThemePrimary)],
-//           ['secondary', intl.formatMessage(messages.ThemeSecondary)],
-//           ['tertiary', intl.formatMessage(messages.ThemeTertiary)],
-//         ],
-//       },
-//       inverted: {
-//         title: intl.formatMessage(messages.Inverted),
-//         description: intl.formatMessage(messages.InvertedHelp),
-//         type: 'boolean',
-//       },
-//       rounded: {
-//         title: intl.formatMessage(messages.Rounded),
-//         description: intl.formatMessage(messages.RoundedHelp),
-//         type: 'boolean',
-//       },
-//     },
-//     required: [],
-//   };
-
-//   return schema;
-// };
-
 const CallToActionSchema = ({ formData }) => {
   return {
     fieldsets: [

@@ -1,4 +1,3 @@
-// import { addStyling } from '@plone/volto/helpers';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 
