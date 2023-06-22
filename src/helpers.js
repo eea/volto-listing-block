@@ -26,7 +26,7 @@ export function getImageScaleParams(image, size) {
   if (isInternalURL(image['@id'])) {
     if (image?.image_scales?.[image?.image_field]) {
       const scale =
-        image.image_scales[image.image_field]?.[0].scales[imageScale] ||
+        image.image_scales[image.image_field]?.[0].scales?.[imageScale] ||
         image.image_scales[image.image_field]?.[0];
 
       const download = flattenToAppURL(`${image['@id']}/${scale?.download}`);
