@@ -29,22 +29,27 @@ export function getImageScaleParams(image, size) {
         image.image_scales[image.image_field]?.[0].scales[imageScale] ||
         image.image_scales[image.image_field]?.[0];
 
-      const url = flattenToAppURL(`${image['@id']}/${scale?.download}`);
+      const download = flattenToAppURL(`${image['@id']}/${scale?.download}`);
       const width = scale?.width;
       const height = scale?.height;
 
       return {
-        url,
+        download,
         width,
         height,
       };
+      //fallback if we do not have scales
     } else {
-      return flattenToAppURL(
-        `${image['@id']}/@@images/${image.image_field}/${imageScale}`,
-      );
+      return {
+        download: flattenToAppURL(
+          `${image['@id']}/@@images/${
+            image.image_field || 'preview_image'
+          }/${imageScale}`,
+        ),
+      };
     }
   } else {
-    return image['@id'];
+    return { download: image['@id'] };
   }
 }
 

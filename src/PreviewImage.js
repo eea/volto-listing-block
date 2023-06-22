@@ -45,7 +45,7 @@ function PreviewImage(props) {
 
   return (
     <Image
-      src={preview_image_url || params.url}
+      src={preview_image_url || params?.download}
       alt={item.title}
       {...rest}
       label={
