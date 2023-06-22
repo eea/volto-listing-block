@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { getFieldURL } from '@eeacms/volto-listing-block/helpers';
+import { getFieldURL, setImageSize } from '@eeacms/volto-listing-block/helpers';
+import { getContent } from '@plone/volto/actions';
+import { flattenToAppURL } from '@plone/volto/helpers';
 
 function Item({
   assetType,
@@ -15,17 +19,36 @@ function Item({
   imageSize = 'big',
   meta,
   mode = 'view',
+  block,
+  image: imageUrl,
   ...props
 }) {
-  const image = getFieldURL(props.image);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (imageUrl) {
+      dispatch(getContent(flattenToAppURL(imageUrl), null, block));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [imageUrl]);
+
+  const imageParams = useSelector(
+    (state) => state.content.subrequests[block]?.data?.image,
+  );
+
+  const scaledImage = setImageSize(imageUrl, imageParams, imageSize);
+
+  const image = getFieldURL(imageUrl);
   return (
     <UiItem.Group unstackable className="row">
       <UiItem className={cx(theme)}>
         {assetType === 'image' && image && (
           <UiItem.Image
-            src={`${image}/@@images/image/${imageSize}`}
+            src={flattenToAppURL(scaledImage?.download)}
             className={cx('ui', imageSize, verticalAlign, 'aligned')}
             alt={header || 'Item image'}
+            width={scaledImage?.width}
+            height={scaledImage?.height}
           />
         )}
         {assetType === 'icon' && icon && (
