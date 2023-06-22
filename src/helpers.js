@@ -1,6 +1,7 @@
 import isArray from 'lodash/isArray';
 import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
+import config from '@plone/volto/registry';
 import { isInternalURL, flattenToAppURL } from '@plone/volto/helpers';
 
 export const getFieldURL = (data) => {
@@ -19,7 +20,9 @@ export const getFieldURL = (data) => {
 };
 
 export function getImageScaleParams(image, size) {
-  const imageScale = size || 'preview';
+  const imageScale =
+    config.blocks.blocksConfig['teaser'].imageScale || size || 'preview'; //listings use preview scale
+
   if (isInternalURL(image['@id'])) {
     if (image?.image_scales?.[image?.image_field]) {
       const scale =
