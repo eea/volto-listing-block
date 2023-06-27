@@ -22,34 +22,35 @@ export const getFieldURL = (data) => {
 export function getImageScaleParams(image, size) {
   const imageScale =
     config.blocks.blocksConfig['teaser'].imageScale || size || 'preview'; //listings use preview scale
+  if (image) {
+    if (isInternalURL(image['@id'])) {
+      if (image?.image_scales?.[image?.image_field]) {
+        const scale =
+          image.image_scales[image.image_field]?.[0].scales?.[imageScale] ||
+          image.image_scales[image.image_field]?.[0];
 
-  if (isInternalURL(image['@id'])) {
-    if (image?.image_scales?.[image?.image_field]) {
-      const scale =
-        image.image_scales[image.image_field]?.[0].scales?.[imageScale] ||
-        image.image_scales[image.image_field]?.[0];
+        const download = flattenToAppURL(`${image['@id']}/${scale?.download}`);
+        const width = scale?.width;
+        const height = scale?.height;
 
-      const download = flattenToAppURL(`${image['@id']}/${scale?.download}`);
-      const width = scale?.width;
-      const height = scale?.height;
-
-      return {
-        download,
-        width,
-        height,
-      };
-      //fallback if we do not have scales
+        return {
+          download,
+          width,
+          height,
+        };
+        //fallback if we do not have scales
+      } else {
+        return {
+          download: flattenToAppURL(
+            `${image['@id']}/@@images/${
+              image.image_field || 'preview_image'
+            }/${imageScale}`,
+          ),
+        };
+      }
     } else {
-      return {
-        download: flattenToAppURL(
-          `${image['@id']}/@@images/${
-            image.image_field || 'preview_image'
-          }/${imageScale}`,
-        ),
-      };
+      return { download: image['@id'] };
     }
-  } else {
-    return { download: image['@id'] };
   }
 }
 
