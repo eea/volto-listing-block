@@ -35,6 +35,7 @@ export default ({ data }) => {
       image: {
         title: 'Image',
         widget: 'attachedimage',
+        selectedItemAttrs: ['image_field', 'image_scales', '@type'],
       },
       imageSize: {
         title: 'Image size',

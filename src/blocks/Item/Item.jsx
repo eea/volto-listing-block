@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { getFieldURL, setImageSize } from '@eeacms/volto-listing-block/helpers';
-import { getContent } from '@plone/volto/actions';
+import {
+  getFieldURL,
+  getImageScaleParams,
+} from '@eeacms/volto-listing-block/helpers';
+
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 function Item({
@@ -23,20 +24,7 @@ function Item({
   image: imageUrl,
   ...props
 }) {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (imageUrl) {
-      dispatch(getContent(flattenToAppURL(imageUrl), null, block));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [imageUrl]);
-
-  const imageParams = useSelector(
-    (state) => state.content.subrequests[block]?.data?.image,
-  );
-
-  const scaledImage = setImageSize(imageUrl, imageParams, imageSize);
+  const scaledImage = getImageScaleParams(imageUrl, imageSize);
 
   const image = getFieldURL(imageUrl);
   return (
