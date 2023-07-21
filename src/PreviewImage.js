@@ -39,7 +39,7 @@ function PreviewImage(props) {
   } = props;
   const params = preview_image?.[0]
     ? getImageScaleParams(preview_image?.[0], size)
-    : item.image_field
+    : item
     ? getImageScaleParams(item, size)
     : DefaultImageSVG;
 
