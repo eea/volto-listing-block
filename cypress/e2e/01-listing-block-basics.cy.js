@@ -22,9 +22,23 @@ describe('Blocks Tests', () => {
       'listing',
     );
     cy.get('.button.listing').click({ force: true });
+    cy.get('#field-headline').click({ force: true }).type('Test Headline');
+    cy.get(
+      '.inline.field.field-wrapper-variation .ui.grid .react-select__value-container',
+    ).click();
+    cy.get('.react-select__option').contains('Listing').click();
+
+    cy.contains('Test Headline').click();
 
     cy.contains('Add criteria').click();
     cy.get('.react-select__menu').contains('Creator').click();
+
+    cy.get('.title').contains('Card').click();
+    cy.contains('Card (default)').click();
+    cy.contains('Image on left').click();
+    cy.get('.ui.attached.tabular.menu').contains('Styling').click();
+    cy.get('#field-objectPosition-5-styles-0-itemModel').click();
+    cy.get('.react-select__option').contains('right').click();
 
     // Save page
     cy.get('#toolbar-save').click();
@@ -63,7 +77,8 @@ describe('Blocks Tests', () => {
 
     // Add some text to the description block
     cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
-
+    cy.get('#sidebar-metadata #effective-date').click();
+    cy.get('tr td').contains(1).click({ force: true });
     cy.get('#toolbar-save').click();
 
     cy.visit('/cypress/my-page');
@@ -72,10 +87,79 @@ describe('Blocks Tests', () => {
     // The page view should contain our changes
     cy.contains('Listing Block Demo');
     cy.get('.block.listing');
-    cy.get('.listing-item').contains('Cypress');
-    cy.get('.listing-item .listing-body').contains('Page with Description');
-    cy.get('.listing-item .listing-body').contains(
-      'lorem ipsum dolor sit amet',
-    );
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.contains('Image on left').click();
+    cy.contains('Image on right').click();
+    cy.get('#toolbar-save').click();
+
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.contains('Image on right').click({ force: true });
+    cy.contains('Image Card').click();
+    cy.get('#toolbar-save').click();
+
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.contains('Image Card').click();
+    cy.contains('Listing Item').click();
+    cy.get('.inline.field.field-wrapper-hasDate-2-itemModel input').click({
+      force: true,
+    });
+    cy.get(
+      '.inline.field.field-wrapper-imageOnRightSide-6-itemModel input',
+    ).click({ force: true });
+    cy.get('#field-maxTitle-1-itemModel')
+      .click()
+      .type('{downArrow}{downArrow}');
+    cy.get('#field-maxDescription-4-itemModel')
+      .click()
+      .type('{downArrow}{downArrow}');
+    cy.get('#toolbar-save').click();
+
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
+      force: true,
+    });
+    cy.get('#toolbar-save').click();
+
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.contains('Listing Item').click();
+    cy.contains('Search Item').click();
+    cy.get('#toolbar-save').click();
+
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.contains('Search Item').click();
+    cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
+      force: true,
+    });
+    cy.get(
+      '.inline.field.field-wrapper-imageOnRightSide-6-itemModel input',
+    ).click({ force: true });
+    cy.get('#toolbar-save').click();
+
+    cy.get('.edit').click();
+    cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click();
+    cy.get('.title').contains('Card').click();
+    cy.contains('Search Item').click();
+    cy.contains('Simple Item').click();
+    cy.get('#toolbar-save').click();
   });
 });
