@@ -1,6 +1,7 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
 import { getFieldURL } from '@eeacms/volto-listing-block/helpers';
+import messages from '@eeacms/volto-listing-block/messages';
 
 function Item({
   assetType,
@@ -25,7 +26,7 @@ function Item({
           <UiItem.Image
             src={`${image}/@@images/image/${imageSize}`}
             className={cx('ui', imageSize, verticalAlign, 'aligned')}
-            alt={header || 'Item image'}
+            alt={header || intl.formatMessage(messages.ItemImage)}
           />
         )}
         {assetType === 'icon' && icon && (

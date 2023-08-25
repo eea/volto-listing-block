@@ -1,3 +1,4 @@
+import messages from '@eeacms/volto-listing-block/messages';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 
@@ -47,7 +48,7 @@ const applyConfig = (config) => {
     {
       id: 'summary',
       isDefault: false,
-      title: 'Listing',
+      title: intl.formatMessage(messages.Listing),
       template: Listing,
       schemaEnhancer: composeSchema(
         // addStyling,
@@ -58,7 +59,7 @@ const applyConfig = (config) => {
     {
       id: 'cardsCarousel',
       isDefault: false,
-      title: 'Carousel',
+      title: intl.formatMessage(messages.Carousel),
       template: Carousel,
       schemaEnhancer: composeSchema(
         // addStyling,
@@ -70,7 +71,7 @@ const applyConfig = (config) => {
     {
       id: 'cardsGallery', //  'customCardsGalleryVariationId'
       isDefault: false,
-      title: 'Gallery',
+      title: intl.formatMessage(messages.Gallery),
       template: Gallery,
       schemaEnhancer: composeSchema(
         // addStyling,
@@ -86,21 +87,21 @@ const applyConfig = (config) => {
       {
         id: 'card',
         isDefault: true,
-        title: 'Card (default)',
+        title: intl.formatMessage(messages.CardDefault),
         template: DefaultCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
       },
       {
         id: 'imageCard',
         isDefault: false,
-        title: 'Image Card',
+        title: intl.formatMessage(messages.ImageCard),
         template: ImageCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
       },
       {
         id: 'imageOnLeft',
         isDefault: false,
-        title: 'Image on left',
+        title: intl.formatMessage(messages.ImageOnLeft),
         template: LeftImageCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
         excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
@@ -108,7 +109,7 @@ const applyConfig = (config) => {
       {
         id: 'imageOnRight',
         isDefault: false,
-        title: 'Image on right',
+        title: intl.formatMessage(messages.ImageOnRight),
         template: RightImageCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
         excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
@@ -116,7 +117,7 @@ const applyConfig = (config) => {
       {
         id: 'item',
         isDefault: false,
-        title: 'Listing Item',
+        title: intl.formatMessage(messages.ListingItem),
         template: DefaultItemLayout,
         schemaEnhancer: composeSchema(setItemModelSchema, setCardStylingSchema),
         excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
@@ -124,7 +125,7 @@ const applyConfig = (config) => {
       {
         id: 'searchItem',
         isDefault: false,
-        title: 'Search Item',
+        title: intl.formatMessage(messages.SearchItem),
         template: SearchItemLayout,
         schemaEnhancer: composeSchema(setItemModelSchema, setCardStylingSchema),
         excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
@@ -132,7 +133,7 @@ const applyConfig = (config) => {
       {
         id: 'simpleItem',
         isDefault: false,
-        title: 'Simple Item',
+        title: intl.formatMessage(messages.SimpleItem),
         template: SimpleItemLayout,
         schemaEnhancer: composeSchema(
           setSimpleItemModelSchema,
@@ -156,7 +157,7 @@ const moveQueryToFieldset = ({ schema }) => {
   );
   schema.fieldsets.splice(1, 0, {
     id: 'querystring',
-    title: 'Query',
+    title: intl.formatMessage(messages.Query),
     fields: ['querystring'],
   });
 

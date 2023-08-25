@@ -1,439 +1,446 @@
+# Translation of volto.pot to Spanish
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2023-08-24T06:22:34.848Z\n"
-"Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
-"Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
-"MIME-Version: 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-20T18:38:33.091Z\n"
+"PO-Revision-Date: 2023-08-25 14:41-0400\n"
+"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>\n"
+"Language: es\n"
+"Language-Team: ES <LL@li.org>\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
-"Language-Code: en\n"
-"Language-Name: English\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Preferred-Encodings: utf-8\n"
+"MIME-Version: 1.0\n"
+"Language-Code: es\n"
+"Language-Name: Español\n"
 "Domain: volto\n"
+"X-Is-Fallback-For: es-ar es-bo es-cl es-co es-cr es-do es-ec es-es es-sv es-gt es-hn es-mx es-ni es-pa es-py es-pe es-pr es-us es-uy es-ve\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: messages
 # defaultMessage: Action URL
 msgid "Action URL"
-msgstr ""
+msgstr "URL de acción"
 
 #: messages
 # defaultMessage: Action URL Template
 msgid "Action URL Template"
-msgstr ""
+msgstr "Plantilla de URL de acción"
 
 #: messages
 # defaultMessage: Action label
 msgid "Action label"
-msgstr ""
+msgstr "Etiqueta de acción"
 
 #: messages
 # defaultMessage: Add item description...
 msgid "Add item description..."
-msgstr ""
+msgstr "Añadir descripción del elemento..."
 
 #: components/UniversalCard/fragments/CardImage
 # defaultMessage: Archived
 msgid "Archived"
-msgstr ""
+msgstr "Archivado"
 
 #: messages
 # defaultMessage: Asset type
 msgid "Asset type"
-msgstr ""
+msgstr "Tipo de activo"
 
 #: messages
 # defaultMessage: Bordered
 msgid "Bordered"
-msgstr ""
+msgstr "Bordeado"
 
 #: messages
 # defaultMessage: Bottom
 msgid "Bottom"
-msgstr ""
+msgstr "Abajo"
 
 #: messages
 # defaultMessage: Card
 msgid "Card"
-msgstr ""
+msgstr "Tarjeta"
 
 #: messages
 # defaultMessage: Card (default)
 msgid "Card (default)"
-msgstr ""
+msgstr "Tarjeta (por defecto)"
 
 #: messages
 # defaultMessage: Card Model
 msgid "Card Model"
-msgstr ""
+msgstr "Modelo de tarjeta"
 
 #: messages
 # defaultMessage: Card Styling
 msgid "Card Styling"
-msgstr ""
+msgstr "Estilo de Tarjeta"
 
 #: messages
 # defaultMessage: Card styling
 msgid "Card styling"
-msgstr ""
+msgstr "Estilo de tarjeta"
 
 #: messages
 # defaultMessage: Card type
 msgid "Card type"
-msgstr ""
+msgstr "Tipo de tarjeta"
 
 #: messages
 # defaultMessage: Carousel
 msgid "Carousel"
-msgstr ""
+msgstr "Carrusel"
 
 #: messages
 # defaultMessage: Default
 msgid "Default"
-msgstr ""
+msgstr "Por defecto"
 
 #: messages
 # defaultMessage: Description
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #: messages
 # defaultMessage: Description max lines
 msgid "Description max lines"
-msgstr ""
+msgstr "Líneas máximas de descripción"
 
 #: messages
 # defaultMessage: Display title on image
 msgid "Display title on image"
-msgstr ""
+msgstr "Mostrar título en la imagen"
 
 #: messages
 # defaultMessage: Enable link
 msgid "Enable link"
-msgstr ""
+msgstr "Habilitar enlace"
 
 #: messages
 # defaultMessage: Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.
 msgid "Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used."
-msgstr ""
+msgstr "Introduzca una ruta. Marcadores de posición disponibles: $URL, $PORTAL_URL. Si está vacío, se utilizará la URL resultante."
 
 #: messages
 # defaultMessage: Four
 msgid "Four"
-msgstr ""
+msgstr "Cuatro"
 
 #: messages
 # defaultMessage: Gallery
 msgid "Gallery"
-msgstr ""
+msgstr "Galería"
 
 #: blocks/Listing/layout-templates/Carousel
 # defaultMessage: Go to slide
 msgid "Go to slide"
-msgstr ""
+msgstr "Ir a la diapositiva"
 
 #: messages
 # defaultMessage: Grid Size
 msgid "Grid Size"
-msgstr ""
+msgstr "Tamaño de la cuadrícula"
 
 #: messages
 # defaultMessage: Icon
 msgid "Icon"
-msgstr ""
+msgstr "Icono"
 
 #: messages
 # defaultMessage: Icon name
 msgid "Icon name"
-msgstr ""
+msgstr "Nombre de icono"
 
 #: messages
 # defaultMessage: Icon size
 msgid "Icon size"
-msgstr ""
+msgstr "Tamaño de icono"
 
 #: messages
 # defaultMessage: Image
 msgid "Image"
-msgstr ""
+msgstr "Imagen"
 
 #: messages
 # defaultMessage: Image Card
 msgid "Image Card"
-msgstr ""
+msgstr "Tarjeta de imagen"
 
 #: messages
 # defaultMessage: Image on Right (Default is Left)
 msgid "Image on Right (Default is Left)"
-msgstr ""
+msgstr "Imagen a la derecha (por defecto a la izquierda)"
 
 #: messages
 # defaultMessage: Image on left
 msgid "Image on left"
-msgstr ""
+msgstr "Imagen a la izquierda"
 
 #: messages
 # defaultMessage: Image on right
 msgid "Image on right"
-msgstr ""
+msgstr "Imagen a la derecha"
 
 #: messages
 # defaultMessage: Image size
 msgid "Image size"
-msgstr ""
+msgstr "Tamaño de la imagen"
 
 #: messages
 # defaultMessage: Inverted
 msgid "Inverted"
-msgstr ""
+msgstr "Invertido"
 
 #: messages
 # defaultMessage: Inverted theme
 msgid "InvertedHelp"
-msgstr ""
+msgstr "Tema invertido"
 
 #: messages
 # defaultMessage: Item
 msgid "Item"
-msgstr ""
+msgstr "Elemento"
 
 #: messages
 # defaultMessage: Item image
 msgid "Item image"
-msgstr ""
+msgstr "Imagen de elemento"
 
 #: messages
 # defaultMessage: Item theme
 msgid "Item theme"
-msgstr ""
+msgstr "Tema de elemento"
 
 #: messages
 # defaultMessage: Large
 msgid "Large"
-msgstr ""
+msgstr "Grande"
 
 #: messages
 # defaultMessage: Limit description to a maximum number of lines by adding trailing "..."
-msgid "Limit description to a maximum number of lines by adding trailing "...""
-msgstr ""
+msgid "Limit description to a maximum number of lines by adding trailing \"...\""
+msgstr "Limitar la descripción a un número máximo de líneas añadiendo '...' al final"
 
 #: messages
 # defaultMessage: Limit title to a maximum number of lines by adding trailing "..."
-msgid "Limit title to a maximum number of lines by adding trailing "...""
-msgstr ""
+msgid "Limit title to a maximum number of lines by adding trailing \"...\""
+msgstr "Limitar el título a un número máximo de líneas añadiendo '...' al final"
 
 #: messages
 # defaultMessage: Link to source content
 msgid "Link to source content"
-msgstr ""
+msgstr "Enlace al contenido fuente"
 
 #: messages
 # defaultMessage: Listing
 msgid "Listing"
-msgstr ""
+msgstr "Listado"
 
 #: messages
 # defaultMessage: Listing Item
 msgid "Listing Item"
-msgstr ""
+msgstr "Elemento de listado"
 
 #: messages
 # defaultMessage: Medium
 msgid "Medium"
-msgstr ""
+msgstr "Medio"
 
 #: messages
 # defaultMessage: Middle
 msgid "Middle"
-msgstr ""
+msgstr "Medio"
 
 #: components/UniversalCard/fragments/CardImage
 # defaultMessage: New
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #: messages
 # defaultMessage: News item
 msgid "News item"
-msgstr ""
+msgstr "Noticias"
 
 #: messages
 # defaultMessage: Next slide
 msgid "Next slide"
-msgstr ""
+msgstr "Siguiente diapositiva"
 
 #: messages
 # defaultMessage: Object fit
 msgid "Object fit"
-msgstr ""
+msgstr "Ajuste del objeto"
 
 #: messages
 # defaultMessage: Css property object-fit applied on Card image
 msgid "ObjectFitHelp"
-msgstr ""
+msgstr "Propiedad CSS para ajuste del objeto aplicado en la imagen de la tarjeta"
 
 #: messages
 # defaultMessage: Object position
 msgid "ObjectPosition"
-msgstr ""
+msgstr "Posición del objeto"
 
 #: messages
 # defaultMessage: Css property object-position applied on Card image
 msgid "ObjectPositionHelp"
-msgstr ""
+msgstr "Propiedad CSS de posición del objeto aplicado en la imagen de la tarjeta"
 
 #: messages
 # defaultMessage: Please choose an existing content as source for this element
 msgid "Please choose an existing content as source for this element"
-msgstr ""
+msgstr "Elija un contenido existente como fuente para este elemento"
 
 #: messages
 # defaultMessage: Preview
 msgid "Preview"
-msgstr ""
+msgstr "Previsualizar"
 
 #: messages
 # defaultMessage: Previous slide
 msgid "Previous slide"
-msgstr ""
+msgstr "Diapositiva anterior"
 
 #: messages
 # defaultMessage: Primary
 msgid "Primary"
-msgstr ""
+msgstr "Primario"
 
 #: messages
 # defaultMessage: Publication date
 msgid "Publication date"
-msgstr ""
+msgstr "Fecha de publicación"
 
 #: blocks/Listing/layout-templates/NewsList
 # defaultMessage: Published
 msgid "Published"
-msgstr ""
+msgstr "Publicado"
 
 #: messages
 # defaultMessage: Query
 msgid "Query"
-msgstr ""
+msgstr "Consulta"
 
 #: messages
 # defaultMessage: Read more
 msgid "Read more"
-msgstr ""
+msgstr "Leer más"
 
 #: messages
 # defaultMessage: Rounded
 msgid "Rounded"
-msgstr ""
+msgstr "Redondeado"
 
 #: messages
 # defaultMessage: Rounded Image
 msgid "Rounded Image"
-msgstr ""
+msgstr "Imagen Redondeada"
 
 #: messages
 # defaultMessage: Search Item
 msgid "Search Item"
-msgstr ""
+msgstr "Buscar elemento"
 
 #: messages
 # defaultMessage: Secondary
 msgid "Secondary"
-msgstr ""
+msgstr "Secundario"
 
 #: messages
 # defaultMessage: Settings
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
 #: messages
 # defaultMessage: Show action
 msgid "Show action"
-msgstr ""
+msgstr "Mostrar acción"
 
 #: messages
 # defaultMessage: Show new/archived label
 msgid "Show new/archived label"
-msgstr ""
+msgstr "Mostrar etiqueta nueva/archivada"
 
 #: messages
 # defaultMessage: Show portal type
 msgid "Show portal type"
-msgstr ""
+msgstr "Mostrar tipo de contenido portal"
 
 #: messages
 # defaultMessage: Show tags
 msgid "Show tags"
-msgstr ""
+msgstr "Mostrar etiquetas"
 
 #: messages
 # defaultMessage: Simple Item
 msgid "Simple Item"
-msgstr ""
+msgstr "Elemento simple"
 
 #: messages
 # defaultMessage: Slides to scroll
 msgid "Slides to scroll"
-msgstr ""
+msgstr "Diapositivas para desplazarse"
 
 #: messages
 # defaultMessage: Slides to show
 msgid "Slides to show"
-msgstr ""
+msgstr "Diapositivas para mostrar"
 
 #: messages
 # defaultMessage: Small
 msgid "Small"
-msgstr ""
+msgstr "Pequeño"
 
 #: messages
 # defaultMessage: Styling
 msgid "Styling"
-msgstr ""
+msgstr "Estilo"
 
 #: messages
 # defaultMessage: Tertiary
 msgid "Tertiary"
-msgstr ""
+msgstr "Terciario"
 
 #: messages
 # defaultMessage: Text align
 msgid "Text align"
-msgstr ""
+msgstr "Texto alineado"
 
 #: messages
 # defaultMessage: Theme
 msgid "Theme"
-msgstr ""
+msgstr "Tema"
 
 #: blocks/Listing/layout-templates/Listing
 # defaultMessage: There are no items to show in this view.
 msgid "There are no items to show in this view."
-msgstr ""
+msgstr "No hay elementos que mostrar en esta vista."
 
 #: messages
 # defaultMessage: Three
 msgid "Three"
-msgstr ""
+msgstr "Tres"
 
 #: messages
 # defaultMessage: Tiny
 msgid "Tiny"
-msgstr ""
+msgstr "Diminuto"
 
 #: messages
 # defaultMessage: Title max lines
 msgid "Title max lines"
-msgstr ""
+msgstr "Líneas máximas de título"
 
 #: messages
 # defaultMessage: Top
 msgid "Top"
-msgstr ""
+msgstr "Arriba"
 
 #: messages
 # defaultMessage: Vertical align
 msgid "Vertical align"
-msgstr ""
+msgstr "Alineación vertical"

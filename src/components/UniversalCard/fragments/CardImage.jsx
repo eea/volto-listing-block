@@ -1,12 +1,28 @@
 import React from 'react';
+import { defineMessages } from 'react-intl';
 import { ConditionalLink } from '@plone/volto/components';
 import { Card } from 'semantic-ui-react';
 
 import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
 
+const messages = defineMessages({
+  New: {
+    id: 'New',
+    defaultMessage: 'New',
+  },
+  Archived: {
+    id: 'Archived',
+    defaultMessage: 'Archived',
+  },
+});
+
 const getLabel = (props) => {
   const { item, itemModel = {} } = props;
-  const text = item.isNew ? 'New' : item.isExpired ? 'Archived' : null;
+  const text = item.isNew
+    ? intl.formatMessage(messages.New)
+    : item.isExpired
+    ? intl.formatMessage(messages.Archived)
+    : null;
 
   return itemModel?.hasLabel && text
     ? {

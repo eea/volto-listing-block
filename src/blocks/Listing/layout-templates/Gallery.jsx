@@ -1,6 +1,7 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
+import messages from '@eeacms/volto-listing-block/messages';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import config from '@plone/volto/registry';
 
@@ -30,17 +31,17 @@ const Gallery = ({
 Gallery.schemaEnhancer = ({ schema }) => {
   schema.fieldsets.splice(1, 0, {
     id: 'cardsGallery',
-    title: 'Gallery',
+    title: intl.formatMessage(messages.Gallery),
     fields: ['gridSize'],
   });
 
   schema.properties = {
     ...schema.properties,
     gridSize: {
-      title: 'Grid Size',
+      title: intl.formatMessage(messages.GridSize),
       choices: [
-        ['three', 'Three'],
-        ['four', 'Four'],
+        ['three', intl.formatMessage(messages.Three)],
+        ['four', intl.formatMessage(messages.Four)],
       ],
       default: 'three',
       factory: 'Choice',

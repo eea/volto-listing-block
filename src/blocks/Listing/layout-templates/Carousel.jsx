@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Button, Icon } from 'semantic-ui-react';
 import loadable from '@loadable/component';
 
@@ -7,6 +8,7 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
+import messages from '@eeacms/volto-listing-block/messages';
 
 const Slider = loadable(() => import('react-slick'));
 
@@ -32,7 +34,7 @@ const PrevArrow = (props) => {
 
   return (
     <Button
-      aria-label="Previous slide"
+      aria-label={intl.formatMessage(messages.PreviousSlide)}
       className="slider-arrow prev-arrow tablet or lower hidden"
       icon
       onClick={onClick}
@@ -47,7 +49,7 @@ const NextArrow = (props) => {
 
   return (
     <Button
-      aria-label="Next slide"
+      aria-label={intl.formatMessage(messages.NextSlide)}
       className={
         (className.indexOf('slick-disabled') !== -1 ? 'slick-disabled' : '') +
         ' slider-arrow next-arrow tablet or lower hidden'
@@ -81,7 +83,10 @@ const CardsCarousel = ({ block, items, ...rest }) => {
     customPaging: (i) => (
       <button className={'slider-dots-button'} aria-current={i === 0}>
         <span className="slick-dot-icon" aria-hidden="true" />
-        <span className="slick-sr-only">Go to slide {i + 1}</span>
+        <span className="slick-sr-only">
+          <FormattedMessage id="Go to slide" defaultMessage="Go to slide" />{' '}
+          {i + 1}
+        </span>
       </button>
     ),
     appendDots: (dots) => (
@@ -157,7 +162,7 @@ CardsCarousel.schemaEnhancer = (args) => {
 
   schema.fieldsets.splice(1, 0, {
     id: 'carousel',
-    title: 'Carousel',
+    title: intl.formatMessage(messages.Carousel),
     fields: ['slidesToShow', 'slidesToScroll'],
   });
 
@@ -167,13 +172,13 @@ CardsCarousel.schemaEnhancer = (args) => {
     properties: {
       ...schema.properties,
       slidesToShow: {
-        title: 'Slides to show',
+        title: intl.formatMessage(messages.SlidesToShow),
         type: 'number',
         default: 4,
         minimum: 1,
       },
       slidesToScroll: {
-        title: 'Slides to scroll',
+        title: intl.formatMessage(messages.SlidesToScroll),
         type: 'number',
         default: 1,
         minimum: 1,

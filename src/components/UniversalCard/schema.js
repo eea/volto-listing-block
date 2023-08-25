@@ -1,16 +1,9 @@
-import { defineMessages } from 'react-intl';
 import {
   DefaultCardModelSchema,
   schemaEnhancerFactory,
   addTypeSelect,
 } from '@eeacms/volto-listing-block/schema-utils';
-
-const messages = defineMessages({
-  title: {
-    id: 'Card type',
-    defaultMessage: 'Card type',
-  },
-});
+import messages from '@eeacms/volto-listing-block/messages';
 
 export default function universalCardSchemaEnhancer(args) {
   const props = { ...args };
@@ -27,7 +20,7 @@ export default function universalCardSchemaEnhancer(args) {
 
   schema.fieldsets.push({
     id: 'cardDesigner',
-    title: 'Card',
+    title: intl.formatMessage(messages.Card),
     fields: ['itemModel'],
   });
 
@@ -44,7 +37,7 @@ export default function universalCardSchemaEnhancer(args) {
     properties: {
       ...schema.properties,
       itemModel: {
-        title: 'Card model',
+        title: intl.formatMessage(messages.CardModel),
         widget: 'object',
         schema: itemModelSchema,
       },

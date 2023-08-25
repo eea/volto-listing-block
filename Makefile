@@ -93,7 +93,7 @@ test-update:	## Update jest tests snapshots
 
 .PHONY: stylelint
 stylelint:		## Stylelint
-	$(NODE_MODULES)/stylelint/bin/stylelint.js --allow-empty-input 'src/**/*.{css,less}'
+	$(NODE_MODULES)/.bin/stylelint --allow-empty-input 'src/**/*.{css,less}'
 
 .PHONY: stylelint-overrides
 stylelint-overrides:

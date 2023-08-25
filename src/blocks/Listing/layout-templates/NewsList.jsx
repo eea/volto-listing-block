@@ -1,9 +1,11 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import { flattenToAppURL, getBaseUrl } from '@plone/volto/helpers';
 import { Link } from 'react-router-dom';
 import config from '@plone/volto/registry';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import messages from '@eeacms/volto-listing-block/messages';
 
 const CustomNewsListTemplate = ({
   items,
@@ -25,7 +27,10 @@ const CustomNewsListTemplate = ({
 
       {hasDate && item.effective && (
         <div>
-          <span className="info-prefix">Published:{'  '}</span>
+          <span className="info-prefix">
+            <FormattedMessage id="Published" defaultMessage="Published" />:
+            {'  '}
+          </span>
           <span className="category">
             {moment(item.effective).format('ll')}
           </span>
@@ -55,18 +60,18 @@ const CustomNewsListTemplate = ({
 CustomNewsListTemplate.schemaEnhancer = ({ schema, formData, intl }) => {
   schema.fieldsets.splice(1, 0, {
     id: 'newsList',
-    title: 'News item',
+    title: intl.formatMessage(messages.NewsItem),
     fields: ['hasDate', 'hasDescription'],
   });
 
   schema.properties = {
     ...schema.properties,
     hasDate: {
-      title: 'Publication date',
+      title: intl.formatMessage(messages.PublicationDate),
       type: 'boolean',
     },
     hasDescription: {
-      title: 'Description',
+      title: intl.formatMessage(messages.Description),
       type: 'boolean',
     },
   };

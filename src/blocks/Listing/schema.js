@@ -23,30 +23,29 @@ const CallToActionSchema = ({ formData }) => {
               ]
             : []),
         ],
-        title: 'Default',
+        title: intl.formatMessage(messages.Default),
       },
     ],
     properties: {
       enable: {
         type: 'boolean',
-        title: 'Show action',
+        title: intl.formatMessage(messages.ShowAction),
       },
       label: {
-        title: 'Action label',
+        title: intl.formatMessage(messages.ActionLabel),
         default: 'Read more',
         defaultValue: 'Read more',
       },
       href: {
-        title: 'Action URL',
+        title: intl.formatMessage(messages.ActionURL),
         widget: 'object_browser',
         mode: 'link',
         selectedItemAttrs: ['Title', 'Description'],
         allowExternals: true,
       },
       urlTemplate: {
-        title: 'Action URL Template',
-        description:
-          'Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.',
+        title: intl.formatMessage(messages.ActionURLTemplate),
+        description: intl.formatMessage(messages.ActionURLTemplateHelp),
       },
     },
     required: [],
@@ -73,53 +72,51 @@ export const setCardModelSchema = (args) => {
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
     titleOnImage: {
-      title: 'Display title on image',
+      title: intl.formatMessage(messages.DisplayTitleOnImage),
       type: 'boolean',
       default: false,
     },
     hasLink: {
-      title: 'Enable link',
+      title: intl.formatMessage(messages.EnableLink),
       description: 'Link to source content',
       type: 'boolean',
       default: true,
     },
     hasDate: {
-      title: 'Publication date',
+      title: intl.formatMessage(messages.PublicationDate),
       type: 'boolean',
       default: false,
     },
     hasDescription: {
-      title: 'Description',
+      title: intl.formatMessage(messages.Description),
       type: 'boolean',
     },
     maxTitle: {
-      title: 'Title max lines',
-      description:
-        "Limit title to a maximum number of lines by adding trailing '...'",
+      title: intl.formatMessage(messages.TitleMaxLines),
+      description: intl.formatMessage(messages.TitleMaxLinesHelp),
       type: 'number',
       default: 2,
       minimum: 0,
       maximum: 5,
     },
     maxDescription: {
-      title: 'Description max lines',
-      description:
-        "Limit description to a maximum number of lines by adding trailing '...'",
+      title: intl.formatMessage(messages.DescriptionMaxLines),
+      description: intl.formatMessage(messages.DescriptionMaxLinesHelp),
       type: 'number',
       default: 2,
       minimum: 0,
       maximum: 5,
     },
     hasMetaType: {
-      title: 'Show portal type',
+      title: intl.formatMessage(messages.HasMetaType),
       type: 'boolean',
     },
     hasLabel: {
-      title: 'Show new/archived label',
+      title: intl.formatMessage(messages.HasLabel),
       type: 'boolean',
     },
     hasTags: {
-      title: 'Show tags',
+      title: intl.formatMessage(messages.HasTags),
       type: 'boolean',
     },
     callToAction: {
@@ -151,51 +148,49 @@ export const setItemModelSchema = (args) => {
     ...itemModelSchema.properties,
 
     hasDate: {
-      title: 'Publication date',
+      title: intl.formatMessage(messages.PublicationDate),
       type: 'boolean',
     },
     hasDescription: {
-      title: 'Description',
+      title: intl.formatMessage(messages.Description),
       type: 'boolean',
       default: true,
     },
     maxTitle: {
-      title: 'Title max lines',
-      description:
-        "Limit title to a maximum number of lines by adding trailing '...'",
+      title: intl.formatMessage(messages.TitleMaxLines),
+      description: intl.formatMessage(messages.TitleMaxLinesHelp),
       type: 'number',
       default: 2,
       minimum: 0,
       maximum: 5,
     },
     maxDescription: {
-      title: 'Description max lines',
-      description:
-        "Limit description to a maximum number of lines by adding trailing '...'",
+      title: intl.formatMessage(messages.DescriptionMaxLines),
+      description: intl.formatMessage(messages.DescriptionMaxLinesHelp),
       type: 'number',
       default: 2,
       minimum: 0,
       maximum: 5,
     },
     hasImage: {
-      title: 'Image',
+      title: intl.formatMessage(messages.Image),
       type: 'boolean',
       default: true,
     },
     imageOnRightSide: {
-      title: 'Image on Right (Default is Left)',
+      title: intl.formatMessage(messages.ImageOnRightSide),
       type: 'boolean',
     },
     // hasMetaType: {
-    //   title: 'Show portal type',
+    //   title: intl.formatMessage(messages.HasMetaType),
     //   type: 'boolean',
     // },
     // hasLabel: {
-    //   title: 'Show new/archived label',
+    //   title: intl.formatMessage(messages.HasLabel),
     //   type: 'boolean',
     // },
     // hasTags: {
-    //   title: 'Show tags',
+    //   title: intl.formatMessage(messages.HasTags),
     //   type: 'boolean',
     // },
   };
@@ -213,9 +208,8 @@ export const setSimpleItemModelSchema = (args) => {
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
     maxTitle: {
-      title: 'Title max lines',
-      description:
-        "Limit title to a maximum number of lines by adding trailing '...'",
+      title: intl.formatMessage(messages.TitleMaxLines),
+      description: intl.formatMessage(messages.TitleMaxLinesHelp),
       type: 'number',
       default: 2,
       minimum: 0,
@@ -262,7 +256,7 @@ export const setSimpleItemStylingSchema = ({ schema, intl }) => {
       type: 'boolean',
     },
     text: {
-      title: 'Text align',
+      title: intl.formatMessage(messages.TextAlign),
       widget: 'style_text_align',
       actions: Object.keys(ALIGN_INFO_MAP),
       actionsInfoMap: ALIGN_INFO_MAP,
@@ -312,7 +306,7 @@ export const setCardStylingSchema = ({ schema, intl }) => {
       type: 'boolean',
     },
     text: {
-      title: 'Text align',
+      title: intl.formatMessage(messages.TextAlign),
       widget: 'style_text_align',
       actions: Object.keys(ALIGN_INFO_MAP),
       actionsInfoMap: ALIGN_INFO_MAP,

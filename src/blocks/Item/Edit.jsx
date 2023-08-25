@@ -1,4 +1,5 @@
 import React from 'react';
+import messages from '@eeacms/volto-listing-block/messages';
 import { connect } from 'react-redux';
 import { isArray } from 'lodash';
 import config from '@plone/volto/registry';
@@ -64,7 +65,7 @@ const Edit = (props) => {
           onFocus={handleFocus}
           onKeyDown={handleKey}
           selected={selected}
-          placeholder="Add item description..."
+          placeholder={intl.formatMessage(messages.SlateEditorPlaceHolder)}
           slateSettings={slate}
         />
       </Item>

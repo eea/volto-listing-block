@@ -1,23 +1,30 @@
 import config from '@plone/volto/registry';
+import messages from '@eeacms/volto-listing-block/messages';
 
 export default ({ data }) => {
   const { assetType = 'image' } = data;
   return {
-    title: 'Item',
+    title: intl.formatMessage(messages.Item),
     fieldsets: [
       {
         id: 'default',
-        title: 'Default',
+        title: intl.formatMessage(messages.Default),
         fields: ['assetType', 'theme', 'verticalAlign'],
       },
       ...(assetType === 'image'
-        ? [{ id: 'image', title: 'Image', fields: ['image', 'imageSize'] }]
+        ? [
+            {
+              id: 'image',
+              title: intl.formatMessage(messages.Image),
+              fields: ['image', 'imageSize'],
+            },
+          ]
         : []),
       ...(assetType === 'icon'
         ? [
             {
               id: 'icon',
-              title: 'Icon',
+              title: intl.formatMessage(messages.Icon),
               fields: ['icon', 'iconSize'],
             },
           ]
@@ -25,55 +32,58 @@ export default ({ data }) => {
     ],
     properties: {
       assetType: {
-        title: 'Asset type',
+        title: intl.formatMessage(messages.AssetType),
         choices: [
-          ['image', 'Image'],
-          ['icon', 'Icon'],
+          ['image', intl.formatMessage(messages.Image)],
+          ['icon', intl.formatMessage(messages.Icon)],
         ],
         default: 'image',
       },
       image: {
-        title: 'Image',
+        title: intl.formatMessage(messages.Image),
         widget: 'attachedimage',
       },
       imageSize: {
-        title: 'Image size',
+        title: intl.formatMessage(messages.ImageSize),
         choices: [
-          ['tiny', 'Tiny'],
-          ['small', 'Small'],
-          ['medium', 'Medium'],
-          ['big', 'Large'],
-          ['preview', 'Preview'],
+          ['tiny', intl.formatMessage(messages.Tiny)],
+          ['small', intl.formatMessage(messages.Small)],
+          ['medium', intl.formatMessage(messages.Medium)],
+          ['big', intl.formatMessage(messages.Large)],
+          ['preview', intl.formatMessage(messages.Preview)],
         ],
         default: 'big',
       },
       icon: {
-        title: 'Icon name',
+        title: intl.formatMessage(messages.IconName),
         description: (
           <>
-            See{' '}
+            <FormattedMessage id="See" defaultMessage="See" />{' '}
             <a
               target="_blank"
               rel="noopener noreferrer"
               href="https://remixicon.com"
             >
-              Remix icon cheatsheet
+              <FormattedMessage
+                id="Remix icon cheatsheet"
+                defaultMessage="Remix icon cheatsheet"
+              />
             </a>
           </>
         ),
       },
       iconSize: {
-        title: 'Icon size',
+        title: intl.formatMessage(messages.IconSize),
         choices: [
-          ['tiny', 'Tiny'],
-          ['small', 'Small'],
-          ['medium', 'Medium'],
-          ['big', 'Large'],
+          ['tiny', intl.formatMessage(messages.Tiny)],
+          ['small', intl.formatMessage(messages.Small)],
+          ['medium', intl.formatMessage(messages.Medium)],
+          ['big', intl.formatMessage(messages.Large)],
         ],
         default: 'big',
       },
       theme: {
-        title: 'Item theme',
+        title: intl.formatMessage(messages.ItemTheme),
         widget: 'theme_picker',
         colors: [
           ...(config.settings && config.settings.themeColors
@@ -86,11 +96,11 @@ export default ({ data }) => {
         ],
       },
       verticalAlign: {
-        title: 'Vertical align',
+        title: intl.formatMessage(messages.VerticalAlign),
         choices: [
-          ['top', 'Top'],
-          ['middle', 'Middle'],
-          ['bottom', 'Bottom'],
+          ['top', intl.formatMessage(messages.Top)],
+          ['middle', intl.formatMessage(messages.Middle)],
+          ['bottom', intl.formatMessage(messages.Bottom)],
         ],
         default: 'middle',
       },

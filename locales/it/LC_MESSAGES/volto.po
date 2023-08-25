@@ -11,4 +11,427 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#: messages
+# defaultMessage: Action URL
+msgid "Action URL"
+msgstr ""
 
+#: messages
+# defaultMessage: Action URL Template
+msgid "Action URL Template"
+msgstr ""
+
+#: messages
+# defaultMessage: Action label
+msgid "Action label"
+msgstr ""
+
+#: messages
+# defaultMessage: Add item description...
+msgid "Add item description..."
+msgstr ""
+
+#: components/UniversalCard/fragments/CardImage
+# defaultMessage: Archived
+msgid "Archived"
+msgstr ""
+
+#: messages
+# defaultMessage: Asset type
+msgid "Asset type"
+msgstr ""
+
+#: messages
+# defaultMessage: Bordered
+msgid "Bordered"
+msgstr ""
+
+#: messages
+# defaultMessage: Bottom
+msgid "Bottom"
+msgstr ""
+
+#: messages
+# defaultMessage: Card
+msgid "Card"
+msgstr ""
+
+#: messages
+# defaultMessage: Card (default)
+msgid "Card (default)"
+msgstr ""
+
+#: messages
+# defaultMessage: Card Model
+msgid "Card Model"
+msgstr ""
+
+#: messages
+# defaultMessage: Card Styling
+msgid "Card Styling"
+msgstr ""
+
+#: messages
+# defaultMessage: Card styling
+msgid "Card styling"
+msgstr ""
+
+#: messages
+# defaultMessage: Card type
+msgid "Card type"
+msgstr ""
+
+#: messages
+# defaultMessage: Carousel
+msgid "Carousel"
+msgstr ""
+
+#: messages
+# defaultMessage: Default
+msgid "Default"
+msgstr ""
+
+#: messages
+# defaultMessage: Description
+msgid "Description"
+msgstr ""
+
+#: messages
+# defaultMessage: Description max lines
+msgid "Description max lines"
+msgstr ""
+
+#: messages
+# defaultMessage: Display title on image
+msgid "Display title on image"
+msgstr ""
+
+#: messages
+# defaultMessage: Enable link
+msgid "Enable link"
+msgstr ""
+
+#: messages
+# defaultMessage: Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.
+msgid "Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used."
+msgstr ""
+
+#: messages
+# defaultMessage: Four
+msgid "Four"
+msgstr ""
+
+#: messages
+# defaultMessage: Gallery
+msgid "Gallery"
+msgstr ""
+
+#: blocks/Listing/layout-templates/Carousel
+# defaultMessage: Go to slide
+msgid "Go to slide"
+msgstr ""
+
+#: messages
+# defaultMessage: Grid Size
+msgid "Grid Size"
+msgstr ""
+
+#: messages
+# defaultMessage: Icon
+msgid "Icon"
+msgstr ""
+
+#: messages
+# defaultMessage: Icon name
+msgid "Icon name"
+msgstr ""
+
+#: messages
+# defaultMessage: Icon size
+msgid "Icon size"
+msgstr ""
+
+#: messages
+# defaultMessage: Image
+msgid "Image"
+msgstr ""
+
+#: messages
+# defaultMessage: Image Card
+msgid "Image Card"
+msgstr ""
+
+#: messages
+# defaultMessage: Image on Right (Default is Left)
+msgid "Image on Right (Default is Left)"
+msgstr ""
+
+#: messages
+# defaultMessage: Image on left
+msgid "Image on left"
+msgstr ""
+
+#: messages
+# defaultMessage: Image on right
+msgid "Image on right"
+msgstr ""
+
+#: messages
+# defaultMessage: Image size
+msgid "Image size"
+msgstr ""
+
+#: messages
+# defaultMessage: Inverted
+msgid "Inverted"
+msgstr ""
+
+#: messages
+# defaultMessage: Inverted theme
+msgid "InvertedHelp"
+msgstr ""
+
+#: messages
+# defaultMessage: Item
+msgid "Item"
+msgstr ""
+
+#: messages
+# defaultMessage: Item image
+msgid "Item image"
+msgstr ""
+
+#: messages
+# defaultMessage: Item theme
+msgid "Item theme"
+msgstr ""
+
+#: messages
+# defaultMessage: Large
+msgid "Large"
+msgstr ""
+
+#: messages
+# defaultMessage: Limit description to a maximum number of lines by adding trailing "..."
+msgid "Limit description to a maximum number of lines by adding trailing "...""
+msgstr ""
+
+#: messages
+# defaultMessage: Limit title to a maximum number of lines by adding trailing "..."
+msgid "Limit title to a maximum number of lines by adding trailing "...""
+msgstr ""
+
+#: messages
+# defaultMessage: Link to source content
+msgid "Link to source content"
+msgstr ""
+
+#: messages
+# defaultMessage: Listing
+msgid "Listing"
+msgstr ""
+
+#: messages
+# defaultMessage: Listing Item
+msgid "Listing Item"
+msgstr ""
+
+#: messages
+# defaultMessage: Medium
+msgid "Medium"
+msgstr ""
+
+#: messages
+# defaultMessage: Middle
+msgid "Middle"
+msgstr ""
+
+#: components/UniversalCard/fragments/CardImage
+# defaultMessage: New
+msgid "New"
+msgstr ""
+
+#: messages
+# defaultMessage: News item
+msgid "News item"
+msgstr ""
+
+#: messages
+# defaultMessage: Next slide
+msgid "Next slide"
+msgstr ""
+
+#: messages
+# defaultMessage: Object fit
+msgid "Object fit"
+msgstr ""
+
+#: messages
+# defaultMessage: Css property object-fit applied on Card image
+msgid "ObjectFitHelp"
+msgstr ""
+
+#: messages
+# defaultMessage: Object position
+msgid "ObjectPosition"
+msgstr ""
+
+#: messages
+# defaultMessage: Css property object-position applied on Card image
+msgid "ObjectPositionHelp"
+msgstr ""
+
+#: messages
+# defaultMessage: Please choose an existing content as source for this element
+msgid "Please choose an existing content as source for this element"
+msgstr ""
+
+#: messages
+# defaultMessage: Preview
+msgid "Preview"
+msgstr ""
+
+#: messages
+# defaultMessage: Previous slide
+msgid "Previous slide"
+msgstr ""
+
+#: messages
+# defaultMessage: Primary
+msgid "Primary"
+msgstr ""
+
+#: messages
+# defaultMessage: Publication date
+msgid "Publication date"
+msgstr ""
+
+#: blocks/Listing/layout-templates/NewsList
+# defaultMessage: Published
+msgid "Published"
+msgstr ""
+
+#: messages
+# defaultMessage: Query
+msgid "Query"
+msgstr ""
+
+#: messages
+# defaultMessage: Read more
+msgid "Read more"
+msgstr ""
+
+#: messages
+# defaultMessage: Rounded
+msgid "Rounded"
+msgstr ""
+
+#: messages
+# defaultMessage: Rounded Image
+msgid "Rounded Image"
+msgstr ""
+
+#: messages
+# defaultMessage: Search Item
+msgid "Search Item"
+msgstr ""
+
+#: messages
+# defaultMessage: Secondary
+msgid "Secondary"
+msgstr ""
+
+#: messages
+# defaultMessage: Settings
+msgid "Settings"
+msgstr ""
+
+#: messages
+# defaultMessage: Show action
+msgid "Show action"
+msgstr ""
+
+#: messages
+# defaultMessage: Show new/archived label
+msgid "Show new/archived label"
+msgstr ""
+
+#: messages
+# defaultMessage: Show portal type
+msgid "Show portal type"
+msgstr ""
+
+#: messages
+# defaultMessage: Show tags
+msgid "Show tags"
+msgstr ""
+
+#: messages
+# defaultMessage: Simple Item
+msgid "Simple Item"
+msgstr ""
+
+#: messages
+# defaultMessage: Slides to scroll
+msgid "Slides to scroll"
+msgstr ""
+
+#: messages
+# defaultMessage: Slides to show
+msgid "Slides to show"
+msgstr ""
+
+#: messages
+# defaultMessage: Small
+msgid "Small"
+msgstr ""
+
+#: messages
+# defaultMessage: Styling
+msgid "Styling"
+msgstr ""
+
+#: messages
+# defaultMessage: Tertiary
+msgid "Tertiary"
+msgstr ""
+
+#: messages
+# defaultMessage: Text align
+msgid "Text align"
+msgstr ""
+
+#: messages
+# defaultMessage: Theme
+msgid "Theme"
+msgstr ""
+
+#: blocks/Listing/layout-templates/Listing
+# defaultMessage: There are no items to show in this view.
+msgid "There are no items to show in this view."
+msgstr ""
+
+#: messages
+# defaultMessage: Three
+msgid "Three"
+msgstr ""
+
+#: messages
+# defaultMessage: Tiny
+msgid "Tiny"
+msgstr ""
+
+#: messages
+# defaultMessage: Title max lines
+msgid "Title max lines"
+msgstr ""
+
+#: messages
+# defaultMessage: Top
+msgid "Top"
+msgstr ""
+
+#: messages
+# defaultMessage: Vertical align
+msgid "Vertical align"
+msgstr ""

@@ -1,4 +1,5 @@
 import React from 'react';
+import { FormattedMessage } from 'react-intl';
 import PropTypes from 'prop-types';
 import moment from 'moment'; // TODO: this needs to be lazyloaded!!!
 import { ConditionalLink } from '@plone/volto/components';
@@ -32,7 +33,12 @@ const Listing = (props) => {
             />
           ))
         ) : (
-          <p>There are no items to show in this view.</p>
+          <p>
+            <FormattedMessage
+              id="There are no items to show in this view."
+              defaultMessage="There are no items to show in this view."
+            />
+          </p>
         )}
       </div>
 

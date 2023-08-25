@@ -1,6 +1,7 @@
 import { Button, Label, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import { flattenToAppURL } from '@plone/volto/helpers';
+import messages from '@eeacms/volto-listing-block/messages';
 
 const getCallToAction = (item, options) => {
   const { urlTemplate } = options;
@@ -23,7 +24,7 @@ const CallToAction = ({ item, itemModel }) => (
         : 'tertiary inverted'
     }
   >
-    {itemModel.callToAction.label || 'Read more'}
+    {itemModel.callToAction.label || intl.formatMessage(messages.ReadMore)}
   </Button>
 );
 
