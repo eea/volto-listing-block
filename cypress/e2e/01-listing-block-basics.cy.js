@@ -622,7 +622,7 @@ describe('Blocks Tests', () => {
       .click({ force: true })
       .type('Test Title');
     cy.get('#field-head_title').click({ force: true }).type('Test Head Title');
-    cy.get('# blockform-fieldset-default #field-description')
+    cy.get('#blockform-fieldset-default #field-description')
       .click({ force: true })
       .type('Test Description');
 
