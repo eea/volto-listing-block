@@ -241,11 +241,6 @@ describe('Blocks Tests', () => {
     ).click();
     cy.get('.react-select__option').contains('Carousel').click();
 
-    // cy.contains('Test Headline').click();
-
-    // cy.contains('Add criteria').click();
-    // cy.get('.react-select__menu').contains('Creator').click();
-
     cy.get('.title').contains('Carousel').click();
     cy.get('.title').contains('Card').click();
     cy.contains('Card (default)').click();
@@ -254,17 +249,14 @@ describe('Blocks Tests', () => {
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
     cy.get('.react-select__option').contains('right').click();
 
-    // // Save page
+    // Save page
     cy.get('#toolbar-save').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
     cy.get('.headline').contains('Test Headline');
-    // cy.get(
-    //   '.block.listing .items.imageOnLeft-items .card.max-2-lines.title-max-2-lines.has--object-position--right.item-card.left-image-card',
-    // ).should('exist');
 
-    // // Create a page
+    // Create a page
     cy.createContent({
       contentType: 'Document',
       contentId: 'page-1',
@@ -272,7 +264,7 @@ describe('Blocks Tests', () => {
       path: 'cypress/my-page',
     });
 
-    // // Navigate to that page
+    // Navigate to that page
     cy.visit('cypress/my-page/page-1');
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-1');
 
@@ -283,14 +275,14 @@ describe('Blocks Tests', () => {
     cy.get('.documentFirstHeading').contains('Page with Description');
     cy.get('[contenteditable=true]').first().type('{enter}');
 
-    // // // Add description block
+    // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
     cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
       'description',
     );
     cy.get('.button.description').click();
 
-    // // // Add some text to the description block
+    // Add some text to the description block
     cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
     cy.get('#sidebar-metadata #effective-date').click();
     cy.get('tr td').contains(1).click({ force: true });
@@ -317,7 +309,7 @@ describe('Blocks Tests', () => {
       path: 'cypress/my-page',
     });
 
-    // // Navigate to that page
+    // Navigate to that page
     cy.visit('cypress/my-page/page-2');
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-2');
 
@@ -328,14 +320,14 @@ describe('Blocks Tests', () => {
     cy.get('.documentFirstHeading').contains('Page with Description');
     cy.get('[contenteditable=true]').first().type('{enter}');
 
-    // // // Add description block
+    // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
     cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
       'description',
     );
     cy.get('.button.description').click();
 
-    // // // Add some text to the description block
+    // Add some text to the description block
     cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
     cy.get('#sidebar-metadata #effective-date').click();
     cy.get('tr td').contains(1).click({ force: true });
@@ -415,11 +407,6 @@ describe('Blocks Tests', () => {
     ).click();
     cy.get('.react-select__option').contains('Gallery').click();
 
-    // cy.contains('Test Headline').click();
-
-    // cy.contains('Add criteria').click();
-    // cy.get('.react-select__menu').contains('Creator').click();
-
     cy.get('.title').contains('Gallery').click();
     cy.get('.title').contains('Card').click();
     cy.contains('Card (default)').click();
@@ -428,17 +415,14 @@ describe('Blocks Tests', () => {
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
     cy.get('.react-select__option').contains('right').click();
 
-    // // Save page
+    // Save page
     cy.get('#toolbar-save').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
     cy.get('.headline').contains('Test Headline');
-    // cy.get(
-    //   '.block.listing .items.imageOnLeft-items .card.max-2-lines.title-max-2-lines.has--object-position--right.item-card.left-image-card',
-    // ).should('exist');
 
-    // // Create a page
+    // Create a page
     cy.createContent({
       contentType: 'Document',
       contentId: 'page-1',
@@ -446,7 +430,7 @@ describe('Blocks Tests', () => {
       path: 'cypress/my-page',
     });
 
-    // // Navigate to that page
+    // Navigate to that page
     cy.visit('cypress/my-page/page-1');
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-1');
 
@@ -457,14 +441,14 @@ describe('Blocks Tests', () => {
     cy.get('.documentFirstHeading').contains('Page with Description');
     cy.get('[contenteditable=true]').first().type('{enter}');
 
-    // // // Add description block
+    // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
     cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
       'description',
     );
     cy.get('.button.description').click();
 
-    // // // Add some text to the description block
+    // Add some text to the description block
     cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
     cy.get('#sidebar-metadata #effective-date').click();
     cy.get('tr td').contains(1).click({ force: true });
@@ -491,7 +475,7 @@ describe('Blocks Tests', () => {
       path: 'cypress/my-page',
     });
 
-    // // Navigate to that page
+    // Navigate to that page
     cy.visit('cypress/my-page/page-2');
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-2');
 
@@ -502,14 +486,14 @@ describe('Blocks Tests', () => {
     cy.get('.documentFirstHeading').contains('Page with Description');
     cy.get('[contenteditable=true]').first().type('{enter}');
 
-    // // // Add description block
+    // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
     cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
       'description',
     );
     cy.get('.button.description').click();
 
-    // // // Add some text to the description block
+    // Add some text to the description block
     cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
     cy.get('#sidebar-metadata #effective-date').click();
     cy.get('tr td').contains(1).click({ force: true });
@@ -591,7 +575,7 @@ describe('Blocks Tests', () => {
 
     cy.get('#field-theme').click({ force: true }).type('Test Theme');
 
-    // // Save page
+    // Save page
     cy.get('#toolbar-save').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
@@ -614,5 +598,36 @@ describe('Blocks Tests', () => {
     cy.get('#field-icon').click({ force: true }).type('test');
 
     cy.get('#field-theme').click({ force: true }).type('Test Theme');
+  });
+  it('Add Block: Teaser', () => {
+    // Change page title
+    cy.get('[contenteditable=true]').first().click();
+    cy.get('[contenteditable=true]').first().clear();
+    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
+    cy.get('.documentFirstHeading').contains('Listing Block Demo');
+    cy.get('[contenteditable=true]').first().type('{enter}');
+
+    // Add listing block
+    cy.get('.ui.basic.icon.button.block-add-button').first().click();
+    cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
+      'teaser',
+    );
+    cy.get('.blocks-chooser .button.teaser').click({
+      force: true,
+    });
+
+    cy.get(
+      '.ui.form #blockform-fieldset-default .field-wrapper-title input#field-title',
+    )
+      .click({ force: true })
+      .type('Test Title');
+    cy.get('#field-head_title').click({ force: true }).type('Test Head Title');
+    cy.get('# blockform-fieldset-default #field-description')
+      .click({ force: true })
+      .type('Test Description');
+
+    // Save page
+    cy.get('#toolbar-save').click();
+    cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
   });
 });
