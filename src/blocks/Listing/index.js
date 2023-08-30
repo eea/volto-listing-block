@@ -1,4 +1,3 @@
-// import { addStyling } from '@plone/volto/helpers';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 
@@ -6,12 +5,11 @@ import Carousel from './layout-templates/Carousel';
 import Gallery from './layout-templates/Gallery';
 import Listing from './layout-templates/Listing';
 import {
-  // setBasicStylingSchema,
-  setCardStylingSchema,
-  setSimpleItemStylingSchema,
   setCardModelSchema,
+  setCardStylingSchema,
   setItemModelSchema,
   setSimpleItemModelSchema,
+  setSimpleItemStylingSchema,
 } from './schema';
 
 import {
@@ -82,7 +80,6 @@ const applyConfig = (config) => {
       ),
     },
   ];
-
   listing.extensions = {
     ...listing.extensions,
     cardTemplates: [
@@ -95,28 +92,34 @@ const applyConfig = (config) => {
       },
       {
         id: 'imageCard',
+        isDefault: false,
         title: 'Image Card',
         template: ImageCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
       },
       {
         id: 'imageOnLeft',
+        isDefault: false,
         title: 'Image on left',
         template: LeftImageCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
+        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
       },
       {
         id: 'imageOnRight',
+        isDefault: false,
         title: 'Image on right',
         template: RightImageCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
+        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
       },
       {
         id: 'item',
-        isDefault: true,
+        isDefault: false,
         title: 'Listing Item',
         template: DefaultItemLayout,
         schemaEnhancer: composeSchema(setItemModelSchema, setCardStylingSchema),
+        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
       },
       {
         id: 'searchItem',
@@ -124,6 +127,7 @@ const applyConfig = (config) => {
         title: 'Search Item',
         template: SearchItemLayout,
         schemaEnhancer: composeSchema(setItemModelSchema, setCardStylingSchema),
+        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
       },
       {
         id: 'simpleItem',

@@ -1,7 +1,21 @@
 @categoryFontSize: 12px;
 
-@imageWrapperDisplay: flex;
+@imageAspectRatio: 16/9;
+@imageMinWidth: 200px;
+@imageMaxWidth: 350px;
+@imageMaxHeight: 235px;
+@imageRoundedWidth: 176px;
 
-@primaryColor         : #004B7F;
-@secondaryColor       : #007B6C;
-@tertiaryColor        : #3D5265;
+@imageWrapperDisplay: flex;
+@imageWrapperMargin: 24px;
+
+@listingCardBorderBottom: 1px solid #bcbec0;
+@listingCardExtraTopMargin: -3rem;
+@listingCardPadding: 2rem 1rem 2rem 0;
+@listingCardGridDescriptionMarginBottom: 2.5rem;
+@listingCardGridMinMax: minmax(275px, auto);
+@listingCardGridGap: 1.5rem;
+
+@primaryColor: #004B7F;
+@secondaryColor: #007B6C;
+@tertiaryColor: #3D5265;

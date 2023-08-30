@@ -1,8 +1,8 @@
 // TODO: see if possible to replace with Volto's PreviewImage component
 import React from 'react';
 
-import { Image } from 'semantic-ui-react';
 import { getImageScaleParams } from '@eeacms/volto-listing-block/helpers';
+import { Image, Label } from 'semantic-ui-react';
 
 import DefaultImageSVG from './default-image.svg';
 
@@ -44,33 +44,21 @@ function PreviewImage(props) {
     : DefaultImageSVG;
 
   return (
-    <Image
-      src={preview_image_url || params?.download}
-      alt={item.title}
-      {...rest}
-      label={
-        label
-          ? {
-              as: 'a',
-              ribbon: label.side,
-              content: label.text,
-              color: label.color,
-            }
-          : null
-      }
-      width={params.width}
-      height={params.height}
-    />
+    <>
+      {label ? (
+        <Label ribbon={label.side} color={label.color}>
+          {label.text}
+        </Label>
+      ) : null}
+      <Image
+        src={preview_image_url || params?.download}
+        alt={item.title}
+        {...rest}
+        width={params.width}
+        height={params.height}
+      />
+    </>
   );
 }
-
-// PreviewImage.propTypes = {
-//   size: PropTypes.string,
-//   item: PropTypes.shape({
-//     '@id': PropTypes.string.isRequired,
-//     image_field: PropTypes.string,
-//     title: PropTypes.string.isRequired,
-//   }),
-// };
 
 export default PreviewImage;

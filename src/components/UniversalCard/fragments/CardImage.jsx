@@ -11,7 +11,7 @@ const getLabel = (props) => {
   return itemModel?.hasLabel && text
     ? {
         text,
-        side: 'left',
+        side: true,
         // TODO: set the colors from css?
         color: item.isExpired ? 'yellow' : 'green',
       }
@@ -30,19 +30,16 @@ const CardTitleOnImage = (props) => {
 const CardImage = (props) => {
   const { item, isEditMode, preview_image, itemModel } = props;
   const label = getLabel(props);
+  const showLink = !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage;
 
   return (
-    <ConditionalLink
-      className="image"
-      item={item}
-      condition={!isEditMode && itemModel?.hasLink}
-    >
-      {!isEditMode && itemModel?.hasLink ? (
+    <ConditionalLink className="image" item={item} condition={showLink}>
+      {showLink ? (
         <>
           <PreviewImage
             item={item}
             preview_image={preview_image}
-            alt={item.title}
+            alt={''}
             label={label}
           />
           <CardTitleOnImage {...props} />

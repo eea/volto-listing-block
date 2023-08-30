@@ -2,10 +2,7 @@ import config from '@plone/volto/registry';
 import { resolveExtension } from '@plone/volto/helpers/Extensions/withBlockExtensions';
 import { Item } from './model';
 import cx from 'classnames';
-
-// import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
 import { buildStyleClassNamesFromData } from '@plone/volto/helpers';
-//
 import schemaEnhancer from './schema';
 
 function UniversalCard(props) {

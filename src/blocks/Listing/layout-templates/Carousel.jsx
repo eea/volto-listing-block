@@ -27,53 +27,79 @@ const getSlidesToScroll = (items, _slidesToShow, _slidesToScroll) => {
   return slidesToShow;
 };
 
-const Arrows = (props) => {
-  const { slider = {} } = props;
+const PrevArrow = (props) => {
+  const { onClick } = props;
 
   return (
-    <>
-      <Button
-        aria-label="Previous slide"
-        className="slider-arrow prev-arrow tablet or lower hidden"
-        icon
-        onClick={() => {
-          if (slider.current) {
-            slider.current.slickPrev();
-          }
-        }}
-      >
-        <Icon className="ri-arrow-left-s-line" />
-      </Button>
-      <Button
-        aria-label="Next slide"
-        className="slider-arrow next-arrow tablet or lower hidden"
-        icon
-        onClick={() => {
-          if (slider.current) {
-            slider.current.slickNext();
-          }
-        }}
-      >
-        <Icon className="ri-arrow-right-s-line" />
-      </Button>
-    </>
+    <Button
+      aria-label="Previous slide"
+      className="slider-arrow prev-arrow tablet or lower hidden"
+      icon
+      onClick={onClick}
+    >
+      <Icon className="ri-arrow-left-s-line" />
+    </Button>
+  );
+};
+
+const NextArrow = (props) => {
+  const { className, onClick } = props;
+
+  return (
+    <Button
+      aria-label="Next slide"
+      className={
+        (className.indexOf('slick-disabled') !== -1 ? 'slick-disabled' : '') +
+        ' slider-arrow next-arrow tablet or lower hidden'
+      }
+      icon
+      onClick={onClick}
+    >
+      <Icon className="ri-arrow-right-s-line" />
+    </Button>
   );
 };
 
 const CardsCarousel = ({ block, items, ...rest }) => {
   const slider = React.useRef(null);
-  const [settings] = React.useState({
+  const dots_parent = React.useRef(null);
+  const slidesToShow = getSlidesToShow(items, rest.slidesToShow || 4);
+  const settings = {
     dots: true,
     infinite: true,
-    arrows: false,
+    arrows: items.length > slidesToShow,
     initialSlide: 0,
     lazyLoad: 'progressive',
-    slidesToShow: getSlidesToShow(items, rest.slidesToShow || 4),
+    slidesToShow: slidesToShow,
     slidesToScroll: getSlidesToScroll(
       items,
       rest.slidesToShow || 4,
       rest.slidesToScroll || 1,
     ),
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+    customPaging: (i) => (
+      <button className={'slider-dots-button'} aria-current={i === 0}>
+        <span className="slick-dot-icon" aria-hidden="true" />
+        <span className="slick-sr-only">Go to slide {i + 1}</span>
+      </button>
+    ),
+    appendDots: (dots) => (
+      <ul ref={dots_parent} className={'slick-dots'}>
+        {dots}
+      </ul>
+    ),
+    afterChange: () => {
+      const dots = dots_parent.current;
+      if (dots) {
+        dots.querySelectorAll('.slider-dots-button').forEach(function (el) {
+          el.setAttribute(
+            'aria-current',
+            el.parentElement.className === 'slick-active',
+          );
+        });
+      }
+    },
     responsive: [
       {
         breakpoint: tabletBreakpoint,
@@ -97,7 +123,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
         },
       },
     ],
-  });
+  };
 
   return (
     <ResponsiveContainer>
@@ -106,6 +132,8 @@ const CardsCarousel = ({ block, items, ...rest }) => {
           <div
             className="cards-carousel"
             style={{ width: `${parentWidth}px`, margin: '0 auto' }}
+            role={'region'}
+            aria-label={'carousel'}
           >
             <Slider {...settings} ref={slider}>
               {items.map((item, index) => (
@@ -117,7 +145,6 @@ const CardsCarousel = ({ block, items, ...rest }) => {
                 />
               ))}
             </Slider>
-            {items.length > settings.slidesToShow && <Arrows slider={slider} />}
           </div>
         ) : null
       }
@@ -127,7 +154,6 @@ const CardsCarousel = ({ block, items, ...rest }) => {
 
 CardsCarousel.schemaEnhancer = (args) => {
   const { schema } = args;
-  // const schema = UniversalCard.schemaEnhancer(args);
 
   schema.fieldsets.splice(1, 0, {
     id: 'carousel',

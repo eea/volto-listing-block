@@ -35,6 +35,7 @@ const intl = {
 describe('addTypeSelect', () => {
   it('adds @type field to schema', () => {
     const schema = addTypeSelect({
+      formData: { variation: 'default' },
       intl,
       schema: { properties: {}, fieldsets: [{ id: 'default', fields: [] }] },
       extensionName: 'myExtension',

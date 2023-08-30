@@ -83,12 +83,16 @@ each(range(5), {
 
 .listing-item {
   padding-bottom: 16px;
-  border-bottom: 1px solid #bcbec0;
   margin-bottom: 32px;
 
   .slot-head,
   .listing-header {
     margin-bottom: 8px;
+  }
+
+  // shrink and grow listing body in order to fit the left or right image
+  .listing-body {
+    flex: 1;
   }
 
   .meta .date {
@@ -99,6 +103,7 @@ each(range(5), {
   .slot-top {
     display: flex;
     width: 100%;
+    gap: @imageWrapperMargin;
 
     @media only screen and (max-width: (@largestMobileScreen)) {
       flex-direction: column;
@@ -106,28 +111,127 @@ each(range(5), {
   }
 }
 
+.listing-item:not(:last-child) {
+  border-bottom: @listingCardBorderBottom;
+}
+
+// span listing item full width in order for images to line up when
+// we have small titles
+.listing-item .wrapper {
+  width: 100%;
+}
+
+// Search item listing
+.result-item .listing-body {
+  display: flex;
+  flex-direction: column;
+}
+
+// ensure default card model on listing is part of a grid
+// of cards instead of one giant card
+.imageCard-items,
+.card-items {
+  display: grid;
+  gap: @listingCardGridGap;
+  grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
+}
+
+.card.u-card.item-card {
+  display: grid;
+  padding: @listingCardPadding;
+}
+
+.card.u-card.item-card:not(:last-child) {
+  border-bottom: @listingCardBorderBottom;
+}
+
+//.listing.summary
+.ui.card.u-card.item-card .extra {
+  padding-bottom: 0;
+}
+
+@media screen and (min-width: 480px) {
+  // bring the extra section closer to the content area
+  .left-image-card {
+    grid-template-areas:
+      'image body'
+      '.     extra';
+  }
+
+  .right-image-card {
+    grid-template-areas:
+      'body image'
+      'extra .';
+  }
+
+  .item-card .image {
+    grid-area: image;
+  }
+
+  .ui.item-card .extra.content {
+    margin-top: @listingCardExtraTopMargin;
+    grid-area: extra;
+  }
+
+  .u-card.item-card .description {
+    margin-bottom: @listingCardGridDescriptionMarginBottom;
+  }
+
+  .left-image-card {
+    grid-template-columns:
+      minmax(
+        var(--image-min-width, @imageMinWidth),
+        var(--image-max-width, @imageMaxWidth)
+      )
+      auto;
+  }
+
+  .right-image-card {
+    grid-template-columns: auto minmax(
+        var(--image-min-width, @imageMinWidth),
+        var(--image-max-width, @imageMaxWidth)
+      );
+  }
+}
+
 // listing theme styling alongside inverse options
 .listing-item:not(.rounded) {
-  --image-max-width: 350px;
-  --image-max-height: 210px;
+  --image-max-width: @imageMaxWidth;
+  --image-max-height: @imageMaxHeight;
+  --image-aspect-ratio: @imageAspectRatio;
 }
 
-.listing .listing-item .ui.image {
-  width: var(--image-width, auto);
+.u-item.listing-item .ui.image {
+  width: var(--image-width, 100%);
+  max-width: var(--image-max-width, 100%);
   height: var(--image-height, auto);
   max-height: var(--image-max-height, auto);
+  aspect-ratio: var(--image-aspect-ratio, initial);
   border-radius: var(--border-radius, 0);
+  object-fit: var(--image-object-fit, cover);
+  object-position: var(--image-object-position, top);
 }
 
-.image-wrapper {
+// override block.less from pastanaga
+.u-item.listing-item img {
+  margin-right: 0;
+}
+
+.listing-item .image-wrapper {
   display: @imageWrapperDisplay;
-  width: var(--image-max-width, auto);
-  height: var(--image-max-height, auto);
 }
 
+@media screen and (min-width: 480px) {
+  // without a fixed width wrapper some images are smaller with 100% width value
+  .listing-item .image-wrapper {
+    width: var(--image-max-width, auto);
+  }
+}
+
+.card.rounded,
 .listing-item.rounded {
-  --image-width: 176px !important;
-  --image-height: 176px !important;
+  --image-width: @imageRoundedWidth;
+  --image-height: @imageRoundedWidth;
   --border-radius: 50%;
 }
 
@@ -163,39 +267,6 @@ each(range(5), {
   color: var(--text-color, @tertiaryColor);
 }
 
-.listing-body {
-  flex: 1;
-}
-
-.listing-item:not(.rounded) {
-  .listing-body {
-    flex: 1;
-  }
-
-  .left-image .image-wrapper {
-    margin-right: 24px;
-  }
-
-  .ui.image {
-    width: 100%;
-    margin-right: auto;
-    object-fit: cover;
-  }
-}
-
-.right-image {
-  width: 100%;
-
-  .image-wrapper {
-    margin-right: 0;
-    margin-left: 24px;
-
-    .ui.image {
-      margin-left: auto;
-    }
-  }
-}
-
 .u-item.listing-item.simple-listing-item {
   padding: var(--theme-padding, 0);
   border-bottom: none;
@@ -228,14 +299,14 @@ each(range(5), {
   .description {
     .useMaxLines();
   }
+}
 
-  &.left-image-card {
-    flex-direction: row;
-  }
+.cards-carousel .slick-slide {
+  visibility: hidden;
+}
 
-  &.right-image-card {
-    flex-direction: row-reverse;
-  }
+.cards-carousel .slick-active {
+  visibility: visible;
 }
 
 @media only screen and (max-width: (@largestMobileScreen)) {
@@ -245,40 +316,6 @@ each(range(5), {
       margin: 0;
     }
   }
-}
-
-// Search item listing
-
-.listing-item.result-item:not(.rounded) {
-  .listing-body {
-    flex: auto;
-  }
-
-  .left-image {
-    .listing-body {
-      flex: 1;
-    }
-  }
-
-  .right-image {
-    .ui.image {
-      width: auto;
-    }
-  }
-}
-
-.result-item .listing-body {
-  display: flex;
-  //flex: auto; breaks rounded image size, re-enable if trully needed
-  flex-direction: column;
-}
-
-.cards-carousel .slick-slide {
-  visibility: hidden;
-}
-
-.cards-carousel .slick-active {
-  visibility: visible;
 }
 
 @media print {

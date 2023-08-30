@@ -1,6 +1,9 @@
 import cx from 'classnames';
-import { ConditionalLink, FormattedDate } from '@plone/volto/components';
+import { ConditionalLink } from '@plone/volto/components';
 
+import { formatDate } from '@plone/volto/helpers/Utils/Date';
+
+import config from '@plone/volto/registry';
 import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
 
 import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
@@ -17,21 +20,28 @@ const getStyles = (props) => {
   return res;
 };
 
-const BodyText = ({ item, hasDate, hasDescription }) => {
+const BodyText = ({ item, hasDate, hasDescription, isEditMode }) => {
+  const locale = config.settings.dateLocale || 'en-gb';
+  const showDate = hasDate !== false && item.EffectiveDate !== 'None';
+
   return (
     <div className="listing-body">
-      <h3 className={'listing-header'}>{item.title ? item.title : item.id}</h3>
-      {hasDate && item.effective && (
+      <ConditionalLink item={item} condition={!isEditMode}>
+        <h3 className={'listing-header'}>
+          {item.title ? item.title : item.id}
+        </h3>
+      </ConditionalLink>
+      {showDate && (
         <p className={'listing-date'}>
-          <FormattedDate
-            date={item.effective}
-            format={{
+          {formatDate({
+            date: item.EffectiveDate,
+            format: {
               year: 'numeric',
               month: 'short',
               day: '2-digit',
-            }}
-            locale={'en-gb'}
-          />
+            },
+            locale: locale,
+          })}
         </p>
       )}
       {hasDescription && (
@@ -54,39 +64,40 @@ const BasicItem = (props) => {
         className={`wrapper ${imageOnRightSide ? 'right-image' : 'left-image'}`}
       >
         <div className="slot-top">
-          <ConditionalLink item={item} condition={!isEditMode}>
-            {hasImage ? (
-              imageOnRightSide ? (
-                <>
-                  <BodyText
-                    item={item}
-                    hasDescription={hasDescription}
-                    hasDate={hasDate}
-                  />
-                  <div className="image-wrapper">
-                    <PreviewImage item={item} />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="image-wrapper">
-                    <PreviewImage item={item} />
-                  </div>
-                  <BodyText
-                    item={item}
-                    hasDescription={hasDescription}
-                    hasDate={hasDate}
-                  />
-                </>
-              )
+          {hasImage ? (
+            imageOnRightSide ? (
+              <>
+                <BodyText
+                  item={item}
+                  hasDescription={hasDescription}
+                  hasDate={hasDate}
+                  isEditMode={isEditMode}
+                />
+                <div className="image-wrapper">
+                  <PreviewImage item={item} />
+                </div>
+              </>
             ) : (
-              <BodyText
-                item={item}
-                hasDescription={hasDescription}
-                hasDate={hasDate}
-              />
-            )}
-          </ConditionalLink>
+              <>
+                <div className="image-wrapper">
+                  <PreviewImage item={item} />
+                </div>
+                <BodyText
+                  item={item}
+                  hasDescription={hasDescription}
+                  hasDate={hasDate}
+                  isEditMode={isEditMode}
+                />
+              </>
+            )
+          ) : (
+            <BodyText
+              item={item}
+              hasDescription={hasDescription}
+              hasDate={hasDate}
+              isEditMode={isEditMode}
+            />
+          )}
         </div>
         <div className="slot-bottom">{item?.extra}</div>
       </div>

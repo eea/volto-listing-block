@@ -1,15 +1,27 @@
 import { cloneDeep } from 'lodash';
 import config from '@plone/volto/registry';
 
-export const addTypeSelect = ({ intl, schema, extensionName, messages }) => {
+export const addTypeSelect = ({
+  formData,
+  intl,
+  schema,
+  extensionName,
+  messages,
+}) => {
   schema = cloneDeep(schema);
   const field = '@type';
   const extensions = config.blocks.blocksConfig.listing.extensions;
   const variations = extensions[extensionName];
+  const selectedVariation = formData?.variation || 'summary';
+  const filteredVariations = variations.filter((entry) => {
+    return entry.excludedFromVariations
+      ? entry.excludedFromVariations.indexOf(selectedVariation) === -1
+      : true;
+  });
   schema.properties[field] = {
     title: intl.formatMessage(messages.title),
-    choices: variations.map(({ id, title }) => [id, title]),
-    defaultValue: variations.find(({ isDefault }) => isDefault).id,
+    choices: filteredVariations.map(({ id, title }) => [id, title]),
+    default: filteredVariations.find(({ isDefault }) => isDefault).id,
   };
   schema.fieldsets[0].fields.unshift(field);
 

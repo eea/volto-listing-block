@@ -40,7 +40,7 @@ const CardExtra = ({ item, itemModel = {}, ...rest }) => {
 
   return show ? (
     <UiCard.Content extra>
-      {showTags && (
+      {showTags && item?.Subject?.length > 0 && (
         <div className={'tags labels'}>
           <Tags item={item} itemModel={itemModel} {...rest} />
         </div>
