@@ -22,7 +22,7 @@ const Listing = (props) => {
 
   return (
     <>
-      <div className={'items ' + props.itemModel['@type'] + '-items'}>
+      <div className={'items ' + props?.itemModel?.['@type'] + '-items'}>
         {items && items.length > 0 ? (
           items.map((item, index) => (
             <UniversalCard
