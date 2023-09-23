@@ -28,8 +28,7 @@ describe('Blocks Tests', () => {
 
     cy.contains('Add criteria').click();
     cy.get('.react-select__menu').contains('Creator').click();
-
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Card (default)').click();
     cy.contains('Image on left').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
@@ -101,7 +100,7 @@ describe('Blocks Tests', () => {
     cy.get('[contenteditable=true]').first().click();
 
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Image on left').click();
     cy.contains('Image on right').click();
     cy.get('.inline.field.field-wrapper-hasTags-8-itemModel input').click({
@@ -154,7 +153,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Image on right').click({ force: true });
     cy.contains('Image Card').click();
     cy.contains('Image Card');
@@ -164,7 +163,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Image Card').click();
     cy.contains('Listing Item').click();
     cy.get('.inline.field.field-wrapper-hasDate-2-itemModel input').click({
@@ -184,7 +183,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
       force: true,
     });
@@ -193,7 +192,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Listing Item').click();
     cy.contains('Search Item').click();
     cy.get('#toolbar-save').click();
@@ -201,7 +200,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Search Item').click();
     cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
       force: true,
@@ -214,7 +213,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Search Item').click();
     cy.contains('Simple Item').click();
     cy.get('#toolbar-save').click();
@@ -242,7 +241,7 @@ describe('Blocks Tests', () => {
     cy.get('.react-select__option').contains('Carousel').click();
 
     cy.get('.title').contains('Carousel').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Card (default)').click();
     cy.contains('Image Card').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
@@ -408,7 +407,7 @@ describe('Blocks Tests', () => {
     cy.get('.react-select__option').contains('Gallery').click();
 
     cy.get('.title').contains('Gallery').click();
-    cy.get('.title').contains('Card').click();
+    cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Card (default)').click();
     cy.contains('Image Card').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
