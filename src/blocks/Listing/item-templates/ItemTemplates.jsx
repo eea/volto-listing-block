@@ -1,5 +1,6 @@
 import cx from 'classnames';
 import { ConditionalLink } from '@plone/volto/components';
+import { Icon } from 'semantic-ui-react';
 
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
 import { When } from '@plone/volto/components/theme/View/EventDatesInfo';
@@ -21,7 +22,13 @@ const getStyles = (props) => {
   return res;
 };
 
-const BodyText = ({ item, hasDate, hasDescription, isEditMode }) => {
+const BodyText = ({
+  item,
+  hasDate,
+  hasEventDate,
+  hasDescription,
+  isEditMode,
+}) => {
   const locale = config.settings.dateLocale || 'en-gb';
   const showDate = hasDate !== false && item.EffectiveDate !== 'None';
 
@@ -33,15 +40,6 @@ const BodyText = ({ item, hasDate, hasDescription, isEditMode }) => {
         </h3>
       </ConditionalLink>
       <div className="listing-body-dates">
-        {!!item.start && showDate && (
-          <When
-            start={item.start}
-            end={item.end}
-            whole_day={true}
-            open_end={item.open_end}
-          />
-        )}
-
         {showDate && (
           <p className={'listing-date'}>
             {formatDate({
@@ -55,6 +53,17 @@ const BodyText = ({ item, hasDate, hasDescription, isEditMode }) => {
             })}
           </p>
         )}
+        {!!item.start && hasEventDate && (
+          <span className="event-date">
+            <Icon className="ri-calendar-line" />
+            <When
+              start={item.start}
+              end={item.end}
+              whole_day={true}
+              open_end={item.open_end}
+            />
+          </span>
+        )}
       </div>
       {hasDescription && (
         <p className={'listing-description'}>{item.description}</p>
@@ -65,7 +74,13 @@ const BodyText = ({ item, hasDate, hasDescription, isEditMode }) => {
 
 const BasicItem = (props) => {
   const { item, className, itemModel = {}, isEditMode = false } = props;
-  const { hasImage, imageOnRightSide, hasDate, hasDescription } = itemModel;
+  const {
+    hasImage,
+    imageOnRightSide,
+    hasDate,
+    hasEventDate,
+    hasDescription,
+  } = itemModel;
   const styles = getStyles(props);
 
   const bodyText = (
@@ -73,6 +88,7 @@ const BasicItem = (props) => {
       item={item}
       hasDescription={hasDescription}
       hasDate={hasDate}
+      hasEventDate={hasEventDate}
       isEditMode={isEditMode}
     />
   );

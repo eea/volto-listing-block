@@ -63,6 +63,7 @@ export const setCardModelSchema = (args) => {
     'titleOnImage',
     'maxTitle',
     'hasDate',
+    'hasEventDate',
     'hasDescription',
     ...(formData?.itemModel?.hasDescription ? ['maxDescription'] : []),
     'hasMetaType',
@@ -85,6 +86,11 @@ export const setCardModelSchema = (args) => {
     },
     hasDate: {
       title: 'Publication date',
+      type: 'boolean',
+      default: false,
+    },
+    hasEventDate: {
+      title: 'Event date',
       type: 'boolean',
       default: false,
     },
@@ -138,6 +144,7 @@ export const setItemModelSchema = (args) => {
     ...itemModelSchema.fieldsets[0].fields,
     'maxTitle',
     'hasDate',
+    'hasEventDate',
     'hasDescription',
     'maxDescription',
     'hasImage',
@@ -153,6 +160,11 @@ export const setItemModelSchema = (args) => {
     hasDate: {
       title: 'Publication date',
       type: 'boolean',
+    },
+    hasEventDate: {
+      title: 'Event date',
+      type: 'boolean',
+      default: false,
     },
     hasDescription: {
       title: 'Description',
