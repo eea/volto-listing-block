@@ -2,6 +2,7 @@ import cx from 'classnames';
 import { ConditionalLink } from '@plone/volto/components';
 
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
+import { When } from '@plone/volto/components/theme/View/EventDatesInfo';
 
 import config from '@plone/volto/registry';
 import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
@@ -31,19 +32,30 @@ const BodyText = ({ item, hasDate, hasDescription, isEditMode }) => {
           {item.title ? item.title : item.id}
         </h3>
       </ConditionalLink>
-      {showDate && (
-        <p className={'listing-date'}>
-          {formatDate({
-            date: item.EffectiveDate,
-            format: {
-              year: 'numeric',
-              month: 'short',
-              day: '2-digit',
-            },
-            locale: locale,
-          })}
-        </p>
-      )}
+      <div className="listing-body-dates">
+        {!!item.start && showDate && (
+          <When
+            start={item.start}
+            end={item.end}
+            whole_day={true}
+            open_end={item.open_end}
+          />
+        )}
+
+        {showDate && (
+          <p className={'listing-date'}>
+            {formatDate({
+              date: item.EffectiveDate,
+              format: {
+                year: 'numeric',
+                month: 'short',
+                day: '2-digit',
+              },
+              locale: locale,
+            })}
+          </p>
+        )}
+      </div>
       {hasDescription && (
         <p className={'listing-description'}>{item.description}</p>
       )}
@@ -56,6 +68,15 @@ const BasicItem = (props) => {
   const { hasImage, imageOnRightSide, hasDate, hasDescription } = itemModel;
   const styles = getStyles(props);
 
+  const bodyText = (
+    <BodyText
+      item={item}
+      hasDescription={hasDescription}
+      hasDate={hasDate}
+      isEditMode={isEditMode}
+    />
+  );
+
   return (
     <div
       className={cx('u-item listing-item', getVoltoStyles(styles), className)}
@@ -65,38 +86,15 @@ const BasicItem = (props) => {
       >
         <div className="slot-top">
           {hasImage ? (
-            imageOnRightSide ? (
-              <>
-                <BodyText
-                  item={item}
-                  hasDescription={hasDescription}
-                  hasDate={hasDate}
-                  isEditMode={isEditMode}
-                />
-                <div className="image-wrapper">
-                  <PreviewImage item={item} />
-                </div>
-              </>
-            ) : (
-              <>
-                <div className="image-wrapper">
-                  <PreviewImage item={item} />
-                </div>
-                <BodyText
-                  item={item}
-                  hasDescription={hasDescription}
-                  hasDate={hasDate}
-                  isEditMode={isEditMode}
-                />
-              </>
-            )
+            <>
+              {imageOnRightSide ? bodyText : null}
+              <div className="image-wrapper">
+                <PreviewImage item={item} />
+              </div>
+              {!imageOnRightSide ? bodyText : null}
+            </>
           ) : (
-            <BodyText
-              item={item}
-              hasDescription={hasDescription}
-              hasDate={hasDate}
-              isEditMode={isEditMode}
-            />
+            bodyText
           )}
         </div>
         <div className="slot-bottom">{item?.extra}</div>
