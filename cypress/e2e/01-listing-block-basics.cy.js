@@ -170,12 +170,12 @@ describe('Blocks Tests', () => {
       force: true,
     });
     cy.get(
-      '.inline.field.field-wrapper-imageOnRightSide-6-itemModel input',
+      '.inline.field.field-wrapper-imageOnRightSide-7-itemModel input',
     ).click({ force: true });
     cy.get('#field-maxTitle-1-itemModel')
       .click()
       .type('{downArrow}{downArrow}');
-    cy.get('#field-maxDescription-4-itemModel')
+    cy.get('#field-maxDescription-5-itemModel')
       .click()
       .type('{downArrow}{downArrow}');
     cy.get('#toolbar-save').click();
@@ -184,7 +184,7 @@ describe('Blocks Tests', () => {
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
     cy.get('.title').contains('Card').click({ force: true });
-    cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
+    cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
     cy.get('#toolbar-save').click();
@@ -202,11 +202,11 @@ describe('Blocks Tests', () => {
     cy.contains('Test Headline').click();
     cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Search Item').click();
-    cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
+    cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
     cy.get(
-      '.inline.field.field-wrapper-imageOnRightSide-6-itemModel input',
+      '.inline.field.field-wrapper-imageOnRightSide-7-itemModel input',
     ).click({ force: true });
     cy.get('#toolbar-save').click();
 
