@@ -138,6 +138,7 @@ export const setCardModelSchema = (args) => {
 
 export const setItemModelSchema = (args) => {
   const { formData, schema } = args;
+
   const itemModelSchema = schema.properties.itemModel.schema;
 
   itemModelSchema.fieldsets[0].fields = [
@@ -149,6 +150,8 @@ export const setItemModelSchema = (args) => {
     'maxDescription',
     'hasImage',
     ...(formData.itemModel?.hasImage ? ['imageOnRightSide'] : []),
+    'hasIcon',
+    ...(formData.itemModel?.hasIcon ? ['icon'] : []),
     // 'hasMetaType',
     // 'hasLabel',
     // 'hasTags',
@@ -193,6 +196,15 @@ export const setItemModelSchema = (args) => {
       title: 'Image',
       type: 'boolean',
       default: true,
+    },
+    hasIcon: {
+      title: 'Icon',
+      type: 'boolean',
+      default: false,
+    },
+    icon: {
+      title: 'Icon name',
+      description: "Ex.: 'ri-home-line'",
     },
     imageOnRightSide: {
       title: 'Image on Right (Default is Left)',

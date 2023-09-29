@@ -93,6 +93,10 @@ each(range(5), {
   // shrink and grow listing body in order to fit the left or right image
   .listing-body {
     flex: 1;
+
+    > :last-child {
+      margin-bottom: 0;
+    }
   }
 
   .meta .date {
@@ -295,6 +299,50 @@ each(range(5), {
   padding: var(--theme-padding, 32px 1rem);
 }
 
+.listing-body.has-icon {
+  display: flex;
+  align-items: @listingBodyIconAlign;
+
+  i.icon {
+    margin-top: 2px; // fix position with top aligned
+  }
+
+  .listing-wrap {
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.listing-body-dates {
+  display: flex;
+  flex-direction: @listingDatesFlexDirection;
+
+  .listing-date,
+  .event-date {
+    margin: @listingDatesMargin;
+  }
+
+  & > *:not(:last-child)::after {
+    padding: 0 0.3em;
+    content: ' | ';
+  }
+
+  .event-date {
+    display: flex;
+    flex-direction: @listingEventDateFlexDirection;
+    align-items: @listingEventDateAlign;
+
+    i.icon {
+      margin-top: 0;
+    }
+
+    .event-when {
+      margin: @listingEventDateMargin;
+    }
+  }
+}
+
 .ui.card.u-card {
   .meta:after {
     content: '\200b';
@@ -315,31 +363,6 @@ each(range(5), {
 
 .cards-carousel .slick-active {
   visibility: visible;
-}
-
-.listing-body-dates {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: 1em;
-
-  .listing-date {
-    margin: 0;
-  }
-
-  & > *:not(:last-child)::after {
-    padding: 0 0.3em;
-    content: ' | ';
-  }
-
-  .event-date {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .event-when {
-      margin: 0;
-    }
-  }
 }
 
 @media only screen and (max-width: (@largestMobileScreen)) {
