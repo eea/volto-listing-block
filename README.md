@@ -36,26 +36,12 @@ This version requires: `@plone/volto >= 16.0.0.alpha.15` (`volto-slate` part of 
 
 ### Try volto-listing-block with Docker
 
-1. Get the latest Docker images
+      git clone https://github.com/eea/volto-listing-block.git
+      cd volto-listing-block
+      make
+      make start
 
-   ```
-   docker pull plone
-   docker pull plone/volto
-   ```
-
-1. Start Plone backend
-
-   ```
-   docker run -d --name plone -p 8080:8080 -e SITE=Plone -e PROFILES="profile-plone.restapi:blocks" plone
-   ```
-
-1. Start Volto frontend
-
-   ```
-   docker run -it --rm -p 3000:3000 --link plone -e ADDONS="@eeacms/volto-listing-block" plone/volto
-   ```
-
-1. Go to http://localhost:3000
+Go to http://localhost:3000
 
 ### Add volto-listing-block to your Volto project
 
@@ -67,25 +53,25 @@ This version requires: `@plone/volto >= 16.0.0.alpha.15` (`volto-slate` part of 
 
 1. Start Volto frontend
 
-- If you already have a volto project, just update `package.json`:
+* If you already have a volto project, just update `package.json`:
 
-  ```JSON
-  "addons": [
-      "@eeacms/volto-listing-block"
-  ],
+   ```JSON
+   "addons": [
+       "@eeacms/volto-listing-block"
+   ],
 
-  "dependencies": {
-      "@eeacms/volto-listing-block": "^1.0.0"
-  }
-  ```
+   "dependencies": {
+       "@eeacms/volto-listing-block": "*"
+   }
+   ```
 
-- If not, create one:
+* If not, create one:
 
-  ```
-  npm install -g yo @plone/generator-volto
-  yo @plone/volto my-volto-project --addon @eeacms/volto-listing-block
-  cd my-volto-project
-  ```
+   ```
+   npm install -g yo @plone/generator-volto
+   yo @plone/volto my-volto-project --canary --addon @eeacms/volto-listing-block
+   cd my-volto-project
+   ```
 
 1. Install new add-ons and restart Volto:
 
