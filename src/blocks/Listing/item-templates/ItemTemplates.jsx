@@ -33,12 +33,12 @@ const BodyText = ({ item, isEditMode, itemModel }) => {
   return (
     <div
       className={cx('listing-body', {
-        'has-icon': icon ?? false,
+        'has-icon': hasIcon && icon,
       })}
     >
       {hasIcon && icon && <Icon className={icon} size="large" />}
       <Wrapper
-        condition={icon}
+        condition={hasIcon && icon}
         wrapper={(children) => <div className="listing-wrap">{children}</div>}
       >
         <ConditionalLink item={item} condition={!isEditMode}>
