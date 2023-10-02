@@ -204,7 +204,7 @@ export const setItemModelSchema = (args) => {
     },
     icon: {
       title: 'Icon name',
-      description: "Ex.: 'ri-home-line'",
+      description: "Ex.: 'ri-arrow-right-line'. See Remix Icon set",
     },
     imageOnRightSide: {
       title: 'Image on Right (Default is Left)',
