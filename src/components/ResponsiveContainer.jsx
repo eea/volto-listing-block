@@ -72,10 +72,8 @@ class ResponsiveContainer extends Component {
     const newSize = this.getContainerSize();
 
     if (newSize) {
-      const {
-        containerWidth: oldWidth,
-        containerHeight: oldHeight,
-      } = this.state;
+      const { containerWidth: oldWidth, containerHeight: oldHeight } =
+        this.state;
       const { containerWidth, containerHeight } = newSize;
 
       if (containerWidth !== oldWidth || containerHeight !== oldHeight) {
@@ -121,15 +119,8 @@ class ResponsiveContainer extends Component {
   }
 
   render() {
-    const {
-      minWidth,
-      minHeight,
-      width,
-      height,
-      maxHeight,
-      id,
-      className,
-    } = this.props;
+    const { minWidth, minHeight, width, height, maxHeight, id, className } =
+      this.props;
     const style = { width, height, minWidth, minHeight, maxHeight };
     return (
       <div
