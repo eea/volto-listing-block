@@ -29,34 +29,32 @@ export const addTypeSelect = ({
 };
 
 // Creates a factory that can trigger schemaEnhancer for a given extension
-export const schemaEnhancerFactory =
-  ({
-    extensionName,
-    messages,
-    blockType = 'listing',
-    extensionField = '@type',
-  }) =>
-  ({ schema: originalSchema, formData, intl }) => {
-    // the attribute name that's stored in the block data
-    // it identifies the type of extension that's
-    // applied. Similar in scope, for example, with the block @type
+export const schemaEnhancerFactory = ({
+  extensionName,
+  messages,
+  blockType = 'listing',
+  extensionField = '@type',
+}) => ({ schema: originalSchema, formData, intl }) => {
+  // the attribute name that's stored in the block data
+  // it identifies the type of extension that's
+  // applied. Similar in scope, for example, with the block @type
 
-    const blockConfig = config.blocks.blocksConfig[blockType];
-    const extensions = blockConfig.extensions;
-    const templates = extensions[extensionName];
+  const blockConfig = config.blocks.blocksConfig[blockType];
+  const extensions = blockConfig.extensions;
+  const templates = extensions[extensionName];
 
-    const activeItemName = formData?.itemModel?.[extensionField]; // TODO: don't hardcode itemModel
-    let activeItem = templates?.find((item) => item.id === activeItemName);
-    if (!activeItem) activeItem = templates?.find((item) => item.isDefault);
+  const activeItemName = formData?.itemModel?.[extensionField]; // TODO: don't hardcode itemModel
+  let activeItem = templates?.find((item) => item.id === activeItemName);
+  if (!activeItem) activeItem = templates?.find((item) => item.isDefault);
 
-    const schemaEnhancer = activeItem?.['schemaEnhancer'];
+  const schemaEnhancer = activeItem?.['schemaEnhancer'];
 
-    let schema = schemaEnhancer
-      ? schemaEnhancer({ schema: cloneDeep(originalSchema), formData, intl })
-      : cloneDeep(originalSchema);
+  let schema = schemaEnhancer
+    ? schemaEnhancer({ schema: cloneDeep(originalSchema), formData, intl })
+    : cloneDeep(originalSchema);
 
-    return schema;
-  };
+  return schema;
+};
 
 export const DefaultCardModelSchema = {
   title: 'Card Model',
