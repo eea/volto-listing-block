@@ -18,6 +18,7 @@ describe('DefaultCardLayout', () => {
       title: 'DefaultCardLayout title',
       description: 'DefaultCardLayout description',
       meta: 'DefaultCardLayout meta',
+      EffectiveDate: '2023-10-05T08:21:00+02:00',
     };
 
     const itemModel = {
@@ -46,6 +47,7 @@ describe('LeftImageCardLayout', () => {
       title: 'LeftImageCardLayout title',
       description: 'LeftImageCardLayout description',
       meta: 'LeftImageCardLayout meta',
+      EffectiveDate: '2023-10-05T08:21:00+02:00',
     };
 
     const itemModel = {
@@ -74,6 +76,7 @@ describe('RightImageCardLayout', () => {
       title: 'RightImageCardLayout title',
       description: 'RightImageCardLayout description',
       meta: 'RightImageCardLayout meta',
+      EffectiveDate: '2023-10-05T08:21:00+02:00',
     };
 
     const itemModel = {
@@ -102,6 +105,7 @@ describe('ImageCardLayout', () => {
       title: 'ImageCardLayout title',
       description: 'ImageCardLayout description',
       meta: 'ImageCardLayout meta',
+      EffectiveDate: '2023-10-05T08:21:00+02:00',
     };
 
     const itemModel = {

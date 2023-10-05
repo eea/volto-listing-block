@@ -13,6 +13,7 @@ describe('ItemTemplates', () => {
       title: 'Default listing title',
       description: 'Default listing description',
       meta: 'Default listing meta',
+      EffectiveDate: '2023-10-05T08:21:00+02:00',
     };
 
     const itemModel = {

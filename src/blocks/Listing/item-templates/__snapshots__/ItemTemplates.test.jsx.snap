@@ -31,7 +31,7 @@ exports[`ItemTemplates renders correctly 1`] = `
           <p
             className="listing-date"
           >
-            04 Oct 2023
+            05 Oct 2023
           </p>
         </div>
         <p
