@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SimpleItemTemplates renders correctly 1`] = `
+<div
+  className="u-item listing-item simple-listing-item my-class"
+>
+  <div
+    className="wrapper"
+  >
+    <div
+      className="slot-top"
+    >
+      <div>
+        ConditionalLink
+      </div>
+    </div>
+    <div
+      className="slot-bottom"
+    >
+      Simple listing extra
+    </div>
+  </div>
+</div>
+`;

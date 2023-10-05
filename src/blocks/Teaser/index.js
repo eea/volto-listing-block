@@ -3,7 +3,7 @@ import TeaserCardTemplate from './Card';
 import { adjustTeaserSchema } from './schema';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 
-export default (config) => {
+const applyConfig = (config) => {
   if (config.blocks.blocksConfig.teaser) {
     config.blocks.blocksConfig.teaser.schemaEnhancer = composeSchema(
       config.blocks.blocksConfig.teaser.schemaEnhancer,
@@ -43,3 +43,5 @@ export default (config) => {
 
   return config;
 };
+
+export default applyConfig;

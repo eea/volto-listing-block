@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ItemTemplates renders correctly 1`] = `
+<div
+  className="u-item listing-item my-class"
+>
+  <div
+    className="wrapper left-image"
+  >
+    <div
+      className="slot-top"
+    >
+      <div
+        className="image-wrapper"
+      >
+        <img
+          alt="Default listing title"
+          className="ui image"
+          src="default-image.svg"
+        />
+      </div>
+      <div
+        className="listing-body"
+      >
+        <div>
+          ConditionalLink
+        </div>
+        <div
+          className="listing-body-dates"
+        >
+          <p
+            className="listing-date"
+          >
+            04 Oct 2023
+          </p>
+        </div>
+        <p
+          className="listing-description"
+        >
+          Default listing description
+        </p>
+      </div>
+    </div>
+    <div
+      className="slot-bottom"
+    />
+  </div>
+</div>
+`;
