@@ -317,10 +317,11 @@ each(range(5), {
 .listing-body-dates {
   display: flex;
   flex-direction: @listingDatesFlexDirection;
+  margin: @listingDatesMargin;
 
   .listing-date,
   .event-date {
-    margin: @listingDatesMargin;
+    margin: 0;
   }
 
   & > *:not(:last-child)::after {
