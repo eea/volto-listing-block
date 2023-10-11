@@ -93,6 +93,10 @@ each(range(5), {
   // shrink and grow listing body in order to fit the left or right image
   .listing-body {
     flex: 1;
+
+    > :last-child {
+      margin-bottom: 0;
+    }
   }
 
   .meta .date {
@@ -267,6 +271,10 @@ each(range(5), {
   color: var(--text-color, @tertiaryColor);
 }
 
+.u-item.listing-item.simple-listing-item[class*='ary'] {
+  padding: var(--theme-padding, 0.5rem 0.8rem);
+}
+
 .u-item.listing-item.simple-listing-item {
   padding: var(--theme-padding, 0);
   border-bottom: none;
@@ -281,10 +289,59 @@ each(range(5), {
 }
 
 .u-item.listing-item {
-  padding: var(--theme-padding, 32px 1rem);
+  padding: var(--theme-padding, 32px 0);
   margin: 0;
   background-color: var(--bg-color, #fff);
   color: var(--text-color, @tertiaryColor);
+}
+
+.u-item.listing-item[class*='ary'] {
+  padding: var(--theme-padding, 32px 1rem);
+}
+
+.listing-body.has-icon {
+  display: flex;
+  align-items: @listingBodyIconAlign;
+
+  i.icon {
+    margin-top: 2px; // fix position with top aligned
+  }
+
+  .listing-wrap {
+    > :last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.listing-body-dates {
+  display: flex;
+  flex-direction: @listingDatesFlexDirection;
+  margin: @listingDatesMargin;
+
+  .listing-date,
+  .event-date {
+    margin: 0;
+  }
+
+  & > *:not(:last-child)::after {
+    padding: 0 0.3em;
+    content: ' | ';
+  }
+
+  .event-date {
+    display: flex;
+    flex-direction: @listingEventDateFlexDirection;
+    align-items: @listingEventDateAlign;
+
+    i.icon {
+      margin-top: 0;
+    }
+
+    .event-when {
+      margin: @listingEventDateMargin;
+    }
+  }
 }
 
 .ui.card.u-card {

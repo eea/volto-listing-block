@@ -103,24 +103,24 @@ describe('Blocks Tests', () => {
     cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Image on left').click();
     cy.contains('Image on right').click();
-    cy.get('.inline.field.field-wrapper-hasTags-8-itemModel input').click({
+    cy.get('.inline.field.field-wrapper-hasTags-9-itemModel input').click({
       force: true,
     });
     cy.get(
-      '.inline.field.field-wrapper-enable-0-callToAction-9-itemModel input',
+      '.inline.field.field-wrapper-enable-0-callToAction-10-itemModel input',
     ).click({ force: true });
-    cy.get('#field-urlTemplate-2-callToAction-9-itemModel')
+    cy.get('#field-urlTemplate-2-callToAction-10-itemModel')
       .click({ force: true })
       .type('http://localhost:3000');
 
     cy.get(
-      '.inline.field.field-wrapper-hasTags-8-itemModel .ui.checked.checkbox input',
+      '.inline.field.field-wrapper-hasTags-9-itemModel .ui.checked.checkbox input',
     );
     cy.get(
-      '.inline.field.field-wrapper-enable-0-callToAction-9-itemModel .ui.checked.checkbox input',
+      '.inline.field.field-wrapper-enable-0-callToAction-10-itemModel .ui.checked.checkbox input',
     );
     cy.get(
-      'input[value="http://localhost:3000"]#field-urlTemplate-2-callToAction-9-itemModel',
+      'input[value="http://localhost:3000"]#field-urlTemplate-2-callToAction-10-itemModel',
     );
 
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
@@ -170,12 +170,12 @@ describe('Blocks Tests', () => {
       force: true,
     });
     cy.get(
-      '.inline.field.field-wrapper-imageOnRightSide-6-itemModel input',
+      '.inline.field.field-wrapper-imageOnRightSide-7-itemModel input',
     ).click({ force: true });
     cy.get('#field-maxTitle-1-itemModel')
       .click()
       .type('{downArrow}{downArrow}');
-    cy.get('#field-maxDescription-4-itemModel')
+    cy.get('#field-maxDescription-5-itemModel')
       .click()
       .type('{downArrow}{downArrow}');
     cy.get('#toolbar-save').click();
@@ -184,7 +184,7 @@ describe('Blocks Tests', () => {
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
     cy.get('.title').contains('Card').click({ force: true });
-    cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
+    cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
     cy.get('#toolbar-save').click();
@@ -202,11 +202,11 @@ describe('Blocks Tests', () => {
     cy.contains('Test Headline').click();
     cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Search Item').click();
-    cy.get('.inline.field.field-wrapper-hasImage-5-itemModel input').click({
+    cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
     cy.get(
-      '.inline.field.field-wrapper-imageOnRightSide-6-itemModel input',
+      '.inline.field.field-wrapper-imageOnRightSide-7-itemModel input',
     ).click({ force: true });
     cy.get('#toolbar-save').click();
 

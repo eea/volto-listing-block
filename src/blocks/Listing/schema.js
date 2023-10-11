@@ -63,6 +63,7 @@ export const setCardModelSchema = (args) => {
     'titleOnImage',
     'maxTitle',
     'hasDate',
+    'hasEventDate',
     'hasDescription',
     ...(formData?.itemModel?.hasDescription ? ['maxDescription'] : []),
     'hasMetaType',
@@ -85,6 +86,11 @@ export const setCardModelSchema = (args) => {
     },
     hasDate: {
       title: 'Publication date',
+      type: 'boolean',
+      default: false,
+    },
+    hasEventDate: {
+      title: 'Event date',
       type: 'boolean',
       default: false,
     },
@@ -132,16 +138,20 @@ export const setCardModelSchema = (args) => {
 
 export const setItemModelSchema = (args) => {
   const { formData, schema } = args;
+
   const itemModelSchema = schema.properties.itemModel.schema;
 
   itemModelSchema.fieldsets[0].fields = [
     ...itemModelSchema.fieldsets[0].fields,
     'maxTitle',
     'hasDate',
+    'hasEventDate',
     'hasDescription',
     'maxDescription',
     'hasImage',
     ...(formData.itemModel?.hasImage ? ['imageOnRightSide'] : []),
+    'hasIcon',
+    ...(formData.itemModel?.hasIcon ? ['icon'] : []),
     // 'hasMetaType',
     // 'hasLabel',
     // 'hasTags',
@@ -153,6 +163,11 @@ export const setItemModelSchema = (args) => {
     hasDate: {
       title: 'Publication date',
       type: 'boolean',
+    },
+    hasEventDate: {
+      title: 'Event date',
+      type: 'boolean',
+      default: false,
     },
     hasDescription: {
       title: 'Description',
@@ -181,6 +196,15 @@ export const setItemModelSchema = (args) => {
       title: 'Image',
       type: 'boolean',
       default: true,
+    },
+    hasIcon: {
+      title: 'Icon',
+      type: 'boolean',
+      default: false,
+    },
+    icon: {
+      title: 'Icon name',
+      description: "Ex.: 'ri-arrow-right-line'. See Remix Icon set",
     },
     imageOnRightSide: {
       title: 'Image on Right (Default is Left)',

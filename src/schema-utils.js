@@ -35,7 +35,6 @@ export const schemaEnhancerFactory = ({
   blockType = 'listing',
   extensionField = '@type',
 }) => ({ schema: originalSchema, formData, intl }) => {
-  //
   // the attribute name that's stored in the block data
   // it identifies the type of extension that's
   // applied. Similar in scope, for example, with the block @type

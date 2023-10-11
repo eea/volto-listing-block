@@ -3,7 +3,7 @@ import ItemView from './View';
 
 import codeSVG from '@plone/volto/icons/code.svg';
 
-export default (config) => {
+const applyConfig = (config) => {
   config.blocks.blocksConfig.item = {
     id: 'item',
     title: 'Item',
@@ -28,3 +28,5 @@ export default (config) => {
 
   return config;
 };
+
+export default applyConfig;
