@@ -31,10 +31,6 @@ each(range(5), {
   -webkit-line-clamp: var(--title-max-lines, @value);
 }
 
-.category {
-  font-size: @categoryFontSize;
-}
-
 .ui.cards > .card,
 .ui.card {
   height: unset;
@@ -61,6 +57,10 @@ each(range(5), {
 .info-prefix {
   color: #9a9a9a;
   font-size: 12px;
+}
+
+.news-date {
+  font-size: @newsDateFontSize;
 }
 
 .u-item {

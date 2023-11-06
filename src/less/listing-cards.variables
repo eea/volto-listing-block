@@ -1,4 +1,4 @@
-@categoryFontSize: 12px;
+@newsDateFontSize: 12px;
 
 @imageAspectRatio: 16/9;
 @imageMinWidth: 200px;
