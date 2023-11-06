@@ -1,5 +1,8 @@
 /* eslint no-console: ["error", { allow: ["log"] }] */
 
+const SLATE_SELECTOR = '.content-area .slate-editor [contenteditable=true]';
+const SLATE_TITLE_SELECTOR = '.block.inner.title [contenteditable="true"]';
+
 // --- AUTOLOGIN -------------------------------------------------------------
 Cypress.Commands.add('autologin', () => {
   let api_url, user, password;
@@ -376,6 +379,44 @@ Cypress.Commands.add(
   },
 );
 
+Cypress.Commands.add('getSlate', ({ createNewSlate = true } = {}) => {
+  let slate;
+  cy.getIfExists(
+    SLATE_SELECTOR,
+    () => {
+      slate = cy.get(SLATE_SELECTOR).last();
+    },
+    () => {
+      if (createNewSlate) {
+        cy.get('.block.inner').last().type('{moveToEnd}{enter}');
+      }
+      slate = cy.get(SLATE_SELECTOR, { timeout: 10000 }).last();
+    },
+  );
+  return slate;
+});
+
+Cypress.Commands.add('getSlateTitle', () => {
+  return cy.get(SLATE_TITLE_SELECTOR, {
+    timeout: 10000,
+  });
+});
+
+Cypress.Commands.add('clearSlateTitle', () => {
+  return cy.clearSlate(SLATE_TITLE_SELECTOR);
+});
+
+Cypress.Commands.add('clearSlate', (selector) => {
+  return cy
+    .get(selector)
+    .focus()
+    .click()
+    .wait(1000)
+    .type('{selectAll}')
+    .wait(1000)
+    .type('{backspace}');
+});
+
 Cypress.Commands.add('getSlateEditorAndType', (type) => {
   cy.get('.content-area .slate-editor [contenteditable=true]')
     .focus()
@@ -483,3 +524,16 @@ Cypress.Commands.add('store', () => {
 Cypress.Commands.add('settings', (key, value) => {
   return cy.window().its('settings');
 });
+
+Cypress.Commands.add(
+  'getIfExists',
+  (selector, successAction = () => {}, failAction = () => {}) => {
+    cy.get('body').then((body) => {
+      if (body.find(selector).length > 0 && successAction) {
+        successAction();
+      } else if (failAction) {
+        failAction();
+      }
+    });
+  },
+);

@@ -26,7 +26,7 @@ const CustomNewsListTemplate = ({
       {hasDate && item.effective && (
         <div>
           <span className="info-prefix">Published:{'  '}</span>
-          <span className="category">
+          <span className="news-date">
             {moment(item.effective).format('ll')}
           </span>
         </div>

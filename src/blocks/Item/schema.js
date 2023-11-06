@@ -1,6 +1,6 @@
 import config from '@plone/volto/registry';
 
-export default ({ data }) => {
+const ItemBlockSchema = ({ data }) => {
   const { assetType = 'image' } = data;
   return {
     title: 'Item',
@@ -99,3 +99,5 @@ export default ({ data }) => {
     required: [],
   };
 };
+
+export default ItemBlockSchema;

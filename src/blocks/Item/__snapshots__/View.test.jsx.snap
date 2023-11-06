@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ViewItemBlock renders correctly 1`] = `
+<div
+  className="ui unstackable items row"
+>
+  <div
+    className="item"
+  >
+    <div
+      className="content"
+    />
+  </div>
+</div>
+`;

@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DefaultCardLayout renders correctly 1`] = `
+<div
+  className="ui fluid card u-card my-class"
+  onClick={[Function]}
+>
+  <div>
+    ConditionalLink
+  </div>
+  <div
+    className="content"
+  >
+    <div
+      className="meta"
+    >
+      <span
+        className="text-right date"
+      >
+        05 Oct 2023
+      </span>
+    </div>
+    <div
+      className="header"
+    >
+      <div>
+        ConditionalLink
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ImageCardLayout renders correctly 1`] = `
+<div
+  className="ui fluid card u-card my-class"
+  onClick={[Function]}
+>
+  <div>
+    ConditionalLink
+  </div>
+</div>
+`;
+
+exports[`LeftImageCardLayout renders correctly 1`] = `
+<div
+  className="ui fluid card u-card my-class item-card left-image-card"
+  onClick={[Function]}
+>
+  <div>
+    ConditionalLink
+  </div>
+  <div
+    className="content"
+  >
+    <div
+      className="meta"
+    >
+      <span
+        className="text-right date"
+      >
+        05 Oct 2023
+      </span>
+    </div>
+    <div
+      className="header"
+    >
+      <div>
+        ConditionalLink
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`RightImageCardLayout renders correctly 1`] = `
+<div
+  className="ui fluid card u-card my-class item-card right-image-card"
+  onClick={[Function]}
+>
+  <div
+    className="content"
+  >
+    <div
+      className="meta"
+    >
+      <span
+        className="text-right date"
+      >
+        05 Oct 2023
+      </span>
+    </div>
+    <div
+      className="header"
+    >
+      <div>
+        ConditionalLink
+      </div>
+    </div>
+  </div>
+  <div>
+    ConditionalLink
+  </div>
+</div>
+`;
