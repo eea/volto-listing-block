@@ -2,12 +2,13 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import { SearchItemLayout } from './SearchItemTemplate';
 
-describe('SimpleItemTemplates', () => {
+describe('SearchItemTemplates', () => {
   it('renders correctly', () => {
     const item = {
       title: 'Search listing title',
       description: 'Search listing description',
       meta: 'Search listing meta',
+      url: '/my-item-url',
     };
 
     const itemModel = {

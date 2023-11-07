@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SimpleItemTemplates renders correctly 1`] = `
+exports[`SearchItemTemplates renders correctly 1`] = `
 <div
   className="u-item listing-item result-item my-class"
 >
@@ -21,7 +21,7 @@ exports[`SimpleItemTemplates renders correctly 1`] = `
         <img
           alt="Search listing title"
           className="ui image"
-          src="default-image.svg"
+          src="/my-item-url/@@images/image/preview"
         />
       </div>
       <div
