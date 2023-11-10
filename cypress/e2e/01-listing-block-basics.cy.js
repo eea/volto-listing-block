@@ -565,7 +565,6 @@ describe('Blocks Tests', () => {
     });
     cy.get('.item div[role="textbox"]').click({ force: true }).type('test');
 
-    cy.get;
     cy.get('#field-assetType .react-select__control').click({ force: true });
     cy.get('#field-assetType .react-select__option')
       .contains('Image')
@@ -614,6 +613,9 @@ describe('Blocks Tests', () => {
     cy.get('.blocks-chooser .button.teaser').click({
       force: true,
     });
+
+    cy.get('.ui.buttons').first().click();
+    cy.get('.ui.buttons').first().next().click();
 
     cy.get(
       '.ui.form #blockform-fieldset-default .field-wrapper-title input#field-title',
