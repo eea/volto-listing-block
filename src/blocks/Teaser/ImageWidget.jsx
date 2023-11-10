@@ -269,7 +269,6 @@ const ImageWidget = (props) => {
                           onClick={(e) => {
                             e.stopPropagation();
                             setUrl('');
-                            onChange(id, '');
                           }}
                         >
                           <Icon name={clearSVG} size="30px" />

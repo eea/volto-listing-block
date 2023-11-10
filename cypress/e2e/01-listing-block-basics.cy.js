@@ -616,6 +616,10 @@ describe('Blocks Tests', () => {
 
     cy.get('.ui.buttons').first().click();
     cy.get('.block.teaser .ui.input input[type="text"]').type(
+      'some random link',
+    );
+    cy.get('.block.teaser .ui.buttons .cancel').click();
+    cy.get('.block.teaser .ui.input input[type="text"]').type(
       `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
     );
     cy.get(
