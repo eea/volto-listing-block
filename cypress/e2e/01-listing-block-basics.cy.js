@@ -615,8 +615,9 @@ describe('Blocks Tests', () => {
     });
 
     cy.get('.ui.buttons').first().click();
-    cy.get('.ui.buttons').first().next().click();
-
+    cy.get('.block.teaser .ui.input input[type="text"]').type(
+      `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
+    );
     cy.get(
       '.ui.form #blockform-fieldset-default .field-wrapper-title input#field-title',
     )

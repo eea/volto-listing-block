@@ -76,7 +76,6 @@ const ImageWidget = (props) => {
   useEffect(() => {
     if (loading && requestLoaded && uploading) {
       setUploading(false);
-      console.log('logion');
       onChange(id, {
         image_field: 'image',
         '@type': 'Image',
