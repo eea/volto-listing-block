@@ -46,15 +46,7 @@ const ImagePreview = ({ src }) => (
 );
 
 const ImageWidget = (props) => {
-  const {
-    block,
-    id,
-    inline,
-    onChange,
-    openObjectBrowser,
-    onSelectBlock,
-    value,
-  } = props;
+  const { block, id, inline, onChange, openObjectBrowser, value } = props;
   const intl = useIntl();
   const pathname = useLocation().pathname;
   const placeholder =
@@ -254,12 +246,6 @@ const ImageWidget = (props) => {
                       onChange={onChangeUrl}
                       placeholder={placeholder}
                       value={url}
-                      onClick={(e) => {
-                        e.target.focus();
-                      }}
-                      onFocus={(e) => {
-                        onSelectBlock(block);
-                      }}
                     />
                     {url && (
                       <Button.Group>
