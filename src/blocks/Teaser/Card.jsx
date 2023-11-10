@@ -6,7 +6,14 @@ import ImageWidget from './ImageWidget';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
 const TeaserCardTemplate = (props) => {
-  const { data, isEditMode, onChangeBlock, block, ...rest } = props;
+  const {
+    data,
+    isEditMode,
+    onChangeBlock,
+    onSelectBlock,
+    block,
+    ...rest
+  } = props;
   const item = data.href?.[0];
 
   return item ? (
@@ -19,10 +26,13 @@ const TeaserCardTemplate = (props) => {
     />
   ) : isEditMode ? (
     <ImageWidget
-      onChange={(e, id, ll) => {
+      block={block}
+      onSelectBlock={onSelectBlock}
+      onChange={(e, id) => {
         onChangeBlock(block, {
           ...data,
-          href: [id],
+          preview_image_url: typeof id === 'string' ? id : '',
+          href: [typeof id === 'string' ? { id: id, url: id, title: id } : id],
         });
       }}
     />
