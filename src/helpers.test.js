@@ -12,6 +12,6 @@ it('test getFieldUrl', () => {
     'some-link',
   );
 
-  expect(getFieldURL([{ url: 'some-link' }])).toEqual('some-link');
+  expect(getFieldURL([{ url: 'some-link' }])).toEqual(['some-link']);
   expect(getFieldURL('/image')).toEqual(flattenToAppURL('/image'));
 });
