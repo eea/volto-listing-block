@@ -1,6 +1,6 @@
 import cx from 'classnames';
 import { ConditionalLink } from '@plone/volto/components';
-
+import { flattenToAppURL } from '@plone/volto/helpers';
 import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
 
 const getStyles = (props) => {
@@ -30,7 +30,10 @@ const BasicItem = (props) => {
     >
       <div className="wrapper">
         <div className="slot-top">
-          <ConditionalLink item={item} condition={!isEditMode}>
+          <ConditionalLink
+            to={flattenToAppURL(item['@id'])}
+            condition={!isEditMode}
+          >
             <div className="listing-body">
               <p className={'listing-header'}>
                 {item.title ? item.title : item.id}
