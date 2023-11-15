@@ -14,8 +14,16 @@ describe('SimpleItemTemplates', () => {
       extra: 'Simple listing extra',
     };
 
+    const itemModel = {
+      '@type': 'Document',
+    };
+
     const component = renderer.create(
-      <SimpleItemLayout item={item} className="my-class" />,
+      <SimpleItemLayout
+        item={item}
+        itemModel={itemModel}
+        className="my-class"
+      />,
     );
     const json = component.toJSON();
     expect(json).toMatchSnapshot();

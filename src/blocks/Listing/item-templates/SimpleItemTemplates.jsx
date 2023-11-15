@@ -17,6 +17,7 @@ const getStyles = (props) => {
 
 const BasicItem = (props) => {
   const { item, className, isEditMode = false } = props;
+  const { hasMetaType } = props.itemModel;
   const styles = getStyles(props);
 
   return (
@@ -37,7 +38,9 @@ const BasicItem = (props) => {
             </div>
           </ConditionalLink>
         </div>
-        <div className="slot-bottom">{item?.extra}</div>
+        <div className="simple-item-meta">
+          {hasMetaType && <span className="text-left">{item['Type']}</span>}
+        </div>
       </div>
     </div>
   );

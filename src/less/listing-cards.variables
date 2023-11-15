@@ -25,6 +25,10 @@
 @listingEventDateMargin: 0;
 @listingEventDateFlexDirection: row;
 
+// Simple listing item
+@simpleItemMetaFontSize: 13px;
+@simpleItemMarginTop: 1em;
+
 @primaryColor: #004B7F;
 @secondaryColor: #007B6C;
 @tertiaryColor: #3D5265;
