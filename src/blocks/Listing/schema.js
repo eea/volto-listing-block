@@ -233,6 +233,7 @@ export const setSimpleItemModelSchema = (args) => {
   itemModelSchema.fieldsets[0].fields = [
     ...itemModelSchema.fieldsets[0].fields,
     'maxTitle',
+    'hasMetaType',
   ];
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
@@ -244,6 +245,10 @@ export const setSimpleItemModelSchema = (args) => {
       default: 2,
       minimum: 0,
       maximum: 5,
+    },
+    hasMetaType: {
+      title: 'Show portal type',
+      type: 'boolean',
     },
   };
   return schema;
