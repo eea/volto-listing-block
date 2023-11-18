@@ -1,15 +1,10 @@
 // TODO: see if possible to replace with Volto's PreviewImage component
 import React from 'react';
 
+import { getImageScaleParams } from '@eeacms/volto-listing-block/helpers';
 import { Image, Label } from 'semantic-ui-react';
-import { flattenToAppURL } from '@plone/volto/helpers';
 
 import DefaultImageSVG from './default-image.svg';
-
-const getSrc = (item, size) =>
-  flattenToAppURL(
-    `${item['@id']}/@@images/${item.image_field || 'image'}/${size}`,
-  );
 
 // TODO: do we still need volto-depiction compatibility?
 // import DefaultImageSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
@@ -42,10 +37,10 @@ function PreviewImage(props) {
     label,
     ...rest
   } = props;
-  const src = preview_image?.[0]
-    ? getSrc(preview_image[0], size)
-    : item.image_field
-    ? getSrc(item, size)
+  const params = preview_image?.[0]
+    ? getImageScaleParams(preview_image?.[0], size)
+    : item
+    ? getImageScaleParams(item, size)
     : DefaultImageSVG;
 
   return (
@@ -55,7 +50,13 @@ function PreviewImage(props) {
           {label.text}
         </Label>
       ) : null}
-      <Image src={preview_image_url || src} alt={item.title} {...rest} />
+      <Image
+        src={preview_image_url || params?.download}
+        alt={item.title}
+        {...rest}
+        width={params.width}
+        height={params.height}
+      />
     </>
   );
 }

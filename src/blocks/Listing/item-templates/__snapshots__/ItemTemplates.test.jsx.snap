@@ -16,7 +16,7 @@ exports[`ItemTemplates renders correctly 1`] = `
         <img
           alt="Default listing title"
           className="ui image"
-          src="default-image.svg"
+          src="/my-item-url/@@images/image/preview"
         />
       </div>
       <div

@@ -1,6 +1,11 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { getFieldURL } from '@eeacms/volto-listing-block/helpers';
+import {
+  getFieldURL,
+  getImageScaleParams,
+} from '@eeacms/volto-listing-block/helpers';
+
+import { flattenToAppURL } from '@plone/volto/helpers';
 
 function Item({
   assetType,
@@ -15,17 +20,23 @@ function Item({
   imageSize = 'big',
   meta,
   mode = 'view',
+  block,
+  image: imageUrl,
   ...props
 }) {
-  const image = getFieldURL(props.image);
+  const scaledImage = getImageScaleParams(imageUrl, imageSize);
+
+  const image = getFieldURL(imageUrl);
   return (
     <UiItem.Group unstackable className="row">
       <UiItem className={cx(theme)}>
         {assetType === 'image' && image && (
           <UiItem.Image
-            src={`${image}/@@images/image/${imageSize}`}
+            src={flattenToAppURL(scaledImage?.download)}
             className={cx('ui', imageSize, verticalAlign, 'aligned')}
             alt={header || 'Item image'}
+            width={scaledImage?.width}
+            height={scaledImage?.height}
           />
         )}
         {assetType === 'icon' && icon && (
