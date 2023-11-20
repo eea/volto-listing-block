@@ -31,7 +31,7 @@ function Item({
         {assetType === 'icon' && icon && (
           <Icon
             className={cx(icon, theme, verticalAlign, 'aligned', {
-              medium: iconSize === 'medium' ?? false,
+              medium: iconSize === 'medium' ? true : false,
             })}
             size={iconSize === 'medium' ? null : iconSize}
           />
