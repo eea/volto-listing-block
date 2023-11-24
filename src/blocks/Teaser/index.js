@@ -2,6 +2,8 @@ import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 import TeaserCardTemplate from './Card';
 import { adjustTeaserSchema } from './schema';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
+import { Label } from 'semantic-ui-react';
+import React from 'react';
 
 const applyConfig = (config) => {
   if (config.blocks.blocksConfig.teaser) {
@@ -40,6 +42,10 @@ const applyConfig = (config) => {
     config.blocks.blocksConfig.__grid.blocksConfig.teaser =
       config.blocks.blocksConfig.teaser;
   }
+
+  config.blocks.blocksConfig.teaser.renderTag = (tag, index) => {
+    return <Label key={index}>{tag}</Label>;
+  };
 
   return config;
 };

@@ -1,4 +1,4 @@
-import { cloneDeep } from 'lodash';
+import { cloneDeepSchema } from '@plone/volto/helpers/Utils/Utils';
 import config from '@plone/volto/registry';
 
 export const addTypeSelect = ({
@@ -8,7 +8,7 @@ export const addTypeSelect = ({
   extensionName,
   messages,
 }) => {
-  schema = cloneDeep(schema);
+  schema = cloneDeepSchema(schema);
   const field = '@type';
   const extensions = config.blocks.blocksConfig.listing.extensions;
   const variations = extensions[extensionName];
@@ -50,8 +50,12 @@ export const schemaEnhancerFactory = ({
   const schemaEnhancer = activeItem?.['schemaEnhancer'];
 
   let schema = schemaEnhancer
-    ? schemaEnhancer({ schema: cloneDeep(originalSchema), formData, intl })
-    : cloneDeep(originalSchema);
+    ? schemaEnhancer({
+        schema: cloneDeepSchema(originalSchema),
+        formData,
+        intl,
+      })
+    : cloneDeepSchema(originalSchema);
 
   return schema;
 };

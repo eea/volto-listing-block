@@ -15,10 +15,8 @@ exports[`SimpleItemTemplates renders correctly 1`] = `
       </div>
     </div>
     <div
-      className="slot-bottom"
-    >
-      Simple listing extra
-    </div>
+      className="simple-item-meta"
+    />
   </div>
 </div>
 `;
