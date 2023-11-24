@@ -39,7 +39,9 @@ const BasicItem = (props) => {
           </ConditionalLink>
         </div>
         <div className="simple-item-meta">
-          {hasMetaType && <span className="text-left">{item['Type']}</span>}
+          {hasMetaType && (
+            <span className="text-left">{item['type_title']}</span>
+          )}
         </div>
       </div>
     </div>

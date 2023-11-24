@@ -15,7 +15,7 @@ const CardMeta = (props) => {
   return showMeta || showDate ? (
     <UiCard.Meta>
       {showMeta && (
-        <span className="text-left">{head_title || item['Type']}</span>
+        <span className="text-left">{head_title || item['type_title']}</span>
       )}
 
       {showDate && (
