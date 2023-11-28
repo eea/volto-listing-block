@@ -613,7 +613,6 @@ describe('Blocks Tests', () => {
     cy.get('.blocks-chooser .button.teaser').click({
       force: true,
     });
-    cy.get('.template-chooser-item').first().click();
     cy.get('#toolbar-save').click();
     cy.get('.toolbar-actions .edit').click();
     cy.get('.block.teaser').click();
