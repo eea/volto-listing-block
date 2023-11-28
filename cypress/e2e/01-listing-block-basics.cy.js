@@ -608,21 +608,21 @@ describe('Blocks Tests', () => {
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
     cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
-      'teaser (cards)',
+      'teaser',
     );
-    cy.get('.blocks-chooser .button.teaserGrid').click({
+    cy.get('.blocks-chooser .button.teaser').click({
       force: true,
     });
     cy.get('.template-chooser-item').first().click();
     cy.get('#toolbar-save').click();
     cy.get('.toolbar-actions .edit').click();
-    cy.get('.block.teaserGrid').click();
+    cy.get('.block.teaser').click();
     cy.get('.ui.buttons').first().click();
-    cy.get('.block.teaserGrid .ui.input input[type="text"]')
+    cy.get('.block.teaser .ui.input input[type="text"]')
       .click()
       .type('some random link');
-    cy.get('.block.teaserGrid .ui.buttons .cancel').click();
-    cy.get('.block.teaserGrid .ui.input input[type="text"]').type(
+    cy.get('.block.teaser .ui.buttons .cancel').click();
+    cy.get('.block.teaser .ui.input input[type="text"]').type(
       `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
     );
     cy.get(
