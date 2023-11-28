@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test New List Given an object/object, p.restapi title/token 1`] = `
+<CustomNewsListTemplate
+  items={Array []}
+/>
+`;

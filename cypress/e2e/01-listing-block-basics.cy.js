@@ -565,7 +565,6 @@ describe('Blocks Tests', () => {
     });
     cy.get('.item div[role="textbox"]').click({ force: true }).type('test');
 
-    cy.get;
     cy.get('#field-assetType .react-select__control').click({ force: true });
     cy.get('#field-assetType .react-select__option')
       .contains('Image')
@@ -598,7 +597,7 @@ describe('Blocks Tests', () => {
 
     cy.get('#field-theme').click({ force: true }).type('Test Theme');
   });
-  it('Add Block: Teaser', () => {
+  it('Add Block: teaserGrid', () => {
     // Change page title
     cy.get('[contenteditable=true]').first().click();
     cy.get('[contenteditable=true]').first().clear();
@@ -614,7 +613,17 @@ describe('Blocks Tests', () => {
     cy.get('.blocks-chooser .button.teaser').click({
       force: true,
     });
-
+    cy.get('#toolbar-save').click();
+    cy.get('.toolbar-actions .edit').click();
+    cy.get('.block-editor-teaser').click();
+    cy.get('.ui.buttons').first().click();
+    cy.get('.block.teaser .ui.input input[type="text"]')
+      .click()
+      .type('some random link');
+    cy.get('.block.teaser .ui.buttons .cancel').click();
+    cy.get('.block.teaser .ui.input input[type="text"]').type(
+      `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
+    );
     cy.get(
       '.ui.form #blockform-fieldset-default .field-wrapper-title input#field-title',
     )
