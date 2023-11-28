@@ -16,26 +16,37 @@ const TeaserCardTemplate = (props) => {
     ...rest
   } = props;
   const item = data.href?.[0];
+
+  const modelatePreviewImage = (data) => {
+    if (!data.preview_image) return {};
+    return {
+      preview_image_url:
+        typeof data.preview_image === 'string' &&
+        !isInternalURL(data.preview_image)
+          ? data.preview_image
+          : '',
+      preview_image: Array.isArray(data.preview_image)
+        ? data.preview_image
+        : [
+            typeof data.preview_image === 'string'
+              ? {
+                  '@id': data.preview_image,
+                  url: data.preview_image,
+                  title: data.preview_image,
+                }
+              : data.preview_image,
+          ],
+    };
+  };
+
+  console.log({ data }, modelatePreviewImage(data));
   return item || data.preview_image ? (
     <UniversalCard
       isEditMode={isEditMode}
       {...rest}
       {...{
         ...data,
-        preview_image_url:
-          typeof data.preview_image === 'string' &&
-          !isInternalURL(data.preview_image)
-            ? data.preview_image
-            : '',
-        preview_image: [
-          typeof data.preview_image === 'string'
-            ? {
-                '@id': data.preview_image,
-                url: data.preview_image,
-                title: data.preview_image,
-              }
-            : data.preview_image,
-        ],
+        // ...modelatePreviewImage(data),
       }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
       itemModel={data.itemModel || {}}
