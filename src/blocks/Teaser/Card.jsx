@@ -39,14 +39,13 @@ const TeaserCardTemplate = (props) => {
     };
   };
 
-  console.log({ data }, modelatePreviewImage(data));
   return item || data.preview_image ? (
     <UniversalCard
       isEditMode={isEditMode}
       {...rest}
       {...{
         ...data,
-        // ...modelatePreviewImage(data),
+        ...modelatePreviewImage(data),
       }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
       itemModel={data.itemModel || {}}
