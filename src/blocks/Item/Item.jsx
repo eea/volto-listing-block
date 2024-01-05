@@ -25,7 +25,7 @@ function Item({
           <UiItem.Image
             src={`${image}/@@images/image/${imageSize}`}
             className={cx('ui', imageSize, verticalAlign, 'aligned')}
-            alt={header || 'Item image'}
+            role="presentation"
           />
         )}
         {assetType === 'icon' && icon && (
