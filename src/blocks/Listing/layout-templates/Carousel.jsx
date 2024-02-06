@@ -64,11 +64,10 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   const dots_parent = React.useRef(null);
   const slidesToShow = getSlidesToShow(items, rest.slidesToShow || 4);
   const itemsLength = items.length;
-  const showArrows = itemsLength > slidesToShow;
   const settings = {
     dots: itemsLength > 1,
     infinite: true,
-    arrows: showExtraInterfaceElements,
+    arrows: itemsLength > slidesToShow,
     initialSlide: 0,
     lazyLoad: null,
     slidesToShow: slidesToShow,
