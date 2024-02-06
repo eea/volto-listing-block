@@ -6,7 +6,6 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
 
 const Slider = loadable(() => import('react-slick'));
 
@@ -64,12 +63,13 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   const slider = React.useRef(null);
   const dots_parent = React.useRef(null);
   const slidesToShow = getSlidesToShow(items, rest.slidesToShow || 4);
+  const showExtraInterfaceElements = items.length > slidesToShow;
   const settings = {
-    dots: true,
+    dots: showExtraInterfaceElements,
     infinite: true,
-    arrows: items.length > slidesToShow,
+    arrows: showExtraInterfaceElements,
     initialSlide: 0,
-    lazyLoad: 'progressive',
+    lazyLoad: null,
     slidesToShow: slidesToShow,
     slidesToScroll: getSlidesToScroll(
       items,
@@ -125,31 +125,20 @@ const CardsCarousel = ({ block, items, ...rest }) => {
     ],
   };
 
-  return (
-    <ResponsiveContainer>
-      {({ parentWidth }) =>
-        parentWidth ? (
-          <div
-            className="cards-carousel"
-            style={{ width: `${parentWidth}px`, margin: '0 auto' }}
-            role={'region'}
-            aria-label={'carousel'}
-          >
-            <Slider {...settings} ref={slider}>
-              {items.map((item, index) => (
-                <UniversalCard
-                  key={`card-${block}-${index}`}
-                  {...rest}
-                  block={block}
-                  item={item}
-                />
-              ))}
-            </Slider>
-          </div>
-        ) : null
-      }
-    </ResponsiveContainer>
-  );
+  return items.length > 0 ? (
+    <div className="cards-carousel" role={'region'} aria-label={'carousel'}>
+      <Slider {...settings} ref={slider}>
+        {items.map((item, index) => (
+          <UniversalCard
+            key={`card-${block}-${index}`}
+            {...rest}
+            block={block}
+            item={item}
+          />
+        ))}
+      </Slider>
+    </div>
+  ) : null;
 };
 
 CardsCarousel.schemaEnhancer = (args) => {
@@ -163,7 +152,6 @@ CardsCarousel.schemaEnhancer = (args) => {
 
   return {
     ...schema,
-    // fieldsets: [...schema.fieldsets, ,],
     properties: {
       ...schema.properties,
       slidesToShow: {
