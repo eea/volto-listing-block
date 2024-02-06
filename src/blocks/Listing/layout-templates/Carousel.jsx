@@ -63,9 +63,10 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   const slider = React.useRef(null);
   const dots_parent = React.useRef(null);
   const slidesToShow = getSlidesToShow(items, rest.slidesToShow || 4);
-  const showExtraInterfaceElements = items.length > slidesToShow;
+  const itemsLength = items.length;
+  const showArrows = itemsLength > slidesToShow;
   const settings = {
-    dots: showExtraInterfaceElements,
+    dots: itemsLength > 1,
     infinite: true,
     arrows: showExtraInterfaceElements,
     initialSlide: 0,
@@ -125,7 +126,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
     ],
   };
 
-  return items.length > 0 ? (
+  return itemsLength > 0 ? (
     <div className="cards-carousel" role={'region'} aria-label={'carousel'}>
       <Slider {...settings} ref={slider}>
         {items.map((item, index) => (
