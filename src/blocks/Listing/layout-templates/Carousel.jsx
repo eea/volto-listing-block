@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import loadable from '@loadable/component';
+import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -126,18 +127,27 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   };
 
   return itemsLength > 0 ? (
-    <div className="cards-carousel" role={'region'} aria-label={'carousel'}>
-      <Slider {...settings} ref={slider}>
-        {items.map((item, index) => (
-          <UniversalCard
-            key={`card-${block}-${index}`}
-            {...rest}
-            block={block}
-            item={item}
-          />
-        ))}
-      </Slider>
-    </div>
+    <ResponsiveContainer>
+      {({ parentWidth }) => (
+        <div
+          className="cards-carousel"
+          role={'region'}
+          aria-label={'carousel'}
+          style={{ '--carousel-max-width': `${parentWidth}px` }}
+        >
+          <Slider {...settings} ref={slider}>
+            {items.map((item, index) => (
+              <UniversalCard
+                key={`card-${block}-${index}`}
+                {...rest}
+                block={block}
+                item={item}
+              />
+            ))}
+          </Slider>
+        </div>
+      )}
+    </ResponsiveContainer>
   ) : null;
 };
 

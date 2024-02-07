@@ -376,10 +376,10 @@ each(range(5), {
   float: none;
 }
 
-// we need max width for the carousel after we removed the Responsive component wrapping that set
-// parent width on the carousel
+// we set max width for the carousel instead of inline styles
 .cards-carousel {
   max-width: var(--carousel-max-width, @carouselMaxWidth);
+  margin: 0 auto;
 }
 
 .cards-carousel .slick-slide {

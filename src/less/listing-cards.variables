@@ -31,7 +31,7 @@
 
 
 // Carousel listing
-@carouselMaxWidth: 1120px;
+@carouselMaxWidth: 1127px;
 
 @primaryColor: #004B7F;
 @secondaryColor: #007B6C;
