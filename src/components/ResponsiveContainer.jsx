@@ -117,7 +117,8 @@ class ResponsiveContainer extends Component {
         calculatedHeight = maxHeight;
       }
     }
-    return __CLIENT__ ? children({ parentWidth: calculatedWidth }) : children;
+
+    return children({ parentWidth: calculatedWidth });
   }
 
   render() {

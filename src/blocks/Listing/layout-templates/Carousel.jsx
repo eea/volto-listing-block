@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import loadable from '@loadable/component';
+import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-import ResponsiveContainer from '@eeacms/volto-listing-block/components/ResponsiveContainer';
 
 const Slider = loadable(() => import('react-slick'));
 
@@ -64,12 +64,13 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   const slider = React.useRef(null);
   const dots_parent = React.useRef(null);
   const slidesToShow = getSlidesToShow(items, rest.slidesToShow || 4);
+  const itemsLength = items.length;
   const settings = {
-    dots: true,
+    dots: itemsLength > 1,
     infinite: true,
-    arrows: items.length > slidesToShow,
+    arrows: itemsLength > slidesToShow,
     initialSlide: 0,
-    lazyLoad: 'progressive',
+    lazyLoad: null,
     slidesToShow: slidesToShow,
     slidesToScroll: getSlidesToScroll(
       items,
@@ -125,31 +126,29 @@ const CardsCarousel = ({ block, items, ...rest }) => {
     ],
   };
 
-  return (
+  return itemsLength > 0 ? (
     <ResponsiveContainer>
-      {({ parentWidth }) =>
-        parentWidth ? (
-          <div
-            className="cards-carousel"
-            style={{ width: `${parentWidth}px`, margin: '0 auto' }}
-            role={'region'}
-            aria-label={'carousel'}
-          >
-            <Slider {...settings} ref={slider}>
-              {items.map((item, index) => (
-                <UniversalCard
-                  key={`card-${block}-${index}`}
-                  {...rest}
-                  block={block}
-                  item={item}
-                />
-              ))}
-            </Slider>
-          </div>
-        ) : null
-      }
+      {({ parentWidth }) => (
+        <div
+          className="cards-carousel"
+          role={'region'}
+          aria-label={'carousel'}
+          style={{ '--carousel-max-width': `${parentWidth}px` }}
+        >
+          <Slider {...settings} ref={slider}>
+            {items.map((item, index) => (
+              <UniversalCard
+                key={`card-${block}-${index}`}
+                {...rest}
+                block={block}
+                item={item}
+              />
+            ))}
+          </Slider>
+        </div>
+      )}
     </ResponsiveContainer>
-  );
+  ) : null;
 };
 
 CardsCarousel.schemaEnhancer = (args) => {
@@ -163,7 +162,6 @@ CardsCarousel.schemaEnhancer = (args) => {
 
   return {
     ...schema,
-    // fieldsets: [...schema.fieldsets, ,],
     properties: {
       ...schema.properties,
       slidesToShow: {

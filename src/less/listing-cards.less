@@ -370,6 +370,18 @@ each(range(5), {
   }
 }
 
+// avoid float issues when using volto-block-style in edit
+.ui.teaser .styled-teaser.styled.right,
+.ui.teaser .styled-teaser.styled.left {
+  float: none;
+}
+
+// we set max width for the carousel instead of inline styles
+.cards-carousel {
+  max-width: var(--carousel-max-width, @carouselMaxWidth);
+  margin: 0 auto;
+}
+
 .cards-carousel .slick-slide {
   visibility: hidden;
 }
