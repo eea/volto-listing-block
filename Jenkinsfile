@@ -252,6 +252,7 @@ pipeline {
                     if ( frontend != 0 ) {
                       sh '''docker logs $IMAGE_NAME-cypress16; exit 1'''
                     }
+                    sleep 35
 
                     sh '''timeout -s 9 1800 docker exec --workdir=/app/src/addons/${GIT_NAME} $IMAGE_NAME-cypress16 make cypress-ci'''
                   } finally {
