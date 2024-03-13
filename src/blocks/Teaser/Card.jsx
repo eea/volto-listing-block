@@ -2,11 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-import ImageWidget from './ImageWidget';
+import { defineMessages, useIntl } from 'react-intl';
+import { Message } from 'semantic-ui-react';
 import { isInternalURL } from '@plone/volto/helpers';
+import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
+const messages = defineMessages({
+  PleaseChooseContent: {
+    id: 'Please choose an existing content as source for this element',
+    defaultMessage:
+      'Please choose an existing content as source for this element',
+  },
+});
+
 const TeaserCardTemplate = (props) => {
+  const intl = useIntl();
   const {
     data,
     isEditMode,
@@ -38,7 +49,6 @@ const TeaserCardTemplate = (props) => {
           ],
     };
   };
-
   return item || data.preview_image ? (
     <UniversalCard
       isEditMode={isEditMode}
@@ -51,16 +61,12 @@ const TeaserCardTemplate = (props) => {
       itemModel={data.itemModel || {}}
     />
   ) : isEditMode ? (
-    <ImageWidget
-      block={block}
-      onSelectBlock={onSelectBlock}
-      onChange={(e, id) => {
-        onChangeBlock(block, {
-          ...data,
-          preview_image: typeof id === 'string' ? id : id?.['@id'],
-        });
-      }}
-    />
+    <Message>
+      <div className="teaser-item placeholder">
+        <img src={imageBlockSVG} alt="" />
+        <p>{intl.formatMessage(messages.PleaseChooseContent)}</p>
+      </div>
+    </Message>
   ) : null;
 };
 

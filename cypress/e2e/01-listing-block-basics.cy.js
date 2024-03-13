@@ -597,45 +597,4 @@ describe('Blocks Tests', () => {
 
     cy.get('#field-theme').click({ force: true }).type('Test Theme');
   });
-  it('Add Block: teaserGrid', () => {
-    // Change page title
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
-    cy.get('.documentFirstHeading').contains('Listing Block Demo');
-    cy.get('[contenteditable=true]').first().type('{enter}');
-
-    // Add listing block
-    cy.get('.ui.basic.icon.button.block-add-button').first().click();
-    cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
-      'teaser',
-    );
-    cy.get('.blocks-chooser .button.teaser').click({
-      force: true,
-    });
-    cy.get('#toolbar-save').click();
-    cy.get('.toolbar-actions .edit').click();
-    cy.get('.block-editor-teaser').click();
-    cy.get('.ui.buttons').first().click();
-    cy.get('.block.teaser .ui.input input[type="text"]')
-      .click()
-      .type('some random link');
-    cy.get('.block.teaser .ui.buttons .cancel').click();
-    cy.get('.block.teaser .ui.input input[type="text"]').type(
-      `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
-    );
-    cy.get(
-      '.ui.form #blockform-fieldset-default .field-wrapper-title input#field-title',
-    )
-      .click({ force: true })
-      .type('Test Title');
-    cy.get('#field-head_title').click({ force: true }).type('Test Head Title');
-    cy.get('#blockform-fieldset-default #field-description')
-      .click({ force: true })
-      .type('Test Description');
-
-    // Save page
-    cy.get('#toolbar-save').click();
-    cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
-  });
 });
