@@ -7,14 +7,8 @@ import { isInternalURL } from '@plone/volto/helpers';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
 const TeaserCardTemplate = (props) => {
-  const {
-    data,
-    isEditMode,
-    onChangeBlock,
-    onSelectBlock,
-    block,
-    ...rest
-  } = props;
+  const { data, isEditMode, onChangeBlock, onSelectBlock, block, ...rest } =
+    props;
   const item = data.href?.[0];
 
   const modelatePreviewImage = (data) => {
