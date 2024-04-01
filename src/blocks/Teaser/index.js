@@ -48,7 +48,7 @@ const applyConfig = (config) => {
   config.blocks.blocksConfig.teaser.renderTag = (tag, index) => {
     return <Label key={index}>{tag}</Label>;
   };
-
+  config.blocks.blocksConfig.teaserGrid = config.blocks.blocksConfig.gridBlock;
   return config;
 };
 
