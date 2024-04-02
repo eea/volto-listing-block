@@ -2,11 +2,12 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { useState } from 'react';
 import ContainerEdit from '@plone/volto/components/manage/Blocks/Container/Edit';
-
+import '../../../../../../less/teaser-cards.less';
 const GridBlockEdit = (props) => {
   const { data } = props;
 
-  const columnsLength = data?.blocks_layout?.items?.length || 0;
+  const columnsLength =
+    data?.blocks_layout?.items?.length || data?.columns || 0;
 
   const [selectedBlock, setSelectedBlock] = useState(null);
 
@@ -24,7 +25,7 @@ const GridBlockEdit = (props) => {
       };
     return data;
   };
-
+  console.log(columnsLength);
   return (
     <div
       className={cx({
@@ -44,6 +45,7 @@ const GridBlockEdit = (props) => {
       <ContainerEdit
         {...props}
         data={convertTeaserToGridIfNecessary(data)}
+        content={convertTeaserToGridIfNecessary(data)}
         selectedBlock={selectedBlock}
         setSelectedBlock={setSelectedBlock}
         direction="horizontal"
