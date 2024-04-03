@@ -1,11 +1,12 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import {
   DefaultCardLayout,
   LeftImageCardLayout,
   RightImageCardLayout,
   ImageCardLayout,
 } from './CardTemplates';
+import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('@plone/volto/components', () => ({
   ConditionalLink: () => <div>ConditionalLink</div>,
@@ -28,7 +29,7 @@ describe('DefaultCardLayout', () => {
       imageOnRightSide: false,
     };
 
-    const component = renderer.create(
+    const { container, getAllByText } = render(
       <DefaultCardLayout
         item={item}
         itemModel={itemModel}
@@ -36,8 +37,23 @@ describe('DefaultCardLayout', () => {
         imagePosition="left"
       />,
     );
-    const json = component.toJSON();
-    expect(json).toMatchSnapshot();
+
+    const card = container.querySelector('.ui.fluid.card.u-card.my-class');
+    expect(card).not.toBeNull();
+
+    const contentArea = card.querySelector('.content');
+    expect(contentArea).not.toBeNull();
+
+    const meta = contentArea.querySelector('.meta');
+    expect(meta).not.toBeNull();
+
+    expect(meta.querySelector('.date')).toHaveTextContent('05 Oct 2023');
+
+    const header = contentArea.querySelector('.header');
+    expect(header).not.toBeNull();
+
+    const conditionalLink = getAllByText('ConditionalLink');
+    expect(conditionalLink).not.toBeNull();
   });
 });
 
@@ -57,7 +73,7 @@ describe('LeftImageCardLayout', () => {
       imageOnRightSide: false,
     };
 
-    const component = renderer.create(
+    const { container, getAllByText } = render(
       <LeftImageCardLayout
         item={item}
         itemModel={itemModel}
@@ -65,8 +81,25 @@ describe('LeftImageCardLayout', () => {
         imagePosition="left"
       />,
     );
-    const json = component.toJSON();
-    expect(json).toMatchSnapshot();
+
+    const card = container.querySelector(
+      '.ui.fluid.card.u-card.my-class.item-card.left-image-card',
+    );
+    expect(card).not.toBeNull();
+
+    const contentArea = card.querySelector('.content');
+    expect(contentArea).not.toBeNull();
+
+    const meta = contentArea.querySelector('.meta');
+    expect(meta).not.toBeNull();
+
+    expect(meta.querySelector('.date')).toHaveTextContent('05 Oct 2023');
+
+    const header = contentArea.querySelector('.header');
+    expect(header).not.toBeNull();
+
+    const conditionalLink = getAllByText('ConditionalLink');
+    expect(conditionalLink).not.toBeNull();
   });
 });
 
@@ -86,7 +119,7 @@ describe('RightImageCardLayout', () => {
       imageOnRightSide: false,
     };
 
-    const component = renderer.create(
+    const { container, getAllByText } = render(
       <RightImageCardLayout
         item={item}
         itemModel={itemModel}
@@ -94,8 +127,25 @@ describe('RightImageCardLayout', () => {
         imagePosition="left"
       />,
     );
-    const json = component.toJSON();
-    expect(json).toMatchSnapshot();
+
+    const card = container.querySelector(
+      '.ui.fluid.card.u-card.my-class.item-card.right-image-card',
+    );
+    expect(card).not.toBeNull();
+
+    const contentArea = card.querySelector('.content');
+    expect(contentArea).not.toBeNull();
+
+    const meta = contentArea.querySelector('.meta');
+    expect(meta).not.toBeNull();
+
+    expect(meta.querySelector('.date')).toHaveTextContent('05 Oct 2023');
+
+    const header = contentArea.querySelector('.header');
+    expect(header).not.toBeNull();
+
+    const conditionalLink = getAllByText('ConditionalLink');
+    expect(conditionalLink).not.toBeNull();
   });
 });
 
@@ -115,7 +165,7 @@ describe('ImageCardLayout', () => {
       imageOnRightSide: false,
     };
 
-    const component = renderer.create(
+    const { container, getAllByText } = render(
       <ImageCardLayout
         item={item}
         itemModel={itemModel}
@@ -123,7 +173,11 @@ describe('ImageCardLayout', () => {
         imagePosition="left"
       />,
     );
-    const json = component.toJSON();
-    expect(json).toMatchSnapshot();
+
+    const card = container.querySelector('.ui.fluid.card.u-card.my-class');
+    expect(card).not.toBeNull();
+
+    const conditionalLink = getAllByText('ConditionalLink');
+    expect(conditionalLink).not.toBeNull();
   });
 });
