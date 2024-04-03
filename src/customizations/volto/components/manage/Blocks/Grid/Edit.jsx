@@ -8,6 +8,7 @@ const convertTeaserToGridIfNecessary = (data) => {
   if (data?.['@type'] === 'teaserGrid')
     return {
       ...data,
+      '@type': 'gridBlock',
       blocks_layout: { items: data?.columns.map((c) => c.id) },
       blocks: data?.columns?.reduce((acc, current) => {
         return {
