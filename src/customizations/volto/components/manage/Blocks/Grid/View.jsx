@@ -4,6 +4,21 @@ import { RenderBlocks } from '@plone/volto/components';
 import { withBlockExtensions } from '@plone/volto/helpers';
 import config from '@plone/volto/registry';
 
+const convertTeaserToGridIfNecessary = (data) => {
+  if (data?.['@type'] === 'teaserGrid')
+    return {
+      ...data,
+      blocks_layout: { items: data?.columns.map((c) => c.id) },
+      blocks: data?.columns?.reduce((acc, current) => {
+        return {
+          ...acc,
+          [current?.id]: current,
+        };
+      }, {}),
+    };
+  return data;
+};
+
 const GridBlockView = (props) => {
   const { data, path, className, style } = props;
   const metadata = props.metadata || props.properties;
@@ -13,21 +28,6 @@ const GridBlockView = (props) => {
     props.blocksConfig;
   const location = {
     pathname: path,
-  };
-
-  const convertTeaserToGridIfNecessary = (data) => {
-    if (data?.['@type'] === 'teaserGrid')
-      return {
-        ...data,
-        blocks_layout: { items: data?.columns.map((c) => c.id) },
-        blocks: data?.columns?.reduce((acc, current) => {
-          return {
-            ...acc,
-            [current?.id]: current,
-          };
-        }, {}),
-      };
-    return data;
   };
 
   return (
