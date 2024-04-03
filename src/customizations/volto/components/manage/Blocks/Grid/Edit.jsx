@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { useState } from 'react';
 import ContainerEdit from '@plone/volto/components/manage/Blocks/Container/Edit';
-import '../../../../../../less/teaser-cards.less';
 
 const convertTeaserToGridIfNecessary = (data) => {
   if (data?.['@type'] === 'teaserGrid')
@@ -28,6 +27,11 @@ const GridBlockEdit = (props) => {
 
   const [selectedBlock, setSelectedBlock] = useState(null);
 
+  //convert to gridBlock if necessary
+  if (data?.['@type'] === 'teaserGrid') {
+    props.onChangeBlock(props.block, convertTeaserToGridIfNecessary(data));
+  }
+
   return (
     <div
       className={cx({
@@ -46,7 +50,7 @@ const GridBlockEdit = (props) => {
     >
       <ContainerEdit
         {...props}
-        data={convertTeaserToGridIfNecessary(data)}
+        data={data}
         selectedBlock={selectedBlock}
         setSelectedBlock={setSelectedBlock}
         direction="horizontal"
