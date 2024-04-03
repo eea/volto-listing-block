@@ -19,6 +19,7 @@ const messages = defineMessages({
 const TeaserCardTemplate = (props) => {
   const { data, isEditMode, onChangeBlock, onSelectBlock, block, ...rest } =
     props;
+  const intl = useIntl();
 
   const item = data.href?.[0];
 
