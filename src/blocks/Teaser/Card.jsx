@@ -17,7 +17,6 @@ const messages = defineMessages({
 });
 
 const TeaserCardTemplate = (props) => {
-  const intl = useIntl();
   const {
     data,
     isEditMode,
@@ -26,6 +25,7 @@ const TeaserCardTemplate = (props) => {
     block,
     ...rest
   } = props;
+  
   const item = data.href?.[0];
 
   const modelatePreviewImage = (data) => {
