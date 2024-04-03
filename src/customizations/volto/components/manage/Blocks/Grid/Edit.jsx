@@ -3,29 +3,30 @@ import cx from 'classnames';
 import { useState } from 'react';
 import ContainerEdit from '@plone/volto/components/manage/Blocks/Container/Edit';
 import '../../../../../../less/teaser-cards.less';
+
+const convertTeaserToGridIfNecessary = (data) => {
+  if (data?.['@type'] === 'teaserGrid')
+    return {
+      ...data,
+      blocks_layout: { items: data?.columns.map((c) => c.id) },
+      blocks: data?.columns?.reduce((acc, current) => {
+        return {
+          ...acc,
+          [current?.id]: current,
+        };
+      }, {}),
+    };
+  return data;
+};
+
 const GridBlockEdit = (props) => {
   const { data } = props;
 
   const columnsLength =
-    data?.blocks_layout?.items?.length || data?.columns || 0;
+    data?.blocks_layout?.items?.length || data?.columns?.length || 0;
 
   const [selectedBlock, setSelectedBlock] = useState(null);
 
-  const convertTeaserToGridIfNecessary = (data) => {
-    if (data?.['@type'] === 'teaserGrid')
-      return {
-        ...data,
-        blocks_layout: { items: data?.columns.map((c) => c.id) },
-        blocks: data?.columns?.reduce((acc, current) => {
-          return {
-            ...acc,
-            [current?.id]: current,
-          };
-        }, {}),
-      };
-    return data;
-  };
-  console.log(columnsLength);
   return (
     <div
       className={cx({
@@ -45,7 +46,6 @@ const GridBlockEdit = (props) => {
       <ContainerEdit
         {...props}
         data={convertTeaserToGridIfNecessary(data)}
-        content={convertTeaserToGridIfNecessary(data)}
         selectedBlock={selectedBlock}
         setSelectedBlock={setSelectedBlock}
         direction="horizontal"
