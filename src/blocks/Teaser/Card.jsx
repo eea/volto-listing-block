@@ -17,15 +17,9 @@ const messages = defineMessages({
 });
 
 const TeaserCardTemplate = (props) => {
-  const {
-    data,
-    isEditMode,
-    onChangeBlock,
-    onSelectBlock,
-    block,
-    ...rest
-  } = props;
-  
+  const { data, isEditMode, onChangeBlock, onSelectBlock, block, ...rest } =
+    props;
+
   const item = data.href?.[0];
 
   const modelatePreviewImage = (data) => {
