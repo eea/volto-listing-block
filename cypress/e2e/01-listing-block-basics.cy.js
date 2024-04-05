@@ -572,6 +572,7 @@ describe('Blocks Tests', () => {
 
     cy.get('#field-theme').click({ force: true }).type('Test Theme');
   });
+
   it('Add Block: teaserGrid', () => {
     // Change page title
     cy.get('[contenteditable=true]').first().click();
@@ -591,12 +592,10 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
     cy.get('.toolbar-actions .edit').click();
     cy.get('.block-editor-teaser').click();
-    cy.get('.ui.buttons').first().click();
-    cy.get('.block.teaser .ui.input input[type="text"]')
+    cy.get('#blockform-fieldset-default .field-wrapper-href input')
       .click()
-      .type('some random link');
-    cy.get('.block.teaser .ui.buttons .cancel').click();
-    cy.get('.block.teaser .ui.input input[type="text"]').type(
+      .type('https://github.com/eea/volto-listing-block');
+    cy.get('#blockform-fieldset-default .field-wrapper-preview_image input[type="text"]').type(
       `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
     );
     cy.get(
