@@ -73,7 +73,9 @@ describe('Blocks Tests', () => {
     cy.get('.button.description').click();
 
     // Add some text to the description block
-    cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
+    cy.get('.documentDescription')
+      .click({ force: true })
+      .type('lorem ipsum dolor sit amet');
     cy.get('#sidebar-metadata #effective-date').click();
     cy.get('tr td').contains(1).click({ force: true });
     cy.get(
@@ -144,6 +146,8 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click({ force: true });
+    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
+      cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Image on right').click({ force: true });
     cy.contains('Image Card').click();
     cy.contains('Image Card');
@@ -152,6 +156,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
+    cy.contains('Test Headline').click({ force: true });
     if (Cypress.env('VOLTO_VERSION').startsWith('16'))
       cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Test Headline').click({ force: true });
@@ -369,7 +374,7 @@ describe('Blocks Tests', () => {
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click({ force: true });
     if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
+      cy.get('.title').contains('Carousel').click({ force: true });
     cy.get('#field-slidesToShow').type('{downArrow}{downArrow}{downArrow}');
     cy.get('#field-slidesToScroll').type('{upArrow}');
     cy.get('#toolbar-save').click();
@@ -534,7 +539,7 @@ describe('Blocks Tests', () => {
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click({ force: true });
     if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
+      cy.get('.title').contains('Gallery').click({ force: true });
     cy.get('#blockform-fieldset-cardsGallery .react-select__control').click();
     cy.get('.react-select__menu-list').contains('Four').click({ force: true });
     cy.get('#toolbar-save').click();
