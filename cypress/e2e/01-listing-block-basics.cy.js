@@ -28,8 +28,8 @@ describe('Blocks Tests', () => {
 
     cy.contains('Add criteria').click();
     cy.get('.react-select__menu').contains('Creator').click();
-    cy.contains('Card (default)').click();
-    cy.contains('Image on left').click();
+    cy.contains('Card (default)').click({ force: true });
+    cy.contains('Image on left').click({ force: true });
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
     cy.get('.react-select__option').contains('right').click();
@@ -71,7 +71,9 @@ describe('Blocks Tests', () => {
     cy.get('.button.description').click();
 
     // Add some text to the description block
-    cy.get('.documentDescription').click().type('lorem ipsum dolor sit amet');
+    cy.get('.documentDescription')
+      .click({ force: true })
+      .type('lorem ipsum dolor sit amet');
     cy.get('#sidebar-metadata #effective-date').click();
     cy.get('tr td').contains(1).click({ force: true });
     cy.get(
@@ -595,7 +597,9 @@ describe('Blocks Tests', () => {
     cy.get('#blockform-fieldset-default .field-wrapper-href input')
       .click()
       .type('https://github.com/eea/volto-listing-block');
-    cy.get('#blockform-fieldset-default .field-wrapper-preview_image input[type="text"]').type(
+    cy.get(
+      '#blockform-fieldset-default .field-wrapper-preview_image input[type="text"]',
+    ).type(
       `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
     );
     cy.get(
