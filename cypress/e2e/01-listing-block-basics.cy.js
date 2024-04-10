@@ -28,8 +28,6 @@ describe('Blocks Tests', () => {
 
     cy.contains('Add criteria').click();
     cy.get('.react-select__menu').contains('Creator').click();
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Card (default)').click({ force: true });
     cy.contains('Image on left').click({ force: true });
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
@@ -102,9 +100,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
 
-    cy.contains('Test Headline').click({ force: true });
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.contains('Image on left').click();
     cy.contains('Image on right').click();
     cy.get('.inline.field.field-wrapper-hasTags-9-itemModel input').click({
@@ -145,9 +141,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.contains('Image on right').click({ force: true });
     cy.contains('Image Card').click();
     cy.contains('Image Card');
@@ -156,10 +150,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
-    cy.contains('Test Headline').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.contains('Image Card').click();
     cy.contains('Listing Item').click();
     cy.get('.inline.field.field-wrapper-hasDate-2-itemModel input').click({
@@ -178,8 +169,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    cy.get('.title').contains('Card').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
@@ -187,17 +177,15 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    cy.get('.title').contains('Card').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.contains('Listing Item').click();
     cy.contains('Search Item').click({ force: true });
     cy.get('#toolbar-save').click();
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    cy.get('.title').contains('Card').click({ force: true });
-    cy.contains('Search Item').click({ force: true });
+    cy.contains('Test Headline').click();
+    cy.contains('Search Item').click();
     cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
@@ -208,8 +196,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    cy.get('.title').contains('Card').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.contains('Search Item').click();
     cy.contains('Simple Item').click();
     cy.get('#toolbar-save').click();
@@ -237,8 +224,6 @@ describe('Blocks Tests', () => {
     cy.get('.react-select__option').contains('Carousel').click();
 
     cy.get('.title').contains('Carousel').click();
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Card (default)').click();
     cy.contains('Image Card').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
@@ -372,9 +357,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Carousel').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.get('#field-slidesToShow').type('{downArrow}{downArrow}{downArrow}');
     cy.get('#field-slidesToScroll').type('{upArrow}');
     cy.get('#toolbar-save').click();
@@ -405,8 +388,6 @@ describe('Blocks Tests', () => {
     cy.get('.react-select__option').contains('Gallery').click();
 
     cy.get('.title').contains('Gallery').click();
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Card').click({ force: true });
     cy.contains('Card (default)').click();
     cy.contains('Image Card').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
@@ -537,9 +518,7 @@ describe('Blocks Tests', () => {
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
-    cy.contains('Test Headline').click({ force: true });
-    if (Cypress.env('VOLTO_VERSION').startsWith('16'))
-      cy.get('.title').contains('Gallery').click({ force: true });
+    cy.contains('Test Headline').click();
     cy.get('#blockform-fieldset-cardsGallery .react-select__control').click();
     cy.get('.react-select__menu-list').contains('Four').click({ force: true });
     cy.get('#toolbar-save').click();
@@ -592,7 +571,10 @@ describe('Blocks Tests', () => {
       .contains('Icon')
       .click({ force: true });
     cy.get('#field-icon').click({ force: true }).type('test');
+
+    cy.get('#field-theme').click({ force: true }).type('Test Theme');
   });
+
   it('Add Block: teaserGrid', () => {
     // Change page title
     cy.get('[contenteditable=true]').first().click();
@@ -612,12 +594,12 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
     cy.get('.toolbar-actions .edit').click();
     cy.get('.block-editor-teaser').click();
-    cy.get('.ui.buttons').first().click();
-    cy.get('.block.teaser .ui.input input[type="text"]')
+    cy.get('#blockform-fieldset-default .field-wrapper-href input')
       .click()
-      .type('some random link');
-    cy.get('.block.teaser .ui.buttons .cancel').click();
-    cy.get('.block.teaser .ui.input input[type="text"]').type(
+      .type('https://github.com/eea/volto-listing-block');
+    cy.get(
+      '#blockform-fieldset-default .field-wrapper-preview_image input[type="text"]',
+    ).type(
       `https://github.com/plone/volto/raw/main/logos/volto-colorful.png{enter}`,
     );
     cy.get(
