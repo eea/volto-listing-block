@@ -1,9 +1,11 @@
 import React from 'react';
-import renderer from 'react-test-renderer';
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+
 import Item from './Item';
 
 describe('Item', () => {
-  it('renders correctly', () => {
+  it('renders the icon, description, and applies correct classes', () => {
     const data = {
       '@type': 'item',
       assetType: 'icon',
@@ -14,8 +16,19 @@ describe('Item', () => {
       description: 'some text',
     };
 
-    const component = renderer.create(<Item {...data} />);
-    const json = component.toJSON();
-    expect(json).toMatchSnapshot();
+    const { container } = render(<Item {...data} />);
+
+    const icon = container.querySelector('i');
+    expect(icon).toBeInTheDocument();
+    expect(icon).toHaveClass('ri-home-line');
+    expect(icon).toHaveClass('big');
+    expect(icon).toHaveClass('middle');
+    expect(icon).toHaveClass('aligned');
+
+    const description = screen.getByText('some text');
+    expect(description).toBeInTheDocument();
+    expect(description.closest('div')).toHaveClass('description');
+
+    expect(container.querySelector('div.item')).toBeInTheDocument();
   });
 });
