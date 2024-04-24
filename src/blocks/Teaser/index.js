@@ -48,10 +48,15 @@ const applyConfig = (config) => {
   config.blocks.blocksConfig.teaser.renderTag = (tag, index) => {
     return <Label key={index}>{tag}</Label>;
   };
-  config.blocks.blocksConfig.teaserGrid = {
-    ...config.blocks.blocksConfig.gridBlock,
-    restricted: true,
-  };
+
+  //make sure that is compatiable with the current frontend
+  if (!config.blocks.blocksConfig.teaserGrid) {
+    config.blocks.blocksConfig.teaserGrid = {
+      ...config.blocks.blocksConfig.gridBlock,
+      restricted: true,
+    };
+  }
+
   return config;
 };
 
