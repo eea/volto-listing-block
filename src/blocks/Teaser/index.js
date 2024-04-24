@@ -50,7 +50,7 @@ const applyConfig = (config) => {
   };
 
   //make sure that is compatiable with the current frontend
-  if(!config.blocks.blocksConfig.teaserGrid) {
+  if (!config.blocks.blocksConfig.teaserGrid) {
     config.blocks.blocksConfig.teaserGrid = {
       ...config.blocks.blocksConfig.gridBlock,
       restricted: true,
