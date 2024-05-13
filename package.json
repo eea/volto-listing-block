@@ -18,7 +18,7 @@
   },
   "addons": [],
   "dependencies": {
-    "@eeacms/volto-widget-theme-picker": "^1.0.1",
+    "@eeacms/volto-widget-theme-picker": "*",
     "react-resize-detector": "7.1.2",
     "react-slick": "^0.30.1",
     "slick-carousel": "1.8.1"
