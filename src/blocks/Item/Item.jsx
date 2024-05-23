@@ -1,7 +1,25 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
 import { getFieldURL } from '@eeacms/volto-listing-block/helpers';
+import config from '@plone/volto/registry';
 
+const ItemImage = ({ image, imageSize, verticalAlign }) => {
+  const imageURL = getFieldURL(image);
+  if (!imageURL) return null;
+  const imageSizes = config.blocks.blocksConfig.item.imageSizes;
+  const size = imageSizes[imageSize];
+
+  return (
+    <img
+      src={`${imageURL}/@@images/image/${imageSize}`}
+      className={cx('ui', imageSize, verticalAlign, 'aligned')}
+      alt=""
+      width={size.width}
+      height={size.height}
+      loading="lazy"
+    />
+  );
+};
 function Item({
   assetType,
   children,
@@ -17,15 +35,14 @@ function Item({
   mode = 'view',
   ...props
 }) {
-  const image = getFieldURL(props.image);
   return (
     <UiItem.Group unstackable className="row">
       <UiItem className={cx(theme)}>
-        {assetType === 'image' && image && (
-          <UiItem.Image
-            src={`${image}/@@images/image/${imageSize}`}
-            className={cx('ui', imageSize, verticalAlign, 'aligned')}
-            role="presentation"
+        {assetType === 'image' && (
+          <ItemImage
+            image={props.image}
+            imageSize={imageSize}
+            verticalAlign={verticalAlign}
           />
         )}
         {assetType === 'icon' && icon && (

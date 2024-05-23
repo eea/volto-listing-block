@@ -15,6 +15,13 @@ const applyConfig = (config) => {
     restricted: false,
     mostUsed: false,
     sidebarTab: 1,
+    imageSizes: {
+      tiny: { width: 24, height: 24 },
+      small: { width: 48, height: 48 },
+      medium: { width: 64, height: 64 },
+      big: { width: 80, height: 80 },
+      preview: { width: 400, height: 400 },
+    },
     security: {
       addPermission: [],
       view: [],
