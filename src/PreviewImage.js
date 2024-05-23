@@ -55,7 +55,13 @@ function PreviewImage(props) {
           {label.text}
         </Label>
       ) : null}
-      <Image src={preview_image_url || src} alt={item.title} {...rest} />
+      <Image
+        decoding="async"
+        loading="lazy"
+        src={preview_image_url || src}
+        alt={item.title}
+        {...rest}
+      />
     </>
   );
 }
