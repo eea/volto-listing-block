@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-listing-block",
-  "version": "8.0.3",
+  "version": "8.1.0",
   "description": "@eeacms/volto-listing-block: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
