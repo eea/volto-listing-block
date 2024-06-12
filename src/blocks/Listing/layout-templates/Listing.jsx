@@ -13,7 +13,7 @@ const Listing = (props) => {
 
   moment.locale(config.settings.dateLocale);
   const link = isInternalURL(href) ? (
-    <ConditionalLink to={flattenToAppURL(href)} condition={!isEditMode}>
+    <ConditionalLink to={href} condition={!isEditMode}>
       {linkTitle || href}
     </ConditionalLink>
   ) : href ? (

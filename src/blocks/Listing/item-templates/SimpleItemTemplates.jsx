@@ -30,10 +30,7 @@ const BasicItem = (props) => {
     >
       <div className="wrapper">
         <div className="slot-top">
-          <ConditionalLink
-            to={flattenToAppURL(getBaseUrl(item['@id']))}
-            condition={!isEditMode}
-          >
+          <ConditionalLink to={getBaseUrl(item['@id'])} condition={!isEditMode}>
             <div className="listing-body">
               <p className={'listing-header'}>
                 {item.title ? item.title : item.id}
