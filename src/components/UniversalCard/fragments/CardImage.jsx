@@ -34,7 +34,12 @@ const CardImage = (props) => {
   const showLink = !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage;
 
   return (
-    <ConditionalLink className="image" item={item} condition={showLink}>
+    <ConditionalLink
+      to={item['@id']}
+      className="image"
+      item={item}
+      condition={showLink}
+    >
       {showLink ? (
         <>
           <PreviewImage
