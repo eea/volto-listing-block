@@ -11,6 +11,7 @@ const CardTitle = (props) => {
     <UiCard.Header>
       <ConditionalLink
         className="header-link"
+        to={item['@id']}
         item={item}
         condition={!isEditMode && itemModel?.hasLink}
       >
