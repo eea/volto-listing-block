@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment'; // TODO: this needs to be lazyloaded!!!
 import { ConditionalLink } from '@plone/volto/components';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-import { flattenToAppURL } from '@plone/volto/helpers';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
 
