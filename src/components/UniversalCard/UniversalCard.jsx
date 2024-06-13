@@ -19,6 +19,13 @@ function UniversalCard(props) {
     className.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase(),
   );
 
+  // we need to remove the @@download/file part of the url
+  // to avoid missing image if we encounter a link to a file
+  // which happens for anon users
+  if (item && item['@id']?.indexOf('/@@download/file') !== -1) {
+    item['@id'] = item['@id']?.replace('/@@download/file', '');
+  }
+
   const CardTemplate = extension.template;
 
   return (
