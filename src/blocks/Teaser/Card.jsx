@@ -22,29 +22,9 @@ const TeaserCardTemplate = (props) => {
   const intl = useIntl();
 
   const item = data.href?.[0];
-  console.log(data.preview_image);
+
   const image = getFieldURL(data.preview_image);
-  const modelatePreviewImage = (data) => {
-    if (!data.preview_image) return {};
-    return {
-      preview_image_url:
-        typeof data.preview_image === 'string' &&
-        !isInternalURL(data.preview_image)
-          ? data.preview_image
-          : '',
-      preview_image: Array.isArray(data.preview_image)
-        ? data.preview_image
-        : [
-            typeof data.preview_image === 'string'
-              ? {
-                  '@id': data.preview_image,
-                  url: data.preview_image,
-                  title: data.preview_image,
-                }
-              : data.preview_image,
-          ],
-    };
-  };
+
   const isExternal = !isInternalURL(image);
   return item || data.preview_image ? (
     <UniversalCard
