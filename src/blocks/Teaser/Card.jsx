@@ -4,7 +4,8 @@ import { omit } from 'lodash';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { defineMessages, useIntl } from 'react-intl';
 import { Message } from 'semantic-ui-react';
-import { isInternalURL, getFieldURL } from '@plone/volto/helpers';
+import { isInternalURL } from '@plone/volto/helpers';
+import { getFieldURL } from '@plone/volto/helpers/Url/Url';
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
