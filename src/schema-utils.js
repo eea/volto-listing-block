@@ -1,6 +1,8 @@
 import { cloneDeepSchema } from '@plone/volto/helpers/Utils/Utils';
 import config from '@plone/volto/registry';
 
+import messages from '@eeacms/volto-listing-block/messages';
+
 export const addTypeSelect = ({
   formData,
   intl,
@@ -62,30 +64,30 @@ export const schemaEnhancerFactory =
     return schema;
   };
 
-export const DefaultCardModelSchema = {
-  title: 'Card Model',
+export const DefaultCardModelSchema = (intl) => ({
+  title: intl.formatMessage(messages.cardModel),
   fieldsets: [
     {
       id: 'default',
-      title: 'Settings',
+      title: intl.formatMessage(messages.defaultLabel),
       fields: [],
     },
     {
       id: 'styling',
-      title: 'Styling',
+      title: intl.formatMessage(messages.styling),
       fields: ['styles'],
     },
   ],
   properties: {
     styles: {
       widget: 'object',
-      title: 'Card styling',
+      title: intl.formatMessage(messages.cardStyling),
       schema: {
-        title: 'Card Styling',
+        title: intl.formatMessage(messages.cardStyling),
         fieldsets: [
           {
             id: 'default',
-            title: 'Default',
+            title: intl.formatMessage(messages.defaultLabel),
             fields: [],
           },
         ],
@@ -95,7 +97,7 @@ export const DefaultCardModelSchema = {
     },
   },
   required: [],
-};
+});
 
 export const getVoltoStyles = (props) => {
   const styles = props ? props : {};

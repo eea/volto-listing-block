@@ -14,23 +14,23 @@ const messages = defineMessages({
     defaultMessage: 'Theme',
   },
   ThemeHelp: {
-    id: 'Theme',
-    defaultMessage: 'Theme',
+    id: 'ThemeHelp',
+    defaultMessage: 'Theme selection for the item.',
   },
   ThemeDefault: {
-    id: 'Default',
+    id: 'ThemeDefault',
     defaultMessage: 'Default',
   },
   ThemePrimary: {
-    id: 'Primary',
+    id: 'ThemePrimary',
     defaultMessage: 'Primary',
   },
   ThemeSecondary: {
-    id: 'Secondary',
+    id: 'ThemeSecondary',
     defaultMessage: 'Secondary',
   },
   ThemeTertiary: {
-    id: 'Tertiary',
+    id: 'ThemeTertiary',
     defaultMessage: 'Tertiary',
   },
   Rounded: {
@@ -38,8 +38,8 @@ const messages = defineMessages({
     defaultMessage: 'Rounded',
   },
   RoundedHelp: {
-    id: 'Rounded Image',
-    defaultMessage: 'Rounded Image',
+    id: 'RoundedHelp',
+    defaultMessage: 'Applies rounded corners to the image.',
   },
   Inverted: {
     id: 'Inverted',
@@ -47,19 +47,19 @@ const messages = defineMessages({
   },
   InvertedHelp: {
     id: 'InvertedHelp',
-    defaultMessage: 'Inverted theme',
+    defaultMessage: 'Applies an inverted theme to the item.',
   },
   Bordered: {
     id: 'Bordered',
     defaultMessage: 'Bordered',
   },
   ObjectFit: {
-    id: 'Object fit',
+    id: 'ObjectFit',
     defaultMessage: 'Object fit',
   },
   ObjectFitHelp: {
     id: 'ObjectFitHelp',
-    defaultMessage: 'Css property object-fit applied on Card image',
+    defaultMessage: 'CSS property for object-fit applied to the image.',
   },
   ObjectPosition: {
     id: 'ObjectPosition',
@@ -67,7 +67,234 @@ const messages = defineMessages({
   },
   ObjectPositionHelp: {
     id: 'ObjectPositionHelp',
-    defaultMessage: 'Css property object-position applied on Card image',
+    defaultMessage: 'CSS property for object-position applied to the image.',
+  },
+  assetType: {
+    id: 'assetType',
+    defaultMessage: 'Asset type',
+  },
+  assetTypeHelp: {
+    id: 'assetTypeHelp',
+    defaultMessage: 'Type of asset to display (image or icon).',
+  },
+  image: {
+    id: 'image',
+    defaultMessage: 'Image',
+  },
+  imageSize: {
+    id: 'imageSize',
+    defaultMessage: 'Image size',
+  },
+  imageSizeHelp: {
+    id: 'imageSizeHelp',
+    defaultMessage: 'Size of the image to display.',
+  },
+  icon: {
+    id: 'icon',
+    defaultMessage: 'Icon name',
+  },
+  iconHelp: {
+    id: 'iconHelp',
+    defaultMessage: 'Name of the icon. Refer to the Remix icon cheatsheet.',
+  },
+  iconSize: {
+    id: 'iconSize',
+    defaultMessage: 'Icon size',
+  },
+  verticalAlign: {
+    id: 'verticalAlign',
+    defaultMessage: 'Vertical align',
+  },
+  itemTitle: {
+    id: 'itemTitle',
+    defaultMessage: 'Item',
+  },
+  defaultLabel: {
+    id: 'defaultLabel',
+    defaultMessage: 'Default',
+  },
+  iconLabel: {
+    id: 'iconLabel',
+    defaultMessage: 'Icon',
+  },
+  sizeTiny: {
+    id: 'sizeTiny',
+    defaultMessage: 'Tiny',
+  },
+  sizeSmall: {
+    id: 'sizeSmall',
+    defaultMessage: 'Small',
+  },
+  sizeMedium: {
+    id: 'sizeMedium',
+    defaultMessage: 'Medium',
+  },
+  sizeLarge: {
+    id: 'sizeLarge',
+    defaultMessage: 'Large',
+  },
+  preview: {
+    id: 'preview',
+    defaultMessage: 'Preview',
+  },
+  itemTheme: {
+    id: 'itemTheme',
+    defaultMessage: 'Item theme',
+  },
+  top: {
+    id: 'top',
+    defaultMessage: 'Top',
+  },
+  middle: {
+    id: 'middle',
+    defaultMessage: 'Middle',
+  },
+  bottom: {
+    id: 'bottom',
+    defaultMessage: 'Bottom',
+  },
+  showAction: {
+    id: 'showAction',
+    defaultMessage: 'Show action',
+  },
+  actionLabel: {
+    id: 'actionLabel',
+    defaultMessage: 'Action label',
+  },
+  readMore: {
+    id: 'readMore',
+    defaultMessage: 'Read more',
+  },
+  actionURL: {
+    id: 'actionURL',
+    defaultMessage: 'Action URL',
+  },
+  actionURLTemplate: {
+    id: 'actionURLTemplate',
+    defaultMessage: 'Action URL template',
+  },
+  urlTemplateDescription: {
+    id: 'urlTemplateDescription',
+    defaultMessage:
+      'Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.',
+  },
+  displayTitle: {
+    id: 'displayTitle',
+    defaultMessage: 'Display title on image',
+  },
+  enableLink: {
+    id: 'enableLink',
+    defaultMessage: 'Enable link',
+  },
+  enableLinkDescription: {
+    id: 'enableLinkDescription',
+    defaultMessage: 'Link to source content.',
+  },
+  publicationDate: {
+    id: 'publicationDate',
+    defaultMessage: 'Publication date',
+  },
+  eventDate: {
+    id: 'eventDate',
+    defaultMessage: 'Event date',
+  },
+  description: {
+    id: 'description',
+    defaultMessage: 'Description',
+  },
+  maxTitle: {
+    id: 'maxTitle',
+    defaultMessage: 'Title max lines',
+  },
+  maxTitleDescription: {
+    id: 'maxTitleDescription',
+    defaultMessage:
+      "Limit title to a maximum number of lines by adding trailing '...'",
+  },
+  maxDescriptionTitle: {
+    id: 'maxDescriptionTitle',
+    defaultMessage: 'Description max lines',
+  },
+  maxDescriptionTitleDescription: {
+    id: 'maxDescriptionTitleDescription',
+    defaultMessage:
+      "Limit description to a maximum number of lines by adding trailing '...'",
+  },
+  showPortalType: {
+    id: 'showPortalType',
+    defaultMessage: 'Show portal type',
+  },
+  showNewArchivedLabel: {
+    id: 'showNewArchivedLabel',
+    defaultMessage: 'Show new/archived label',
+  },
+  showTags: {
+    id: 'showTags',
+    defaultMessage: 'Show tags',
+  },
+  iconExample: {
+    id: 'iconExample',
+    defaultMessage: "Ex.: 'ri-arrow-right-line'. See Remix Icon set",
+  },
+  imageRight: {
+    id: 'imageRight',
+    defaultMessage: 'Image on Right (Default is Left)',
+  },
+  imageLeft: {
+    id: 'imageLeft',
+    defaultMessage: 'Image on left',
+  },
+  textAlign: {
+    id: 'textAlign',
+    defaultMessage: 'Text align',
+  },
+  cover: {
+    id: 'cover',
+    defaultMessage: 'cover',
+  },
+  contain: {
+    id: 'contain',
+    defaultMessage: 'contain',
+  },
+  fill: {
+    id: 'fill',
+    defaultMessage: 'fill',
+  },
+  scaleDown: {
+    id: 'scaleDown',
+    defaultMessage: 'scale-down',
+  },
+  none: {
+    id: 'none',
+    defaultMessage: 'none',
+  },
+  left: {
+    id: 'left',
+    defaultMessage: 'Left',
+  },
+  center: {
+    id: 'center',
+    defaultMessage: 'Center',
+  },
+  right: {
+    id: 'right',
+    defaultMessage: 'Right',
+  },
+  query: {
+    id: 'query',
+    defaultMessage: 'Query',
+  },
+  settings: {
+    id: 'settings',
+    defaultMessage: 'Settings',
+  },
+  cardStyling: {
+    id: 'cardStyling',
+    defaultMessage: 'Card styling',
+  },
+  cardModel: {
+    id: 'cardModel',
+    defaultMessage: 'Card model',
   },
 });
 

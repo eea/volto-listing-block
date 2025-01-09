@@ -3,6 +3,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import config from '@plone/volto/registry';
+import { defineMessages } from 'react-intl';
+
+const messages = defineMessages({
+  galleryTitle: {
+    id: 'galleryTitle',
+    defaultMessage: 'Gallery',
+  },
+  gridSize: {
+    id: 'gridSize',
+    defaultMessage: 'Grid Size',
+  },
+  three: {
+    id: 'three',
+    defaultMessage: 'Three',
+  },
+  four: {
+    id: 'four',
+    defaultMessage: 'Four',
+  },
+});
 
 const Gallery = ({
   block,
@@ -27,20 +47,20 @@ const Gallery = ({
   );
 };
 
-Gallery.schemaEnhancer = ({ schema }) => {
+Gallery.schemaEnhancer = ({ schema, intl }) => {
   schema.fieldsets.splice(1, 0, {
     id: 'cardsGallery',
-    title: 'Gallery',
+    title: intl.formatMessage(messages.galleryTitle),
     fields: ['gridSize'],
   });
 
   schema.properties = {
     ...schema.properties,
     gridSize: {
-      title: 'Grid Size',
+      title: intl.formatMessage(messages.gridSize),
       choices: [
-        ['three', 'Three'],
-        ['four', 'Four'],
+        ['three', intl.formatMessage(messages.three)],
+        ['four', intl.formatMessage(messages.four)],
       ],
       default: 'three',
       factory: 'Choice',

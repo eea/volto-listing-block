@@ -14,7 +14,7 @@ const messages = defineMessages({
 
 export default function universalCardSchemaEnhancer(args) {
   const props = { ...args };
-  const { schema } = props;
+  const { schema, intl } = props;
 
   props.formData = props.formData || props.data;
   const extensionName = 'cardTemplates';
@@ -33,7 +33,7 @@ export default function universalCardSchemaEnhancer(args) {
 
   const itemModelSchema = addTypeSelect({
     ...args,
-    schema: DefaultCardModelSchema,
+    schema: DefaultCardModelSchema(intl),
     extensionName,
     messages,
   });

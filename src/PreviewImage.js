@@ -45,8 +45,8 @@ function PreviewImage(props) {
   const src = preview_image?.[0]
     ? getSrc(preview_image[0], size)
     : item.image_field
-    ? getSrc(item, size)
-    : DefaultImageSVG;
+      ? getSrc(item, size)
+      : DefaultImageSVG;
 
   return (
     <>
