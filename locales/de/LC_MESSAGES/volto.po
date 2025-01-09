@@ -11,92 +11,434 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
+#. Default: "Bordered"
 #: messages
-# defaultMessage: Bordered
 msgid "Bordered"
-msgstr ""
+msgstr "Eingerahmt"
 
+#. Default: "Browse the site"
+#: blocks/Teaser/ImageWidget
+msgid "Browse the site"
+msgstr "Durchsuchen Sie die Website"
+
+#. Default: "Browse the site, drop an image, or type an URL"
+#: blocks/Teaser/ImageWidget
+msgid "Browse the site, drop an image, or type an URL"
+msgstr "Durchsuchen Sie die Website, legen Sie ein Bild ab, oder geben Sie eine URL ein."
+
+#. Default: "Card type"
 #: components/UniversalCard/schema
-# defaultMessage: Card type
 msgid "Card type"
-msgstr ""
+msgstr "Kartentyp"
 
+#. Default: "Inverted"
 #: messages
-# defaultMessage: Default
-msgid "Default"
-msgstr ""
-
-#: messages
-# defaultMessage: Inverted
 msgid "Inverted"
-msgstr ""
+msgstr "Umgekehrt"
 
+#. Default: "Applies an inverted theme to the item."
 #: messages
-# defaultMessage: Inverted theme
 msgid "InvertedHelp"
-msgstr ""
+msgstr "Umgekehrtes Theme"
 
+#. Default: "Listing"
 #: messages
-# defaultMessage: Listing
 msgid "Listing"
-msgstr ""
+msgstr "Auflistung"
 
+#. Default: "Object fit"
 #: messages
-# defaultMessage: Object fit
-msgid "Object fit"
-msgstr ""
+msgid "ObjectFit"
+msgstr "Objekt anpassen"
 
+#. Default: "CSS property for object-fit applied to the image."
 #: messages
-# defaultMessage: Css property object-fit applied on Card image
 msgid "ObjectFitHelp"
-msgstr ""
+msgstr "Css-Eigenschaft „object-fit“ auf Kartenbild angewendet"
 
+#. Default: "Object position"
 #: messages
-# defaultMessage: Object position
 msgid "ObjectPosition"
-msgstr ""
+msgstr "Objekt Position"
 
+#. Default: "CSS property for object-position applied to the image."
 #: messages
-# defaultMessage: Css property object-position applied on Card image
 msgid "ObjectPositionHelp"
-msgstr ""
+msgstr "Css-Eigenschaft object-position angewendet auf Kartenbild"
 
+#. Default: "Please choose an existing content as source for this element"
 #: blocks/Teaser/Card
-# defaultMessage: Please choose an existing content as source for this element
 msgid "Please choose an existing content as source for this element"
-msgstr ""
+msgstr "Bitte wählen Sie einen bestehenden Inhalt als Quelle für dieses Element"
 
+#. Default: "Rounded"
 #: messages
-# defaultMessage: Primary
-msgid "Primary"
-msgstr ""
-
-#: messages
-# defaultMessage: Rounded
 msgid "Rounded"
-msgstr ""
+msgstr "Abgerundet"
 
+#. Default: "Applies rounded corners to the image."
 #: messages
-# defaultMessage: Rounded Image
-msgid "Rounded Image"
-msgstr ""
+msgid "RoundedHelp"
+msgstr "Wendet abgerundete Ecken auf das Bild an."
 
+#. Default: "Styling"
 #: messages
-# defaultMessage: Secondary
-msgid "Secondary"
-msgstr ""
-
-#: messages
-# defaultMessage: Styling
 msgid "Styling"
-msgstr ""
+msgstr "Aussehen"
 
+#. Default: "Theme"
 #: messages
-# defaultMessage: Tertiary
-msgid "Tertiary"
-msgstr ""
-
-#: messages
-# defaultMessage: Theme
 msgid "Theme"
 msgstr ""
+
+#. Default: "Default"
+#: messages
+msgid "ThemeDefault"
+msgstr "Standard"
+
+#. Default: "Theme selection for the item."
+#: messages
+msgid "ThemeHelp"
+msgstr "Themenauswahl für das Element."
+
+#. Default: "Primary"
+#: messages
+msgid "ThemePrimary"
+msgstr "Primär"
+
+#. Default: "Secondary"
+#: messages
+msgid "ThemeSecondary"
+msgstr "Sekundär"
+
+#. Default: "Tertiary"
+#: messages
+msgid "ThemeTertiary"
+msgstr "Teritär"
+
+#. Default: "Action label"
+#: messages
+msgid "actionLabel"
+msgstr "Aktion"
+
+#. Default: "Action URL"
+#: messages
+msgid "actionURL"
+msgstr "Aktion URL"
+
+#. Default: "Action URL template"
+#: messages
+msgid "actionURLTemplate"
+msgstr "Aktion URL Vorlage"
+
+#. Default: "Asset type"
+#: messages
+msgid "assetType"
+msgstr "Asset-Typ"
+
+#. Default: "Type of asset to display (image or icon)."
+#: messages
+msgid "assetTypeHelp"
+msgstr "Art des anzuzeigenden Assets (Bild oder Symbol)."
+
+#. Default: "Bottom"
+#: messages
+msgid "bottom"
+msgstr "Unten"
+
+#. Default: "Card model"
+#: messages
+msgid "cardModel"
+msgstr "Kartenmodell"
+
+#. Default: "Card styling"
+#: messages
+msgid "cardStyling"
+msgstr "Gestaltung der Karte"
+
+#. Default: "Carousel"
+#: blocks/Listing/layout-templates/Carousel
+msgid "carouselTitle"
+msgstr "Karussell"
+
+#. Default: "Center"
+#: messages
+msgid "center"
+msgstr "Mitte"
+
+#. Default: "contain"
+#: messages
+msgid "contain"
+msgstr ""
+
+#. Default: "cover"
+#: messages
+msgid "cover"
+msgstr ""
+
+#. Default: "Default"
+#: messages
+msgid "defaultLabel"
+msgstr "Standard"
+
+#. Default: "Description"
+#: blocks/Listing/layout-templates/NewsList
+#: messages
+msgid "description"
+msgstr "Beschreibung"
+
+#. Default: "Display title on image"
+#: messages
+msgid "displayTitle"
+msgstr "Titel auf dem Bild anzeigen"
+
+#. Default: "Enable link"
+#: messages
+msgid "enableLink"
+msgstr "Link aktivieren"
+
+#. Default: "Link to source content."
+#: messages
+msgid "enableLinkDescription"
+msgstr "Link zum Quellinhalt."
+
+#. Default: "Event date"
+#: messages
+msgid "eventDate"
+msgstr "Event datum"
+
+#. Default: "fill"
+#: messages
+msgid "fill"
+msgstr "Füllen"
+
+#. Default: "Four"
+#: blocks/Listing/layout-templates/Gallery
+msgid "four"
+msgstr "Vier"
+
+#. Default: "Gallery"
+#: blocks/Listing/layout-templates/Gallery
+msgid "galleryTitle"
+msgstr "Galerie"
+
+#. Default: "Grid Size"
+#: blocks/Listing/layout-templates/Gallery
+msgid "gridSize"
+msgstr "Rastergröße"
+
+#. Default: "Icon name"
+#: messages
+msgid "icon"
+msgstr ""
+
+#. Default: "Ex.: 'ri-arrow-right-line'. See Remix Icon set"
+#: messages
+msgid "iconExample"
+msgstr "Bsp.: 'ri-arrow-right_line'. Siehe Remix Icon"
+
+#. Default: "Name of the icon. Refer to the Remix icon cheatsheet."
+#: messages
+msgid "iconHelp"
+msgstr "Name des Symbols. Siehe das Remix Icon Cheatsheet."
+
+#. Default: "Icon"
+#: messages
+msgid "iconLabel"
+msgstr ""
+
+#. Default: "Icon size"
+#: messages
+msgid "iconSize"
+msgstr "Icon Größe"
+
+#. Default: "Image"
+#: messages
+msgid "image"
+msgstr "Bild"
+
+#. Default: "Image on left"
+#: messages
+msgid "imageLeft"
+msgstr "Bild auf der linken Seite"
+
+#. Default: "Image on Right (Default is Left)"
+#: messages
+msgid "imageRight"
+msgstr "Bild auf der rechten Seite (Standard ist links)"
+
+#. Default: "Image size"
+#: messages
+msgid "imageSize"
+msgstr "Bildgröße"
+
+#. Default: "Size of the image to display."
+#: messages
+msgid "imageSizeHelp"
+msgstr "Größe des anzuzeigenden Bildes."
+
+#. Default: "Item theme"
+#: messages
+msgid "itemTheme"
+msgstr "Element Theme"
+
+#. Default: "Item"
+#: messages
+msgid "itemTitle"
+msgstr "Element"
+
+#. Default: "Left"
+#: messages
+msgid "left"
+msgstr "Links"
+
+#. Default: "Description max lines"
+#: messages
+msgid "maxDescriptionTitle"
+msgstr "Beschreibung max Zeilen"
+
+#. Default: "Limit description to a maximum number of lines by adding trailing '...'"
+#: messages
+msgid "maxDescriptionTitleDescription"
+msgstr "Beschreibung auf eine maximale Anzahl von Zeilen beschränken, indem ein abschließendes '...' hinzugefügt wird"
+
+#. Default: "Title max lines"
+#: messages
+msgid "maxTitle"
+msgstr "Titel max Zeilen"
+
+#. Default: "Limit title to a maximum number of lines by adding trailing '...'"
+#: messages
+msgid "maxTitleDescription"
+msgstr "Begrenzung des Titels auf eine maximale Anzahl von Zeilen durch Hinzufügen eines nachgestellten '...'."
+
+#. Default: "Middle"
+#: messages
+msgid "middle"
+msgstr "Mitte"
+
+#. Default: "News item"
+#: blocks/Listing/layout-templates/NewsList
+msgid "newsItem"
+msgstr "Neuigkeiten Element"
+
+#. Default: "There are no items to show in this view."
+#: blocks/Listing/layout-templates/Listing
+msgid "noItemsToShow"
+msgstr "In dieser Ansicht sind keine Elemente zu sehen."
+
+#. Default: "none"
+#: messages
+msgid "none"
+msgstr ""
+
+#. Default: "Preview"
+#: messages
+msgid "preview"
+msgstr "Vorschau"
+
+#. Default: "Publication date"
+#: blocks/Listing/layout-templates/NewsList
+#: messages
+msgid "publicationDate"
+msgstr "Datum der Veröffentlichung"
+
+#. Default: "Query"
+#: messages
+msgid "query"
+msgstr "Abfrage"
+
+#. Default: "Read more"
+#: messages
+msgid "readMore"
+msgstr "Mehr lesen"
+
+#. Default: "Right"
+#: messages
+msgid "right"
+msgstr "Rechts"
+
+#. Default: "scale-down"
+#: messages
+msgid "scaleDown"
+msgstr "verkleinern"
+
+#. Default: "Settings"
+#: messages
+msgid "settings"
+msgstr "Einstellungen"
+
+#. Default: "Show action"
+#: messages
+msgid "showAction"
+msgstr "Aktion anzeigen"
+
+#. Default: "Show new/archived label"
+#: messages
+msgid "showNewArchivedLabel"
+msgstr "Neue/archiviert Label anzeigen"
+
+#. Default: "Show portal type"
+#: messages
+msgid "showPortalType"
+msgstr "Portaltyp anzeigen"
+
+#. Default: "Show tags"
+#: messages
+msgid "showTags"
+msgstr "Tags anzeigen"
+
+#. Default: "Large"
+#: messages
+msgid "sizeLarge"
+msgstr "Groß"
+
+#. Default: "Medium"
+#: messages
+msgid "sizeMedium"
+msgstr "Mittel"
+
+#. Default: "Small"
+#: messages
+msgid "sizeSmall"
+msgstr "Klein"
+
+#. Default: "Tiny"
+#: messages
+msgid "sizeTiny"
+msgstr "sehr klein"
+
+#. Default: "Slides to scroll"
+#: blocks/Listing/layout-templates/Carousel
+msgid "slidesToScroll"
+msgstr "Slides bis zum scrollen"
+
+#. Default: "Slides to show"
+#: blocks/Listing/layout-templates/Carousel
+msgid "slidesToShow"
+msgstr "Zu zeigende Slides"
+
+#. Default: "Text align"
+#: messages
+msgid "textAlign"
+msgstr "Text ausrichten"
+
+#. Default: "Three"
+#: blocks/Listing/layout-templates/Gallery
+msgid "three"
+msgstr "Drei"
+
+#. Default: "Top"
+#: messages
+msgid "top"
+msgstr "Oben"
+
+#. Default: "Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used."
+#: messages
+msgid "urlTemplateDescription"
+msgstr "Geben Sie einen Pfad ein. Verfügbare Platzhalter: $URL, $PORTAL_URL. Wenn leer, wird die Ergebnis-URL verwendet."
+
+#. Default: "Vertical align"
+#: messages
+msgid "verticalAlign"
+msgstr "Vertikal ausrichten"
