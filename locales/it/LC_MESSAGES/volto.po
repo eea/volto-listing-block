@@ -31,6 +31,16 @@ msgstr ""
 msgid "Card type"
 msgstr ""
 
+#. Default: "Carousel"
+#: messages
+msgid "Carousel"
+msgstr ""
+
+#. Default: "Gallery"
+#: messages
+msgid "Gallery"
+msgstr ""
+
 #. Default: "Inverted"
 #: messages
 msgid "Inverted"
@@ -39,6 +49,11 @@ msgstr ""
 #. Default: "Applies an inverted theme to the item."
 #: messages
 msgid "InvertedHelp"
+msgstr ""
+
+#. Default: "Item"
+#: messages
+msgid "Item"
 msgstr ""
 
 #. Default: "Listing"
@@ -280,11 +295,6 @@ msgstr ""
 #. Default: "Item theme"
 #: messages
 msgid "itemTheme"
-msgstr ""
-
-#. Default: "Item"
-#: messages
-msgid "itemTitle"
 msgstr ""
 
 #. Default: "Left"

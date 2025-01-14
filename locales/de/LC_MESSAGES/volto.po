@@ -31,6 +31,16 @@ msgstr "Durchsuchen Sie die Website, legen Sie ein Bild ab, oder geben Sie eine 
 msgid "Card type"
 msgstr "Kartentyp"
 
+#. Default: "Carousel"
+#: messages
+msgid "Carousel"
+msgstr "Karussell"
+
+#. Default: "Gallery"
+#: messages
+msgid "Gallery"
+msgstr "Galerie"
+
 #. Default: "Inverted"
 #: messages
 msgid "Inverted"
@@ -40,6 +50,11 @@ msgstr "Umgekehrt"
 #: messages
 msgid "InvertedHelp"
 msgstr "Umgekehrtes Theme"
+
+#. Default: "Item"
+#: messages
+msgid "Item"
+msgstr "Element"
 
 #. Default: "Listing"
 #: messages
@@ -281,11 +296,6 @@ msgstr "Größe des anzuzeigenden Bildes."
 #: messages
 msgid "itemTheme"
 msgstr "Element Theme"
-
-#. Default: "Item"
-#: messages
-msgid "itemTitle"
-msgstr "Element"
 
 #. Default: "Left"
 #: messages
