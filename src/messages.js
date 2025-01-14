@@ -106,7 +106,7 @@ const messages = defineMessages({
     defaultMessage: 'Vertical align',
   },
   itemTitle: {
-    id: 'itemTitle',
+    id: 'Item',
     defaultMessage: 'Item',
   },
   defaultLabel: {
@@ -295,6 +295,18 @@ const messages = defineMessages({
   cardModel: {
     id: 'cardModel',
     defaultMessage: 'Card model',
+  },
+  item: {
+    id: 'Item',
+    defaultMessage: 'Item',
+  },
+  carousel: {
+    id: 'Carousel',
+    defaultMessage: 'Carousel',
+  },
+  gallery: {
+    id: 'Gallery',
+    defaultMessage: 'Gallery',
   },
 });
 
