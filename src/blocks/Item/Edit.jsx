@@ -31,7 +31,7 @@ const Edit = (props) => {
     onSelectBlock,
   } = props;
   const { description } = data;
-  const schema = React.useMemo(() => getSchema(props, intl), [props]);
+  const schema = React.useMemo(() => getSchema(props, intl), [props, intl]);
 
   const withBlockProperties = React.useCallback(
     (editor) => {
