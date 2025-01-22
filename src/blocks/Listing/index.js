@@ -3,6 +3,7 @@ import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 
 import Carousel from './layout-templates/Carousel';
 import Gallery from './layout-templates/Gallery';
+import VisualizationCards from '@eeacms/volto-listing-block/blocks/Listing/layout-templates/VisualizationCards';
 import Listing from './layout-templates/Listing';
 import {
   setCardModelSchema,
@@ -18,6 +19,8 @@ import {
   LeftImageCardLayout,
   RightImageCardLayout,
 } from './item-templates/CardTemplates';
+
+import VisualizationCardLayout from './item-templates/VisualizationCard';
 
 import { DefaultItemLayout } from './item-templates/ItemTemplates';
 import { SearchItemLayout } from './item-templates/SearchItemTemplate';
@@ -79,6 +82,18 @@ const applyConfig = (config) => {
         Gallery.schemaEnhancer,
       ),
     },
+    {
+      id: 'cardsVisualization', //  'customCardsGalleryVariationId'
+      isDefault: false,
+      title: 'Visualization Cards',
+      template: VisualizationCards,
+      schemaEnhancer: composeSchema(
+        // addStyling,
+        // setBasicStylingSchema,
+        UniversalCard.schemaEnhancer,
+        VisualizationCards.schemaEnhancer,
+      ),
+    },
   ];
   listing.extensions = {
     ...listing.extensions,
@@ -88,6 +103,13 @@ const applyConfig = (config) => {
         isDefault: true,
         title: 'Card (default)',
         template: DefaultCardLayout,
+        schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
+      },
+      {
+        id: 'visualizationCard',
+        isDefault: false,
+        title: 'Visualization Card',
+        template: VisualizationCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
       },
       {
