@@ -11,6 +11,7 @@ import {
   setItemModelSchema,
   setSimpleItemModelSchema,
   setSimpleItemStylingSchema,
+  setVisualizationCardModelSchema,
 } from './schema';
 
 import {
@@ -110,7 +111,7 @@ const applyConfig = (config) => {
         isDefault: false,
         title: 'Visualization Card',
         template: VisualizationCardLayout,
-        schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
+        schemaEnhancer: setVisualizationCardModelSchema,
       },
       {
         id: 'imageCard',

@@ -53,6 +53,41 @@ const CallToActionSchema = ({ formData }) => {
   };
 };
 
+const CallToActionVisualizationSchema = ({ formData }) => {
+  return {
+    fieldsets: [
+      {
+        id: 'default',
+        fields: [
+          'enable',
+          ...(formData?.itemModel?.callToAction?.enable
+            ? ['label', 'urlTemplate']
+            : []),
+        ],
+        title: 'Default',
+      },
+    ],
+    properties: {
+      enable: {
+        type: 'boolean',
+        title: 'Show action',
+        default: true,
+      },
+      label: {
+        title: 'Action label',
+        default: 'More info',
+      },
+      urlTemplate: {
+        title: 'Action URL Template',
+        description:
+          'Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.',
+        default: '$URL',
+      },
+    },
+    required: [],
+  };
+};
+
 export const setCardModelSchema = (args) => {
   const { formData, schema } = args;
 
@@ -131,6 +166,28 @@ export const setCardModelSchema = (args) => {
     callToAction: {
       widget: 'object',
       schema: CallToActionSchema({ formData }),
+    },
+  };
+  return schema;
+};
+
+export const setVisualizationCardModelSchema = (args) => {
+  const { formData, schema } = args;
+  // console.log('args', args);
+  // console.log('formData', formData.itemModel.callToAction);
+  // formData.itemModel.callToAction.label.defaultValue = 'More info';
+  // console.log('schema', schema);
+
+  const itemModelSchema = schema.properties.itemModel.schema;
+  itemModelSchema.fieldsets[0].fields = [
+    ...itemModelSchema.fieldsets[0].fields,
+    'callToAction',
+  ];
+  itemModelSchema.properties = {
+    ...itemModelSchema.properties,
+    callToAction: {
+      widget: 'object',
+      schema: CallToActionVisualizationSchema({ formData }),
     },
   };
   return schema;
