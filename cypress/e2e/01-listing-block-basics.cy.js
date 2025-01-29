@@ -32,7 +32,7 @@ describe('Blocks Tests', () => {
     cy.contains('Image on left').click({ force: true });
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
-    cy.get('.react-select__option').contains('right').click();
+    cy.get('.react-select__option').contains('Right').click();
 
     // Save page
     cy.get('#toolbar-save').click();
@@ -228,7 +228,7 @@ describe('Blocks Tests', () => {
     cy.contains('Image Card').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
-    cy.get('.react-select__option').contains('right').click();
+    cy.get('.react-select__option').contains('Right').click();
 
     // Save page
     cy.get('#toolbar-save').click();
@@ -392,7 +392,7 @@ describe('Blocks Tests', () => {
     cy.contains('Image Card').click();
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
-    cy.get('.react-select__option').contains('right').click();
+    cy.get('.react-select__option').contains('Right').click();
 
     // Save page
     cy.get('#toolbar-save').click();
