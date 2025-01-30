@@ -27,7 +27,7 @@ msgid "Browse the site, drop an image, or type an URL"
 msgstr "Durchsuchen Sie die Website, legen Sie ein Bild ab, oder geben Sie eine URL ein."
 
 #. Default: "Card type"
-#: components/UniversalCard/schema
+#: messages
 msgid "Card type"
 msgstr "Kartentyp"
 

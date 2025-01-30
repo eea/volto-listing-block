@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2025-01-14T10:55:09.986Z\n"
+"POT-Creation-Date: 2025-01-30T17:29:22.567Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -29,7 +29,7 @@ msgid "Browse the site, drop an image, or type an URL"
 msgstr ""
 
 #. Default: "Card type"
-#: components/UniversalCard/schema
+#: messages
 msgid "Card type"
 msgstr ""
 
