@@ -1,0 +1,50 @@
+@type: 'extra';
+@element: 'custom';
+
+@import 'listing-cards.variables';
+
+@import (multiple, reference, optional) '../../theme.config';
+
+.text-color {
+  font-weight: bold;
+  &.with-border::before {
+    border-top: 5px solid currentColor;
+    content: ' ';
+    position: absolute;
+    top: -8px;
+    width: 70px;
+  }
+  &.achieved {
+    color: #006bb8;
+  }
+  &.on-track {
+    color: #47b3ff;
+  }
+
+  &.acceleration-needed {
+    color: #c69e7b;
+  }
+  &.wrong-direction {
+    color: #8b5e34;
+  }
+}
+
+.cardsVisualization {
+  .cards {
+    row-gap: 2rem;
+  }
+  .card {
+    border-top: 12px solid @tertiaryColor !important;
+    min-height: 326px !important;
+    min-width: 220px !important;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .description {
+      font-size: 0.85rem;
+    }
+  }
+}
