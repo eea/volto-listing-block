@@ -1,6 +1,10 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
+  title: {
+    id: 'Card type',
+    defaultMessage: 'Card type',
+  },
   styling: {
     id: 'Styling',
     defaultMessage: 'Styling',

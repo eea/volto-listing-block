@@ -24,10 +24,6 @@ jest.mock('@plone/volto/registry', () => ({
   },
 }));
 
-const messages = {
-  title: { id: 'title', defaultMessage: 'Title' },
-};
-
 const intl = {
   formatMessage: (msg) => msg.defaultMessage,
 };
@@ -39,7 +35,6 @@ describe('addTypeSelect', () => {
       intl,
       schema: { properties: {}, fieldsets: [{ id: 'default', fields: [] }] },
       extensionName: 'myExtension',
-      messages,
     });
 
     expect(schema.properties['@type']).toBeDefined();
@@ -51,7 +46,6 @@ describe('schemaEnhancerFactory', () => {
   it('return schema with the default extension', () => {
     const enhancer = schemaEnhancerFactory({
       extensionName: 'myExtension',
-      messages,
     });
     const schema = enhancer({
       schema: { properties: {}, fieldsets: [] },
@@ -66,7 +60,6 @@ describe('schemaEnhancerFactory', () => {
   it('returns schema with custom extension when custom is selected', () => {
     const enhancer = schemaEnhancerFactory({
       extensionName: 'myExtension',
-      messages,
     });
     const schema = enhancer({
       schema: { properties: {}, fieldsets: [] },
