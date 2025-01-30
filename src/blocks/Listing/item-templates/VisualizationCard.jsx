@@ -27,15 +27,14 @@ const VisualizationCard = (props) => {
   const imagePosition = props.imagePosition;
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
-      {(!imagePosition || (imagePosition && imagePosition === 'left')) && (
-        <CardImage {...props} />
-      )}
       <UiCard.Content>
-        <CardMeta {...props} />
         <CardTitle {...props} />
         <CardDescription {...props} />
+        <CardImage {...props} />
+        <CardMeta {...props} />
       </UiCard.Content>
       {imagePosition && imagePosition === 'right' && <CardImage {...props} />}
+
       <CardExtra {...props} />
     </UiCard>
   );

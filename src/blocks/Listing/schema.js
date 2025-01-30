@@ -181,13 +181,40 @@ export const setVisualizationCardModelSchema = (args) => {
   const itemModelSchema = schema.properties.itemModel.schema;
   itemModelSchema.fieldsets[0].fields = [
     ...itemModelSchema.fieldsets[0].fields,
+    'maxTitle',
+    'hasDescription',
+    'maxDescription',
     'callToAction',
   ];
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
+    hasDescription: {
+      title: 'Description',
+      type: 'boolean',
+      default: true,
+    },
     callToAction: {
       widget: 'object',
       schema: CallToActionVisualizationSchema({ formData }),
+    },
+
+    maxTitle: {
+      title: 'Title max lines',
+      description:
+        "Limit title to a maximum number of lines by adding trailing '...'",
+      type: 'number',
+      default: 4,
+      minimum: 0,
+      maximum: 5,
+    },
+    maxDescription: {
+      title: 'Description max lines',
+      description:
+        "Limit description to a maximum number of lines by adding trailing '...'",
+      type: 'number',
+      default: 4,
+      minimum: 0,
+      maximum: 5,
     },
   };
   return schema;

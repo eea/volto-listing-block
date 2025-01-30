@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import config from '@plone/volto/registry';
+import '@eeacms/volto-listing-block/less/visualization-cards.less';
 
 const VisualizationCards = ({
   block,

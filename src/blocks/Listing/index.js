@@ -111,7 +111,10 @@ const applyConfig = (config) => {
         isDefault: false,
         title: 'Visualization Card',
         template: VisualizationCardLayout,
-        schemaEnhancer: setVisualizationCardModelSchema,
+        schemaEnhancer: composeSchema(
+          setVisualizationCardModelSchema,
+          setCardStylingSchema,
+        ),
       },
       {
         id: 'imageCard',
