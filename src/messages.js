@@ -308,9 +308,62 @@ const messages = defineMessages({
     id: 'Carousel',
     defaultMessage: 'Carousel',
   },
+  carouselTitle: {
+    id: 'carouselTitle',
+    defaultMessage: 'Carousel',
+  },
+  slidesToShow: {
+    id: 'slidesToShow',
+    defaultMessage: 'Slides to show',
+  },
+  slidesToScroll: {
+    id: 'slidesToScroll',
+    defaultMessage: 'Slides to scroll',
+  },
   gallery: {
     id: 'Gallery',
     defaultMessage: 'Gallery',
+  },
+  galleryTitle: {
+    id: 'galleryTitle',
+    defaultMessage: 'Gallery',
+  },
+  gridSize: {
+    id: 'gridSize',
+    defaultMessage: 'Grid Size',
+  },
+  three: {
+    id: 'three',
+    defaultMessage: 'Three',
+  },
+  four: {
+    id: 'four',
+    defaultMessage: 'Four',
+  },
+  noItemsToShow: {
+    id: 'noItemsToShow',
+    defaultMessage: 'There are no items to show in this view.',
+  },
+  newsItem: {
+    id: 'newsItem',
+    defaultMessage: 'News item',
+  },
+  gallery: {
+    id: 'Gallery',
+    defaultMessage: 'Gallery',
+  },
+  PleaseChooseContent: {
+    id: 'Please choose an existing content as source for this element',
+    defaultMessage:
+      'Please choose an existing content as source for this element',
+  },
+  ImageBlockInputPlaceholder: {
+    id: 'Browse the site, drop an image, or type an URL',
+    defaultMessage: 'Browse the site, drop an image, or type an URL',
+  },
+  navigate: {
+    id: 'Browse the site',
+    defaultMessage: 'Browse the site',
   },
 });
 

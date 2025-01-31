@@ -5,14 +5,7 @@ import { ConditionalLink } from '@plone/volto/components';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
-import { defineMessages } from 'react-intl';
-
-const messages = defineMessages({
-  noItemsToShow: {
-    id: 'noItemsToShow',
-    defaultMessage: 'There are no items to show in this view.',
-  },
-});
+import messages from '@eeacms/volto-listing-block/messages';
 
 const Listing = (props) => {
   const { block, items, linkTitle, linkHref, isEditMode, intl } = props;
@@ -29,7 +22,7 @@ const Listing = (props) => {
 
   return (
     <>
-      <div className={'items ' + props?.itemModel?.['@type'] + '-items'}>
+      <div className={`items ${props?.itemModel?.['@type']}-items`}>
         {items && items.length > 0 ? (
           items.map((item, index) => (
             <UniversalCard

@@ -4,22 +4,7 @@ import { Link } from 'react-router-dom';
 import config from '@plone/volto/registry';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import { defineMessages } from 'react-intl';
-
-const messages = defineMessages({
-  newsItem: {
-    id: 'newsItem',
-    defaultMessage: 'News item',
-  },
-  publicationDate: {
-    id: 'publicationDate',
-    defaultMessage: 'Publication date',
-  },
-  description: {
-    id: 'description',
-    defaultMessage: 'Description',
-  },
-});
+import messages from '@eeacms/volto-listing-block/messages';
 
 const CustomNewsListTemplate = ({
   items,

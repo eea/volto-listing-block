@@ -7,28 +7,13 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-import { defineMessages } from 'react-intl';
+import messages from '@eeacms/volto-listing-block/messages';
 
 const Slider = loadable(() => import('react-slick'));
 
 const tabletBreakpoint = 768;
 const mobileLargeBreakpoint = 767;
 const mobileBreakpoint = 480;
-
-const messages = defineMessages({
-  carouselTitle: {
-    id: 'carouselTitle',
-    defaultMessage: 'Carousel',
-  },
-  slidesToShow: {
-    id: 'slidesToShow',
-    defaultMessage: 'Slides to show',
-  },
-  slidesToScroll: {
-    id: 'slidesToScroll',
-    defaultMessage: 'Slides to scroll',
-  },
-});
 
 const getSlidesToShow = (items, _slidesToShow) => {
   if (_slidesToShow <= 0) return 1;
