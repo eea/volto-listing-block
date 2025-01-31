@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import config from '@plone/volto/registry';
 import moment from 'moment';
 import PropTypes from 'prop-types';
+import messages from '@eeacms/volto-listing-block/messages';
 
 const CustomNewsListTemplate = ({
   items,
@@ -55,18 +56,18 @@ const CustomNewsListTemplate = ({
 CustomNewsListTemplate.schemaEnhancer = ({ schema, formData, intl }) => {
   schema.fieldsets.splice(1, 0, {
     id: 'newsList',
-    title: 'News item',
+    title: intl.formatMessage(messages.newsItem),
     fields: ['hasDate', 'hasDescription'],
   });
 
   schema.properties = {
     ...schema.properties,
     hasDate: {
-      title: 'Publication date',
+      title: intl.formatMessage(messages.publicationDate),
       type: 'boolean',
     },
     hasDescription: {
-      title: 'Description',
+      title: intl.formatMessage(messages.description),
       type: 'boolean',
     },
   };

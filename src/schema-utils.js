@@ -1,13 +1,9 @@
 import { cloneDeepSchema } from '@plone/volto/helpers/Utils/Utils';
 import config from '@plone/volto/registry';
 
-export const addTypeSelect = ({
-  formData,
-  intl,
-  schema,
-  extensionName,
-  messages,
-}) => {
+import messages from '@eeacms/volto-listing-block/messages';
+
+export const addTypeSelect = ({ formData, intl, schema, extensionName }) => {
   schema = cloneDeepSchema(schema);
   const field = '@type';
   const extensions = config.blocks.blocksConfig.listing.extensions;
@@ -19,7 +15,7 @@ export const addTypeSelect = ({
       : true;
   });
   schema.properties[field] = {
-    title: intl.formatMessage(messages.title),
+    title: intl.formatMessage(messages.cardType),
     choices: filteredVariations.map(({ id, title }) => [id, title]),
     default: filteredVariations.find(({ isDefault }) => isDefault).id,
   };
@@ -30,12 +26,7 @@ export const addTypeSelect = ({
 
 // Creates a factory that can trigger schemaEnhancer for a given extension
 export const schemaEnhancerFactory =
-  ({
-    extensionName,
-    messages,
-    blockType = 'listing',
-    extensionField = '@type',
-  }) =>
+  ({ extensionName, blockType = 'listing', extensionField = '@type' }) =>
   ({ schema: originalSchema, formData, intl }) => {
     // the attribute name that's stored in the block data
     // it identifies the type of extension that's
@@ -62,30 +53,30 @@ export const schemaEnhancerFactory =
     return schema;
   };
 
-export const DefaultCardModelSchema = {
-  title: 'Card Model',
+export const DefaultCardModelSchema = (intl) => ({
+  title: intl.formatMessage(messages.cardModel),
   fieldsets: [
     {
       id: 'default',
-      title: 'Settings',
+      title: intl.formatMessage(messages.defaultLabel),
       fields: [],
     },
     {
       id: 'styling',
-      title: 'Styling',
+      title: intl.formatMessage(messages.styling),
       fields: ['styles'],
     },
   ],
   properties: {
     styles: {
       widget: 'object',
-      title: 'Card styling',
+      title: intl.formatMessage(messages.cardStyling),
       schema: {
-        title: 'Card Styling',
+        title: intl.formatMessage(messages.cardStyling),
         fieldsets: [
           {
             id: 'default',
-            title: 'Default',
+            title: intl.formatMessage(messages.defaultLabel),
             fields: [],
           },
         ],
@@ -95,7 +86,7 @@ export const DefaultCardModelSchema = {
     },
   },
   required: [],
-};
+});
 
 export const getVoltoStyles = (props) => {
   const styles = props ? props : {};

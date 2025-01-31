@@ -2,19 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+import messages from '@eeacms/volto-listing-block/messages';
 import { Message } from 'semantic-ui-react';
 import { isInternalURL } from '@plone/volto/helpers';
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
-
-const messages = defineMessages({
-  PleaseChooseContent: {
-    id: 'Please choose an existing content as source for this element',
-    defaultMessage:
-      'Please choose an existing content as source for this element',
-  },
-});
 
 const TeaserCardTemplate = (props) => {
   const { data, isEditMode, onChangeBlock, onSelectBlock, block, ...rest } =
