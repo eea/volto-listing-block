@@ -15,7 +15,7 @@ export const addTypeSelect = ({ formData, intl, schema, extensionName }) => {
       : true;
   });
   schema.properties[field] = {
-    title: intl.formatMessage(messages.title),
+    title: intl.formatMessage(messages.cardType),
     choices: filteredVariations.map(({ id, title }) => [id, title]),
     default: filteredVariations.find(({ isDefault }) => isDefault).id,
   };

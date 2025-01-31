@@ -1,7 +1,7 @@
 import { defineMessages } from 'react-intl';
 
 const messages = defineMessages({
-  title: {
+  cardType: {
     id: 'Card type',
     defaultMessage: 'Card type',
   },
@@ -300,14 +300,6 @@ const messages = defineMessages({
     id: 'cardModel',
     defaultMessage: 'Card model',
   },
-  item: {
-    id: 'Item',
-    defaultMessage: 'Item',
-  },
-  carousel: {
-    id: 'Carousel',
-    defaultMessage: 'Carousel',
-  },
   carouselTitle: {
     id: 'carouselTitle',
     defaultMessage: 'Carousel',
@@ -319,10 +311,6 @@ const messages = defineMessages({
   slidesToScroll: {
     id: 'slidesToScroll',
     defaultMessage: 'Slides to scroll',
-  },
-  gallery: {
-    id: 'Gallery',
-    defaultMessage: 'Gallery',
   },
   galleryTitle: {
     id: 'galleryTitle',
@@ -347,10 +335,6 @@ const messages = defineMessages({
   newsItem: {
     id: 'newsItem',
     defaultMessage: 'News item',
-  },
-  gallery: {
-    id: 'Gallery',
-    defaultMessage: 'Gallery',
   },
   PleaseChooseContent: {
     id: 'Please choose an existing content as source for this element',
