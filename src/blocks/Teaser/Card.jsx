@@ -6,6 +6,7 @@ import { useIntl } from 'react-intl';
 import messages from '@eeacms/volto-listing-block/messages';
 import { Message } from 'semantic-ui-react';
 import { isInternalURL } from '@plone/volto/helpers';
+import { getFieldURL } from '@plone/volto/helpers/Url/Url';
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
@@ -16,34 +17,18 @@ const TeaserCardTemplate = (props) => {
 
   const item = data.href?.[0];
 
-  const modelatePreviewImage = (data) => {
-    if (!data.preview_image) return {};
-    return {
-      preview_image_url:
-        typeof data.preview_image === 'string' &&
-        !isInternalURL(data.preview_image)
-          ? data.preview_image
-          : '',
-      preview_image: Array.isArray(data.preview_image)
-        ? data.preview_image
-        : [
-            typeof data.preview_image === 'string'
-              ? {
-                  '@id': data.preview_image,
-                  url: data.preview_image,
-                  title: data.preview_image,
-                }
-              : data.preview_image,
-          ],
-    };
-  };
+  const image = getFieldURL(data.preview_image);
+
+  const isExternal = !isInternalURL(image);
   return item || data.preview_image ? (
     <UniversalCard
       isEditMode={isEditMode}
       {...rest}
       {...{
         ...data,
-        ...modelatePreviewImage(data),
+        preview_image_url: isExternal
+          ? getFieldURL(data.preview_image)
+          : `${image}/@@images/image`,
       }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
       itemModel={data.itemModel || {}}
