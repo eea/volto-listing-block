@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
+import messages from '@eeacms/volto-listing-block/messages';
 
 const Slider = loadable(() => import('react-slick'));
 
@@ -152,11 +153,11 @@ const CardsCarousel = ({ block, items, ...rest }) => {
 };
 
 CardsCarousel.schemaEnhancer = (args) => {
-  const { schema } = args;
+  const { schema, intl } = args;
 
   schema.fieldsets.splice(1, 0, {
     id: 'carousel',
-    title: 'Carousel',
+    title: intl.formatMessage(messages.carouselTitle),
     fields: ['slidesToShow', 'slidesToScroll'],
   });
 
@@ -165,13 +166,13 @@ CardsCarousel.schemaEnhancer = (args) => {
     properties: {
       ...schema.properties,
       slidesToShow: {
-        title: 'Slides to show',
+        title: intl.formatMessage(messages.slidesToShow),
         type: 'number',
         default: 4,
         minimum: 1,
       },
       slidesToScroll: {
-        title: 'Slides to scroll',
+        title: intl.formatMessage(messages.slidesToScroll),
         type: 'number',
         default: 1,
         minimum: 1,
