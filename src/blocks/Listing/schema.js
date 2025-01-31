@@ -285,7 +285,7 @@ export const setSimpleItemStylingSchema = ({ schema, intl }) => {
       type: 'boolean',
     },
     text: {
-      title: intl.formatMessage(messages.TextAlign),
+      title: intl.formatMessage(messages.textAlign),
       widget: 'style_text_align',
       actions: Object.keys(ALIGN_INFO_MAP(intl)),
       actionsInfoMap: ALIGN_INFO_MAP(intl),
