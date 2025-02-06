@@ -1,7 +1,9 @@
 import { Button, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import { flattenToAppURL } from '@plone/volto/helpers';
+import { Enlarge } from '@eeacms/volto-embed/Toolbar';
 import React from 'react';
+import RenderBlocksWrapper from './RenderBlocksWrapper';
 
 const getCallToAction = (item, options) => {
   const { urlTemplate } = options;
@@ -12,21 +14,32 @@ const getCallToAction = (item, options) => {
     : options.href?.[0]?.['@id'] || item['@id'];
 };
 
-const CallToAction = ({ item, itemModel }) => (
-  <Button
-    as="a"
-    href={getCallToAction(item, itemModel.callToAction)}
-    className={
-      itemModel.styles?.['theme:noprefix']
-        ? itemModel.styles?.['inverted:bool']
-          ? itemModel.styles?.['theme:noprefix'] + ' inverted'
-          : 'inverted'
-        : 'tertiary inverted'
-    }
-  >
-    {itemModel.callToAction.label || 'Read more'}
-  </Button>
-);
+const CallToAction = ({ item, itemModel }) => {
+  const url = getCallToAction(item, itemModel.callToAction);
+
+  // Try different approaches to access _original
+
+  // const result = { metadata: item?._original, location: { pathname: url } };
+  const result = { location: { pathname: url } };
+  return (
+    <Button
+      // as="a"
+      // href={url}
+      className={
+        itemModel.styles?.['theme:noprefix']
+          ? itemModel.styles?.['inverted:bool']
+            ? itemModel.styles?.['theme:noprefix'] + ' inverted'
+            : 'inverted'
+          : 'tertiary inverted'
+      }
+    >
+      {itemModel.callToAction.label || 'Read more'}
+      <Enlarge>
+        <RenderBlocksWrapper {...result} />
+      </Enlarge>
+    </Button>
+  );
+};
 
 const Tag = ({ item }) => {
   const renderTag = config.blocks.blocksConfig.teaser.renderTag;
@@ -35,7 +48,7 @@ const Tag = ({ item }) => {
     : null;
 };
 
-const CardExtra = ({ item, itemModel = {}, ...rest }) => {
+const CardExtra = ({ item, itemModel = {} }) => {
   const showCallToAction = itemModel?.callToAction?.enable;
   const showTags = itemModel.hasTags;
   const show = showCallToAction || showTags;
@@ -47,9 +60,7 @@ const CardExtra = ({ item, itemModel = {}, ...rest }) => {
           <Tag item={item} />
         </div>
       )}
-      {showCallToAction && (
-        <CallToAction item={item} itemModel={itemModel} {...rest} />
-      )}
+      {showCallToAction && <CallToAction item={item} itemModel={itemModel} />}
     </UiCard.Content>
   ) : null;
 };
