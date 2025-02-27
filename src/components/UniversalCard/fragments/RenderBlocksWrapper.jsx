@@ -4,6 +4,8 @@ import React from 'react';
 import { getContent } from '@plone/volto/actions';
 import { useSelector } from 'react-redux';
 
+import { flattenToAppURL } from '@plone/volto/helpers';
+
 import config from '@plone/volto/registry';
 
 const RenderBlocksWrapper = (props) => {
@@ -31,11 +33,19 @@ const RenderBlocksWrapper = (props) => {
       });
     }
   }, [dispatch, props.location.pathname, contentFromStore, loadingContent]);
-
   return contentFromStore ? (
     <div>
-      <h1>Visualization title</h1>
-      <RenderBlocks {...props} content={contentFromStore} />
+      <div className="eea banner">
+        <div className="gradient">
+          <div className="content">
+            <h1>{contentFromStore.title}</h1>
+          </div>
+        </div>
+      </div>
+      <RenderBlocks
+        content={contentFromStore}
+        location={{ pathname: flattenToAppURL(contentFromStore['@id']) }}
+      />
     </div>
   ) : (
     <div>Loading...</div>
