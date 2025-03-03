@@ -173,10 +173,6 @@ export const setCardModelSchema = (args) => {
 
 export const setVisualizationCardModelSchema = (args) => {
   const { formData, schema } = args;
-  // console.log('args', args);
-  // console.log('formData', formData.itemModel.callToAction);
-  // formData.itemModel.callToAction.label.defaultValue = 'More info';
-  // console.log('schema', schema);
 
   const itemModelSchema = schema.properties.itemModel.schema;
   itemModelSchema.fieldsets[0].fields = [
@@ -185,13 +181,16 @@ export const setVisualizationCardModelSchema = (args) => {
     'hasDescription',
     'maxDescription',
     'callToAction',
+    ...(formData?.itemModel?.callToAction?.enable
+      ? ['enableVisualizationPopup']
+      : []),
   ];
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
     hasDescription: {
       title: 'Description',
       type: 'boolean',
-      default: true,
+      default: false,
     },
     callToAction: {
       widget: 'object',
@@ -215,6 +214,12 @@ export const setVisualizationCardModelSchema = (args) => {
       default: 4,
       minimum: 0,
       maximum: 5,
+    },
+    enableCTAPopup: {
+      title: 'Enable CTA content popup',
+      description: 'Will enable the CTA content popup only from 1280px and up',
+      type: 'boolean',
+      default: true,
     },
   };
   return schema;
