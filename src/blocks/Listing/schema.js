@@ -181,9 +181,7 @@ export const setVisualizationCardModelSchema = (args) => {
     'hasDescription',
     'maxDescription',
     'callToAction',
-    ...(formData?.itemModel?.callToAction?.enableCTAPopup
-      ? ['enableCTAPopup']
-      : []),
+    ...(formData?.itemModel?.callToAction?.enable ? ['enableCTAPopup'] : []),
   ];
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
