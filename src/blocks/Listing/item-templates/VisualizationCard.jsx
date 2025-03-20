@@ -25,12 +25,14 @@ const getStyles = (props) => {
 const VisualizationCard = (props) => {
   const { className } = props;
   const imagePosition = props.imagePosition;
+  const preview_image_url =
+    props.item['@id'] + '/@@plotly_preview.svg/soer_miniature';
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
       <UiCard.Content>
         <CardTitle {...props} />
         <CardDescription {...props} />
-        <CardImage {...props} />
+        <CardImage {...props} preview_image_url={preview_image_url} />
         <CardMeta {...props} />
       </UiCard.Content>
       {imagePosition && imagePosition === 'right' && <CardImage {...props} />}
