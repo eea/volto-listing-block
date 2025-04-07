@@ -14,7 +14,7 @@ const RenderModal = React.memo(({ children, open, onClose }) => {
       className={'enlarge-modal'}
       closeIcon={
         <button className="ui button close icon">
-          <i className="ri-close-line" />
+          <i className="close icon" />
         </button>
       }
     >
