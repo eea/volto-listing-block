@@ -51,9 +51,16 @@
   --text-color: #fff;
 }
 
-.block.metadata.taxonomy_eea_target {
-  padding: 0.5rem 1.5rem;
+.taxonomy_eea_target_wrapper {
+  --padding: 0 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+  align-items: baseline;
+}
+.metadata.taxonomy_eea_target {
   background-color: var(--background-color);
+  font-weight: 500;
+  padding: var(--padding, 0.5rem 1.5rem);
   color: var(--text-color, @buttonColor);
   font-weight: 500;
   text-align: center;
@@ -80,12 +87,14 @@
     .content {
       display: flex;
       flex-direction: column;
-      align-items: end;
       justify-content: space-between;
 
       .button {
         width: fit-content;
       }
+    }
+    .content.extra {
+      align-items: end;
     }
 
     .description {
