@@ -11,10 +11,10 @@ const RenderModal = React.memo(({ children, open, onClose }) => {
     <Modal
       open={open}
       onClose={onClose}
-      className={'enlarge-modal'}
+      className={'enlarge-modal visualization-card-modal'}
       closeIcon={
         <button className="ui button close icon">
-          <i className="close icon" />
+          <i className="ri-close-fill" />
         </button>
       }
     >
