@@ -2,15 +2,9 @@
 import React from 'react';
 
 import { Image, Label } from 'semantic-ui-react';
-import { flattenToAppURL } from '@plone/volto/helpers';
 
 import DefaultImageSVG from './default-image.svg';
 import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
-
-const getSrc = (item, size) =>
-  flattenToAppURL(
-    `${item['@id']}/@@images/${item.image_field || 'image'}/${size}`,
-  );
 
 // TODO: do we still need volto-depiction compatibility?
 // import DefaultImageSVG from '@plone/volto/components/manage/Blocks/Listing/default-image.svg';
