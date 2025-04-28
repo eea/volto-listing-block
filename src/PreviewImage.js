@@ -5,6 +5,7 @@ import { Image, Label } from 'semantic-ui-react';
 import { flattenToAppURL } from '@plone/volto/helpers';
 
 import DefaultImageSVG from './default-image.svg';
+import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
 
 const getSrc = (item, size) =>
   flattenToAppURL(
@@ -42,11 +43,11 @@ function PreviewImage(props) {
     label,
     ...rest
   } = props;
-  const src = preview_image?.[0]
-    ? getSrc(preview_image[0], size)
+  const src = preview_image_url || (preview_image?.[0]
+    ? getImageScaleParams(preview_image, size).download
     : item.image_field
-    ? getSrc(item, size)
-    : DefaultImageSVG;
+    ? getImageScaleParams(item, size).download
+    : DefaultImageSVG);
 
   return (
     <>
@@ -58,7 +59,7 @@ function PreviewImage(props) {
       <Image
         decoding="async"
         loading="lazy"
-        src={preview_image_url || src}
+        src={src}
         alt={item.title}
         {...rest}
       />
