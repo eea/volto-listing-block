@@ -22,7 +22,6 @@ const TeaserCardTemplate = (props) => {
 
   const item = data.href?.[0];
 
-
   return item || data.preview_image ? (
     <UniversalCard
       isEditMode={isEditMode}

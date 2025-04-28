@@ -43,11 +43,13 @@ function PreviewImage(props) {
     label,
     ...rest
   } = props;
-  const src = preview_image_url || (preview_image?.[0]
-    ? getImageScaleParams(preview_image, size).download
-    : item.image_field
-    ? getImageScaleParams(item, size).download
-    : DefaultImageSVG);
+  const src =
+    preview_image_url ||
+    (preview_image?.[0]
+      ? getImageScaleParams(preview_image, size).download
+      : item.image_field
+      ? getImageScaleParams(item, size).download
+      : DefaultImageSVG);
 
   return (
     <>
