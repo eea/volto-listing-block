@@ -1,23 +1,30 @@
 import config from '@plone/volto/registry';
+import messages from '@eeacms/volto-listing-block/messages';
 
-const ItemBlockSchema = ({ data }) => {
+const ItemBlockSchema = ({ data, intl }) => {
   const { assetType = 'image' } = data;
   return {
-    title: 'Item',
+    title: intl.formatMessage(messages.itemTitle),
     fieldsets: [
       {
         id: 'default',
-        title: 'Default',
+        title: intl.formatMessage(messages.defaultLabel),
         fields: ['assetType', 'theme', 'verticalAlign'],
       },
       ...(assetType === 'image'
-        ? [{ id: 'image', title: 'Image', fields: ['image', 'imageSize'] }]
+        ? [
+            {
+              id: 'image',
+              title: intl.formatMessage(messages.image),
+              fields: ['image', 'imageSize'],
+            },
+          ]
         : []),
       ...(assetType === 'icon'
         ? [
             {
               id: 'icon',
-              title: 'Icon',
+              title: intl.formatMessage(messages.iconLabel),
               fields: ['icon', 'iconSize'],
             },
           ]
@@ -25,31 +32,31 @@ const ItemBlockSchema = ({ data }) => {
     ],
     properties: {
       assetType: {
-        title: 'Asset type',
+        title: intl.formatMessage(messages.assetType),
         choices: [
-          ['image', 'Image'],
-          ['icon', 'Icon'],
+          ['image', intl.formatMessage(messages.image)],
+          ['icon', intl.formatMessage(messages.iconLabel)],
         ],
         default: 'image',
       },
       image: {
-        title: 'Image',
+        title: intl.formatMessage(messages.image),
         widget: 'attachedimage',
         selectedItemAttrs: ['image_field', 'image_scales', '@type'],
       },
       imageSize: {
-        title: 'Image size',
+        title: intl.formatMessage(messages.imageSize),
         choices: [
-          ['tiny', 'Tiny'],
-          ['small', 'Small'],
-          ['medium', 'Medium'],
-          ['big', 'Large'],
-          ['preview', 'Preview'],
+          ['tiny', intl.formatMessage(messages.sizeTiny)],
+          ['small', intl.formatMessage(messages.sizeSmall)],
+          ['medium', intl.formatMessage(messages.sizeMedium)],
+          ['big', intl.formatMessage(messages.sizeLarge)],
+          ['preview', intl.formatMessage(messages.preview)],
         ],
         default: 'big',
       },
       icon: {
-        title: 'Icon name',
+        title: intl.formatMessage(messages.icon),
         description: (
           <>
             See{' '}
@@ -60,17 +67,17 @@ const ItemBlockSchema = ({ data }) => {
         ),
       },
       iconSize: {
-        title: 'Icon size',
+        title: intl.formatMessage(messages.iconSize),
         choices: [
-          ['tiny', 'Tiny'],
-          ['small', 'Small'],
-          ['medium', 'Medium'],
-          ['big', 'Large'],
+          ['tiny', intl.formatMessage(messages.sizeTiny)],
+          ['small', intl.formatMessage(messages.sizeSmall)],
+          ['medium', intl.formatMessage(messages.sizeMedium)],
+          ['big', intl.formatMessage(messages.sizeLarge)],
         ],
         default: 'big',
       },
       theme: {
-        title: 'Item theme',
+        title: intl.formatMessage(messages.itemTheme),
         widget: 'theme_picker',
         colors: [
           ...(config.settings && config.settings.themeColors
@@ -83,11 +90,11 @@ const ItemBlockSchema = ({ data }) => {
         ],
       },
       verticalAlign: {
-        title: 'Vertical align',
+        title: intl.formatMessage(messages.verticalAlign),
         choices: [
-          ['top', 'Top'],
-          ['middle', 'Middle'],
-          ['bottom', 'Bottom'],
+          ['top', intl.formatMessage(messages.top)],
+          ['middle', intl.formatMessage(messages.middle)],
+          ['bottom', intl.formatMessage(messages.bottom)],
         ],
         default: 'middle',
       },

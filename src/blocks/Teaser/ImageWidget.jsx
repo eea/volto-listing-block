@@ -12,7 +12,8 @@ import { Icon } from '@plone/volto/components';
 import { Button, Dimmer, Input, Loader, Message } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import loadable from '@loadable/component';
-import { defineMessages, useIntl } from 'react-intl';
+import { useIntl } from 'react-intl';
+import messages from '@eeacms/volto-listing-block/messages';
 import { createContent } from '@plone/volto/actions';
 import { readAsDataURL } from 'promise-file-reader';
 import withObjectBrowser from '@plone/volto/components/manage/Sidebar/ObjectBrowser';
@@ -23,17 +24,6 @@ import aheadSVG from '@plone/volto/icons/ahead.svg';
 import uploadSVG from '@plone/volto/icons/upload.svg';
 
 const Dropzone = loadable(() => import('react-dropzone'));
-
-const messages = defineMessages({
-  ImageBlockInputPlaceholder: {
-    id: 'Browse the site, drop an image, or type an URL',
-    defaultMessage: 'Browse the site, drop an image, or type an URL',
-  },
-  navigate: {
-    id: 'Browse the site',
-    defaultMessage: 'Browse the site',
-  },
-});
 
 const ImagePreview = ({ src }) => (
   <>

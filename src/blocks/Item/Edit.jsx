@@ -12,12 +12,14 @@ import {
 
 import Item from './Item';
 import getSchema from './schema';
+import { useIntl } from 'react-intl';
 
 export const createSlateParagraph = (text) => {
   return isArray(text) ? text : config.settings.slate.defaultValue();
 };
 
 const Edit = (props) => {
+  const intl = useIntl();
   const { slate } = config.settings;
   const {
     data = {},
@@ -30,7 +32,7 @@ const Edit = (props) => {
     id,
   } = props;
   const { description } = data;
-  const schema = React.useMemo(() => getSchema(props), [props]);
+  const schema = React.useMemo(() => getSchema(props, intl), [props, intl]);
 
   const withBlockProperties = React.useCallback(
     (editor) => {

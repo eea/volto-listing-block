@@ -23,6 +23,8 @@ import { DefaultItemLayout } from './item-templates/ItemTemplates';
 import { SearchItemLayout } from './item-templates/SearchItemTemplate';
 import { SimpleItemLayout } from './item-templates/SimpleItemTemplates';
 
+import messages from '@eeacms/volto-listing-block/messages';
+
 const applyConfig = (config) => {
   // moment date locale. See https://momentjs.com/ - Multiple Locale Support
   config.settings.dateLocale = config.settings.dateLocale ?? 'en';
@@ -147,7 +149,7 @@ const applyConfig = (config) => {
 
 export default applyConfig;
 
-const moveQueryToFieldset = ({ schema }) => {
+const moveQueryToFieldset = ({ schema, intl }) => {
   // NOTE: this is a schema finalizer
 
   // move querystring to its own fieldset;
@@ -156,7 +158,7 @@ const moveQueryToFieldset = ({ schema }) => {
   );
   schema.fieldsets.splice(1, 0, {
     id: 'querystring',
-    title: 'Query',
+    title: intl.formatMessage(messages.query),
     fields: ['querystring'],
   });
 
