@@ -1,11 +1,9 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
 import {
-  getFieldURL,
   getImageScaleParams,
-} from '@eeacms/volto-listing-block/helpers';
-
-import { flattenToAppURL } from '@plone/volto/helpers';
+} from '@eeacms/volto-object-widget/helpers';
+import { getFieldURL } from '@plone/volto/helpers/Url/Url';
 
 function Item({
   assetType,
@@ -32,7 +30,7 @@ function Item({
       <UiItem className={cx(theme)}>
         {assetType === 'image' && image && (
           <UiItem.Image
-            src={flattenToAppURL(scaledImage?.download)}
+            src={scaledImage?.download}
             className={cx('ui', imageSize, verticalAlign, 'aligned')}
             alt={header || 'Item image'}
             width={scaledImage?.width}
