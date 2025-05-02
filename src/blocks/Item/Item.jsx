@@ -1,8 +1,6 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import {
-  getImageScaleParams,
-} from '@eeacms/volto-object-widget/helpers';
+import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
 import { getFieldURL } from '@plone/volto/helpers/Url/Url';
 
 function Item({
