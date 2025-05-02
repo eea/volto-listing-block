@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { omit } from 'lodash';
-import { Message } from 'semantic-ui-react';
-import { defineMessages, useIntl } from 'react-intl';
-
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
-
+import { defineMessages, useIntl } from 'react-intl';
+import { Message } from 'semantic-ui-react';
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
+import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
 const messages = defineMessages({
   PleaseChooseContent: {
@@ -17,21 +16,25 @@ const messages = defineMessages({
 });
 
 const TeaserCardTemplate = (props) => {
-  const { data, isEditMode, ...rest } = props;
+  const { data, isEditMode, onChangeBlock, onSelectBlock, block, ...rest } =
+    props;
   const intl = useIntl();
+
   const item = data.href?.[0];
 
-  return item ? (
+  return item || data.preview_image ? (
     <UniversalCard
       isEditMode={isEditMode}
       {...rest}
-      {...data}
+      {...{
+        ...data,
+      }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
       itemModel={data.itemModel || {}}
     />
   ) : isEditMode ? (
     <Message>
-      <div className="grid-teaser-item placeholder">
+      <div className="teaser-item placeholder">
         <img src={imageBlockSVG} alt="" />
         <p>{intl.formatMessage(messages.PleaseChooseContent)}</p>
       </div>

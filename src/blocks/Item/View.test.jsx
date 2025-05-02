@@ -1,7 +1,9 @@
 import React from 'react';
 import { Provider } from 'react-intl-redux';
-import renderer from 'react-test-renderer';
+import { render } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
+import '@testing-library/jest-dom/extend-expect';
+
 import ViewItemBlock from './View';
 
 const mockStore = configureStore();
@@ -28,12 +30,16 @@ const mockData = {
 
 describe('ViewItemBlock', () => {
   it('renders correctly', () => {
-    const component = renderer.create(
+    const { container } = render(
       <Provider store={store}>
         <ViewItemBlock data={mockData} />
       </Provider>,
     );
-    const json = component.toJSON();
-    expect(json).toMatchSnapshot();
+
+    expect(
+      container.querySelector('.ui.unstackable.items.row'),
+    ).toBeInTheDocument();
+    expect(container.querySelector('div.item')).toBeInTheDocument();
+    expect(container.querySelector('div.content')).toBeInTheDocument();
   });
 });

@@ -1,6 +1,6 @@
 import cx from 'classnames';
 import { ConditionalLink } from '@plone/volto/components';
-
+import { getBaseUrl } from '@plone/volto/helpers';
 import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
 
 const getStyles = (props) => {
@@ -17,6 +17,7 @@ const getStyles = (props) => {
 
 const BasicItem = (props) => {
   const { item, className, isEditMode = false } = props;
+  const { hasMetaType } = props.itemModel;
   const styles = getStyles(props);
 
   return (
@@ -29,7 +30,7 @@ const BasicItem = (props) => {
     >
       <div className="wrapper">
         <div className="slot-top">
-          <ConditionalLink item={item} condition={!isEditMode}>
+          <ConditionalLink to={getBaseUrl(item['@id'])} condition={!isEditMode}>
             <div className="listing-body">
               <p className={'listing-header'}>
                 {item.title ? item.title : item.id}
@@ -37,7 +38,11 @@ const BasicItem = (props) => {
             </div>
           </ConditionalLink>
         </div>
-        <div className="slot-bottom">{item?.extra}</div>
+        <div className="simple-item-meta">
+          {hasMetaType && (
+            <span className="text-left">{item['type_title']}</span>
+          )}
+        </div>
       </div>
     </div>
   );

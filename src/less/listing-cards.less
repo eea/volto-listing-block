@@ -210,8 +210,8 @@ each(range(5), {
   max-width: var(--image-max-width, 100%);
   height: var(--image-height, auto);
   max-height: var(--image-max-height, auto);
-  aspect-ratio: var(--image-aspect-ratio, initial);
   border-radius: var(--border-radius, 0);
+  aspect-ratio: var(--image-aspect-ratio, initial);
   object-fit: var(--image-object-fit, cover);
   object-position: var(--image-object-position, top);
 }
@@ -286,6 +286,18 @@ each(range(5), {
   .listing-header {
     margin-bottom: 0;
   }
+
+  .slot-top a {
+    text-decoration: none;
+  }
+
+  .listing-body {
+    margin-top: @simpleItemMarginTop;
+  }
+
+  .simple-item-meta {
+    font-size: @simpleItemMetaFontSize;
+  }
 }
 
 .u-item.listing-item {
@@ -356,6 +368,18 @@ each(range(5), {
   .description {
     .useMaxLines();
   }
+}
+
+// avoid float issues when using volto-block-style in edit
+.ui.teaser .styled-teaser.styled.right,
+.ui.teaser .styled-teaser.styled.left {
+  float: none;
+}
+
+// we set max width for the carousel instead of inline styles
+.cards-carousel {
+  max-width: var(--carousel-max-width, @carouselMaxWidth);
+  margin: 0 auto;
 }
 
 .cards-carousel .slick-slide {

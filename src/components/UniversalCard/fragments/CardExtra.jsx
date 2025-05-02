@@ -1,6 +1,7 @@
-import { Button, Label, Card as UiCard } from 'semantic-ui-react';
+import { Button, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import { flattenToAppURL } from '@plone/volto/helpers';
+import React from 'react';
 
 const getCallToAction = (item, options) => {
   const { urlTemplate } = options;
@@ -27,9 +28,10 @@ const CallToAction = ({ item, itemModel }) => (
   </Button>
 );
 
-const Tags = ({ item }) => {
+const Tag = ({ item }) => {
+  const renderTag = config.blocks.blocksConfig.teaser.renderTag;
   return !!item?.Subject
-    ? item.Subject.map((tag, i) => <Label key={i}>{tag}</Label>)
+    ? item.Subject.map((tag, i) => renderTag(tag, i))
     : null;
 };
 
@@ -42,7 +44,7 @@ const CardExtra = ({ item, itemModel = {}, ...rest }) => {
     <UiCard.Content extra>
       {showTags && item?.Subject?.length > 0 && (
         <div className={'tags labels'}>
-          <Tags item={item} itemModel={itemModel} {...rest} />
+          <Tag item={item} />
         </div>
       )}
       {showCallToAction && (

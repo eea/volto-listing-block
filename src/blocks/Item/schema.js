@@ -53,11 +53,7 @@ const ItemBlockSchema = ({ data }) => {
         description: (
           <>
             See{' '}
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://remixicon.com"
-            >
+            <a target="_blank" rel="noopener" href="https://remixicon.com">
               Remix icon cheatsheet
             </a>
           </>

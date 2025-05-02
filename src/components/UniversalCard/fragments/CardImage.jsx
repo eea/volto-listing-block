@@ -28,17 +28,24 @@ const CardTitleOnImage = (props) => {
 };
 
 const CardImage = (props) => {
-  const { item, isEditMode, preview_image, itemModel } = props;
+  const { item, isEditMode, preview_image, preview_image_url, itemModel } =
+    props;
   const label = getLabel(props);
   const showLink = !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage;
 
   return (
-    <ConditionalLink className="image" item={item} condition={showLink}>
+    <ConditionalLink
+      to={item['@id']}
+      className="image"
+      item={item}
+      condition={showLink}
+    >
       {showLink ? (
         <>
           <PreviewImage
             item={item}
             preview_image={preview_image}
+            preview_image_url={preview_image_url}
             alt={''}
             label={label}
           />
@@ -49,6 +56,7 @@ const CardImage = (props) => {
           <PreviewImage
             item={item}
             preview_image={preview_image}
+            preview_image_url={preview_image_url}
             alt={item.title}
             label={label}
           />

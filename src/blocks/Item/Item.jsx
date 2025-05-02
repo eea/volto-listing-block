@@ -37,12 +37,13 @@ function Item({
             alt={header || 'Item image'}
             width={scaledImage?.width}
             height={scaledImage?.height}
+            loading="lazy"
           />
         )}
         {assetType === 'icon' && icon && (
           <Icon
             className={cx(icon, theme, verticalAlign, 'aligned', {
-              medium: iconSize === 'medium' ?? false,
+              medium: iconSize === 'medium',
             })}
             size={iconSize === 'medium' ? null : iconSize}
           />
