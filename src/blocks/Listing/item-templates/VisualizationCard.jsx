@@ -91,7 +91,7 @@ VisualizationCard.propTypes = {
   benchmark_level_items: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default connect((state, props) => ({
+export default connect((state) => ({
   benchmark_level_items:
     state.vocabularies?.['collective.taxonomy.benchmark_level']?.items,
 }))(VisualizationCard);
