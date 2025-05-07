@@ -52,6 +52,41 @@ const CallToActionSchema = ({ formData, intl }) => {
   };
 };
 
+const CallToActionVisualizationSchema = ({ formData }) => {
+  return {
+    fieldsets: [
+      {
+        id: 'default',
+        fields: [
+          'enable',
+          ...(formData?.itemModel?.callToAction?.enable
+            ? ['label', 'urlTemplate']
+            : []),
+        ],
+        title: 'Default',
+      },
+    ],
+    properties: {
+      enable: {
+        type: 'boolean',
+        title: 'Show action',
+        default: true,
+      },
+      label: {
+        title: 'Action label',
+        default: 'More info',
+      },
+      urlTemplate: {
+        title: 'Action URL Template',
+        description:
+          'Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used.',
+        default: '$URL',
+      },
+    },
+    required: [],
+  };
+};
+
 export const setCardModelSchema = (args) => {
   const { formData, schema, intl } = args;
 
@@ -128,6 +163,58 @@ export const setCardModelSchema = (args) => {
     callToAction: {
       widget: 'object',
       schema: CallToActionSchema({ formData, intl }),
+    },
+  };
+  return schema;
+};
+
+export const setVisualizationCardModelSchema = (args) => {
+  const { formData, schema } = args;
+
+  const itemModelSchema = schema.properties.itemModel.schema;
+  itemModelSchema.fieldsets[0].fields = [
+    ...itemModelSchema.fieldsets[0].fields,
+    'maxTitle',
+    'hasDescription',
+    'maxDescription',
+    'callToAction',
+    ...(formData?.itemModel?.callToAction?.enable ? ['enableCTAPopup'] : []),
+  ];
+  itemModelSchema.properties = {
+    ...itemModelSchema.properties,
+    hasDescription: {
+      title: 'Description',
+      type: 'boolean',
+      default: false,
+    },
+    callToAction: {
+      widget: 'object',
+      schema: CallToActionVisualizationSchema({ formData }),
+    },
+
+    maxTitle: {
+      title: 'Title max lines',
+      description:
+        "Limit title to a maximum number of lines by adding trailing '...'",
+      type: 'number',
+      default: 4,
+      minimum: 0,
+      maximum: 5,
+    },
+    maxDescription: {
+      title: 'Description max lines',
+      description:
+        "Limit description to a maximum number of lines by adding trailing '...'",
+      type: 'number',
+      default: 4,
+      minimum: 0,
+      maximum: 5,
+    },
+    enableCTAPopup: {
+      title: 'Enable CTA content popup',
+      description: 'Will enable the CTA content popup only from 1280px and up',
+      type: 'boolean',
+      default: true,
     },
   };
   return schema;

@@ -29,10 +29,10 @@
 @simpleItemMetaFontSize: 13px;
 @simpleItemMarginTop: 1em;
 
-
 // Carousel listing
 @carouselMaxWidth: 1127px;
 
-@primaryColor: #004B7F;
-@secondaryColor: #007B6C;
-@tertiaryColor: #3D5265;
+@primaryColor: #004b7f;
+@secondaryColor: #007b6c;
+@tertiaryColor: #3d5265;
+@buttonColor: #323232;
