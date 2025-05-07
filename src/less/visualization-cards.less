@@ -1,0 +1,145 @@
+@type: 'extra';
+@element: 'custom';
+
+@import 'listing-cards.variables';
+
+@import (multiple, reference, optional) '../../theme.config';
+
+.text-color {
+  font-weight: bold;
+
+  &.with-border::before {
+    position: absolute;
+    top: -8px;
+    width: 70px;
+    border-top: 5px solid currentColor;
+    content: ' ';
+  }
+
+  &.achieved {
+    color: #006bb8;
+  }
+
+  &.on-track {
+    color: #47b3ff;
+  }
+
+  &.acceleration-needed {
+    color: #c69e7b;
+  }
+
+  &.wrong-direction {
+    color: #8b5e34;
+  }
+}
+
+.benchmark_level[class~='1'] {
+  --background-color: #006bb8;
+  --text-color: #fff;
+}
+
+.benchmark_level[class~='2'] {
+  --background-color: #47b3ff;
+}
+
+.benchmark_level[class~='4'] {
+  --background-color: #e7bc91;
+}
+
+.benchmark_level[class~='6'] {
+  --background-color: #8b5e34;
+  --text-color: #fff;
+}
+
+.visualization-card-modal {
+  &.enlarge-modal.ui.modal .close.icon {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+
+  &.enlarge-modal.ui.modal .close.icon > i {
+    color: #fff;
+    font-size: 44px;
+  }
+}
+
+.taxonomy_benchmark_level_wrapper {
+  --padding: 0 0.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.metadata.benchmark_level {
+  padding: var(--padding, 0.5rem 1.5rem);
+  margin-bottom: 0;
+  background-color: var(--background-color);
+  color: var(--text-color, @buttonColor);
+  font-weight: 500;
+  font-weight: 500;
+  text-align: center;
+}
+
+.grid.column-grid:has(.benchmark-level-column) {
+  align-items: baseline;
+}
+
+.column.benchmark-level-column {
+  margin-bottom: 0;
+}
+
+.cardsVisualization {
+  .cards {
+    row-gap: 2rem;
+  }
+
+  .card {
+    min-width: 220px !important;
+    min-height: 326px !important;
+    border-top: 12px solid @tertiaryColor !important;
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .button {
+        width: fit-content;
+      }
+    }
+
+    .content.extra {
+      align-items: end;
+    }
+
+    .description {
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.modal .eea.banner {
+  position: relative;
+  z-index: 1;
+  margin: -1.5rem 0 2rem 0;
+
+  &::before {
+    position: absolute;
+    z-index: -1;
+    left: -1.5rem;
+    width: 103%;
+    height: 100%;
+    background: #007b6c;
+    content: ' ';
+  }
+
+  .gradient {
+    margin: 0px -1.5rem 0px -1.5rem;
+
+    .content {
+      padding-right: 1.5rem;
+      padding-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+  }
+}
