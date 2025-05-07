@@ -26,7 +26,6 @@ const getStyles = (props) => {
   return res;
 };
 
-
 const CardEEABenchmarkLevel = ({ item, benchmark_level_items }) => {
   const benchmark_level = item?.['benchmark_level']?.[0];
   if (!benchmark_level) {
@@ -37,7 +36,9 @@ const CardEEABenchmarkLevel = ({ item, benchmark_level_items }) => {
   );
   return (
     <div className="benchmark_level_wrapper">
-      <div className={`metadata benchmark_level ${benchmark_level}`}>&nbsp;</div>
+      <div className={`metadata benchmark_level ${benchmark_level}`}>
+        &nbsp;
+      </div>
       {benchmark_level_item?.label}
     </div>
   );
@@ -59,7 +60,10 @@ const VisualizationCard = (props) => {
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
       <UiCard.Content>
         <CardTitle {...props} />
-        <CardEEABenchmarkLevel item={item} benchmark_level_items={benchmark_level_items} />
+        <CardEEABenchmarkLevel
+          item={item}
+          benchmark_level_items={benchmark_level_items}
+        />
         <CardDescription {...props} />
         <CardImage {...props} preview_image_url={preview_image_url} />
         <CardMeta {...props} />
@@ -87,9 +91,7 @@ VisualizationCard.propTypes = {
   benchmark_level_items: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default connect(
-  (state, props) => ({
-    benchmark_level_items: state.vocabularies?.['collective.taxonomy.benchmark_level']?.items,
-  }),
-)(VisualizationCard);
-
+export default connect((state, props) => ({
+  benchmark_level_items:
+    state.vocabularies?.['collective.taxonomy.benchmark_level']?.items,
+}))(VisualizationCard);

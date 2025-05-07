@@ -20,7 +20,9 @@ const VisualizationCards = ({
   moment.locale(config.settings.dateLocale);
 
   useEffect(() => {
-    dispatch(getVocabulary({ vocabNameOrURL: 'collective.taxonomy.benchmark_level' }));
+    dispatch(
+      getVocabulary({ vocabNameOrURL: 'collective.taxonomy.benchmark_level' }),
+    );
   }, [dispatch]);
 
   return (
