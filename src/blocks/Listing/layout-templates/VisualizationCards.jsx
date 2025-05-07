@@ -1,9 +1,11 @@
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useEffect } from 'react';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import config from '@plone/volto/registry';
 import '@eeacms/volto-listing-block/less/visualization-cards.less';
+import { getVocabulary } from '@plone/volto/actions';
+import { useDispatch } from 'react-redux';
 
 const VisualizationCards = ({
   block,
@@ -14,7 +16,13 @@ const VisualizationCards = ({
   hasDescription,
   ...rest
 }) => {
+  const dispatch = useDispatch();
   moment.locale(config.settings.dateLocale);
+
+  useEffect(() => {
+    dispatch(getVocabulary({ vocabNameOrURL: 'collective.taxonomy.benchmark_level' }));
+  }, [dispatch]);
+
   return (
     <>
       {items && items.length > 0 && (
