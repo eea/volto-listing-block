@@ -24,7 +24,10 @@ describe('PreviewImage', () => {
       if (Array.isArray(item)) {
         return { download: item[0].download };
       }
-      return { download: item.image_field?.scales?.[size]?.download || 'default-image.svg' };
+      return {
+        download:
+          item.image_field?.scales?.[size]?.download || 'default-image.svg',
+      };
     });
   });
 
@@ -44,36 +47,27 @@ describe('PreviewImage', () => {
 
   it('renders with preview_image', () => {
     const previewImage = [{ download: 'http://example.com/other.jpg' }];
-    render(
-      <PreviewImage
-        item={testItem}
-        preview_image={previewImage}
-      />,
-    );
+    render(<PreviewImage item={testItem} preview_image={previewImage} />);
     const img = screen.getByRole('img');
     expect(img).toHaveAttribute('src', 'http://example.com/other.jpg');
     expect(helpers.getImageScaleParams).toHaveBeenCalledWith(
       previewImage,
-      'preview'
+      'preview',
     );
   });
 
   it('renders with item.image_field', () => {
-    render(
-      <PreviewImage item={testItem} size="preview" />,
-    );
+    render(<PreviewImage item={testItem} size="preview" />);
     const img = screen.getByRole('img');
     expect(img).toHaveAttribute('src', 'http://example.com/preview.jpg');
     expect(helpers.getImageScaleParams).toHaveBeenCalledWith(
       testItem,
-      'preview'
+      'preview',
     );
   });
 
   it('renders default image when no source available', () => {
-    render(
-      <PreviewImage item={{ title: 'No Image' }} />,
-    );
+    render(<PreviewImage item={{ title: 'No Image' }} />);
     const img = screen.getByRole('img');
     expect(img.src).toContain('default-image.svg');
   });
