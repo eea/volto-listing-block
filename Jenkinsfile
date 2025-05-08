@@ -9,7 +9,7 @@ pipeline {
   environment {
     GIT_NAME = "volto-listing-block"
     NAMESPACE = "@eeacms"
-    SONARQUBE_TAGS = "volto.eea.europa.eu,www.eea.europa.eu-ims,climate-energy.eea.europa.eu,forest.eea.europa.eu,biodiversity.europa.eu,clms.land.copernicus.eu,industry.eea.europa.eu,water.europa.eu-freshwater,demo-www.eea.europa.eu,clmsdemo.devel6cph.eea.europa.eu,water.europa.eu-marine,climate-adapt.eea.europa.eu,climate-advisory-board.devel4cph.eea.europa.eu,climate-advisory-board.europa.eu,www.eea.europa.eu-en,insitu-frontend.eionet.europa.eu,insitu.copernicus.eu,www.industry.eea.europa.eu"
+    SONARQUBE_TAGS = "volto.eea.europa.eu,www.eea.europa.eu-ims,climate-energy.eea.europa.eu,forest.eea.europa.eu,biodiversity.europa.eu,clms.land.copernicus.eu,industry.eea.europa.eu,water.europa.eu-freshwater,demo-www.eea.europa.eu,clmsdemo.devel6cph.eea.europa.eu,water.europa.eu-marine,climate-adapt.eea.europa.eu,climate-advisory-board.devel4cph.eea.europa.eu,climate-advisory-board.europa.eu,www.eea.europa.eu-en,insitu-frontend.eionet.europa.eu,insitu.copernicus.eu,www.industry.eea.europa.eu,ask.copernicus.eu"
     DEPENDENCIES = ""
     BACKEND_PROFILES = "eea.kitkat:testing"
     BACKEND_ADDONS = ""
@@ -217,41 +217,40 @@ pipeline {
               }
           }
 
-    stage('Report to SonarQube') {
-      when {
-        anyOf {
-          allOf {
-            not { environment name: 'CHANGE_ID', value: '' }
-            environment name: 'CHANGE_TARGET', value: 'develop'
-            environment name: 'SKIP_TESTS', value: ''
-          }
-          allOf {
-            environment name: 'CHANGE_ID', value: ''
-            environment name: 'SKIP_TESTS', value: ''
-            anyOf {
-              allOf {
-                branch 'develop'
-                not { changelog '.*^Automated release [0-9\\.]+$' }
+          stage('Report to SonarQube') {
+            when {
+              anyOf {
+                allOf {
+                  not { environment name: 'CHANGE_ID', value: '' }
+                  environment name: 'CHANGE_TARGET', value: 'develop'
+                  environment name: 'SKIP_TESTS', value: ''
+                }
+                allOf {
+                  environment name: 'CHANGE_ID', value: ''
+                  environment name: 'SKIP_TESTS', value: ''
+                  anyOf {
+                    allOf {
+                      branch 'develop'
+                      not { changelog '.*^Automated release [0-9\\.]+$' }
+                    }
+                    branch 'master'
+                  }
+                }
               }
-              branch 'master'
+            }
+            steps {
+              script {
+                def scannerHome = tool 'SonarQubeScanner'
+                def nodeJS = tool 'NodeJS'
+                withSonarQubeEnv('Sonarqube') {
+                  sh '''sed -i "s#/app/src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
+                  sh '''sed -i "s#src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
+                  sh "export PATH=${scannerHome}/bin:${nodeJS}/bin:$PATH; sonar-scanner -Dsonar.javascript.lcov.reportPaths=./xunit-reports/coverage/lcov.info,./cypress-coverage/coverage/lcov.info -Dsonar.sources=./src -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
+                  sh '''try=5; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}-${BRANCH_NAME}&tags=${SONARQUBE_TAGS},${BRANCH_NAME}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 15; try=\$(( \$try - 1 )); fi; done'''
+                }
+              }
             }
           }
-        }
-      }
-      steps {
-        script {
-          def scannerHome = tool 'SonarQubeScanner'
-          def nodeJS = tool 'NodeJS'
-          withSonarQubeEnv('Sonarqube') {
-            sh '''sed -i "s#/app/src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
-            sh '''sed -i "s#src/addons/${GIT_NAME}/##g" xunit-reports/coverage/lcov.info'''
-            sh "export PATH=${scannerHome}/bin:${nodeJS}/bin:$PATH; sonar-scanner -Dsonar.javascript.lcov.reportPaths=./xunit-reports/coverage/lcov.info,./cypress-coverage/coverage/lcov.info -Dsonar.sources=./src -Dsonar.projectKey=$GIT_NAME-$BRANCH_NAME -Dsonar.projectVersion=$BRANCH_NAME-$BUILD_NUMBER"
-            sh '''try=5; while [ \$try -gt 0 ]; do curl -s -XPOST -u "${SONAR_AUTH_TOKEN}:" "${SONAR_HOST_URL}api/project_tags/set?project=${GIT_NAME}-${BRANCH_NAME}&tags=${SONARQUBE_TAGS},${BRANCH_NAME}" > set_tags_result; if [ \$(grep -ic error set_tags_result ) -eq 0 ]; then try=0; else cat set_tags_result; echo "... Will retry"; sleep 15; try=\$(( \$try - 1 )); fi; done'''
-          }
-        }
-      }
-    }
-
 
         }
       }
@@ -341,7 +340,6 @@ pipeline {
         }
       }
     }
-
 
     stage('SonarQube compare to master') {
       when {
