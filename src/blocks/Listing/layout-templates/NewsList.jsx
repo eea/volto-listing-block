@@ -6,13 +6,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import messages from '@eeacms/volto-listing-block/messages';
 
-const CustomNewsListTemplate = ({
-  items,
-  gridSize,
-  isEditMode,
-  hasDate,
-  hasDescription,
-}) => {
+const CustomNewsListTemplate = ({ items, hasDate, hasDescription }) => {
   moment.locale(config.settings.dateLocale);
   const makeTextBody = (item) => (
     <div className="news-item">
@@ -44,8 +38,10 @@ const CustomNewsListTemplate = ({
     <>
       {items && items.length > 0 && (
         <div className={`ui fluid`}>
-          {items.map((item) => (
-            <div key={item['@id']}>{makeTextBody(item)}</div>
+          {items.map((item, index) => (
+            <div key={item['@id'] || item.id || index}>
+              {makeTextBody(item)}
+            </div>
           ))}
         </div>
       )}
@@ -77,7 +73,6 @@ CustomNewsListTemplate.schemaEnhancer = ({ schema, formData, intl }) => {
 CustomNewsListTemplate.propTypes = {
   items: PropTypes.arrayOf(PropTypes.any).isRequired,
   linkMore: PropTypes.any,
-  isEditMode: PropTypes.bool,
 };
 
 export default CustomNewsListTemplate;

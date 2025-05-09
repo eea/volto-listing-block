@@ -1,25 +1,8 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { getFieldURL } from '@eeacms/volto-listing-block/helpers';
-import config from '@plone/volto/registry';
+import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
+import { getFieldURL } from '@plone/volto/helpers/Url/Url';
 
-const ItemImage = ({ image, imageSize, verticalAlign }) => {
-  const imageURL = getFieldURL(image);
-  if (!imageURL) return null;
-  const imageSizes = config.blocks.blocksConfig.item.imageSizes;
-  const size = imageSizes[imageSize];
-
-  return (
-    <img
-      src={`${imageURL}/@@images/image/${imageSize}`}
-      className={cx('ui', imageSize, verticalAlign, 'aligned')}
-      alt=""
-      width={size.width}
-      height={size.height}
-      loading="lazy"
-    />
-  );
-};
 function Item({
   assetType,
   children,
@@ -33,16 +16,24 @@ function Item({
   imageSize = 'big',
   meta,
   mode = 'view',
+  block,
+  image: imageUrl,
   ...props
 }) {
+  const scaledImage = getImageScaleParams(imageUrl, imageSize);
+
+  const image = getFieldURL(imageUrl);
   return (
     <UiItem.Group unstackable className="row">
       <UiItem className={cx(theme)}>
-        {assetType === 'image' && (
-          <ItemImage
-            image={props.image}
-            imageSize={imageSize}
-            verticalAlign={verticalAlign}
+        {assetType === 'image' && image && (
+          <UiItem.Image
+            src={scaledImage?.download}
+            className={cx('ui', imageSize, verticalAlign, 'aligned')}
+            alt={header || 'Item image'}
+            width={scaledImage?.width}
+            height={scaledImage?.height}
+            loading="lazy"
           />
         )}
         {assetType === 'icon' && icon && (
