@@ -210,7 +210,6 @@ describe('Item', () => {
         placeholder: 'placeholder',
       },
       extra: 'Extra Only',
-      description: 'Some description',
     };
     const { container } = render(
       <Provider store={store}>
