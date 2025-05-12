@@ -548,7 +548,9 @@ describe('Blocks Tests', () => {
     cy.get('#field-assetType .react-select__option')
       .contains('Image')
       .click({ force: true });
-    cy.get('.field-attached-image input').click({ force: true }).type('test');
+    cy.get('.field-attached-image .ui.input input')
+      .click({ force: true })
+      .type('test');
 
     // Save page
     cy.get('#toolbar-save').click();
