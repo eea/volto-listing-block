@@ -289,12 +289,11 @@ describe('Edit Component', () => {
 describe('Edit Component Redux Connection', () => {
   it('correctly connects to Redux store', () => {
     const ConnectedEdit = Edit;
-    const { _container, getByTestId } = render(
+    const { getByTestId } = render(
       <Provider store={store}>
         <ConnectedEdit block="block-123" />
       </Provider>,
     );
-
     expect(getByTestId('item-component')).toBeInTheDocument();
   });
 });

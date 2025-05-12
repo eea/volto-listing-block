@@ -16,7 +16,9 @@
     "type": "git",
     "url": "git@github.com:eea/volto-listing-block.git"
   },
-  "addons": [],
+  "addons": [
+    "@eeacms/volto-object-widget"
+  ],
   "dependencies": {
     "@eeacms/volto-widget-theme-picker": "*",
     "@eeacms/volto-object-widget": "eea/volto-object-widget#develop",
