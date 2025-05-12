@@ -286,6 +286,12 @@ const coverageConfig = getCoveragePatterns();
 module.exports = {
   testMatch: ['**/src/addons/**/?(*.)+(spec|test).[jt]s?(x)'],
   collectCoverageFrom: coverageConfig,
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    'schema\\.[jt]s?$',
+    'index\\.[jt]s?$',
+    'config\\.[jt]sx?$',
+  ],
   moduleNameMapper: {
     '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     '@plone/volto/cypress': '<rootDir>/node_modules/@plone/volto/cypress',
