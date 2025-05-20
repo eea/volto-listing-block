@@ -141,7 +141,7 @@ const getTestPath = () => {
   }
 
   // Handle the case where only the filename or directory name is provided (no path separators)
-  if (!testPath.includes('/')) {
+  if (!testPath.includes(path.sep)) {
     // Check if it's a test file
     if (
       testPath.endsWith('.test.js') ||
@@ -235,7 +235,9 @@ const getTestPath = () => {
   // If the path doesn't start with the addon base path and isn't absolute,
   // prepend the addon base path
   if (
-    !testPath.startsWith(`src/addons/${addonName}/src`) &&
+    !path
+      .normalize(testPath)
+      .startsWith(path.join('src', 'addons', addonName, 'src')) &&
     !testPath.startsWith('/')
   ) {
     testPath = `${addonBasePath}/${testPath}`;
@@ -548,7 +550,17 @@ module.exports = {
   },
   ...(process.env.JEST_USE_SETUP === 'ON' && {
     setupFilesAfterEnv: [
-      `<rootDir>/node_modules/@eeacms/${addonName}/jest.setup.js`,
+      fs.existsSync(
+        path.join(
+          __dirname,
+          'node_modules',
+          '@eeacms',
+          addonName,
+          'jest.setup.js',
+        ),
+      )
+        ? `<rootDir>/node_modules/@eeacms/${addonName}/jest.setup.js`
+        : `<rootDir>/src/addons/${addonName}/jest.setup.js`,
     ],
   }),
 };
