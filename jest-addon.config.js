@@ -17,34 +17,84 @@ require('dotenv').config({ path: __dirname + '/.env' });
 
 const path = require('path');
 const fs = require('fs');
-const { execSync } = require('child_process');
 
 // Get the addon name from the current file path
-const currentFilePath = __filename;
-const addonMatch = currentFilePath.match(/src\/addons\/([^/]+)/);
-const addonName = addonMatch ? addonMatch[1] : 'volto-listing-block';
+const pathParts = __filename.split(path.sep);
+const addonsIdx = pathParts.lastIndexOf('addons');
+const addonName =
+  addonsIdx !== -1 && addonsIdx < pathParts.length - 1
+    ? pathParts[addonsIdx + 1]
+    : 'volto-listing-block';
 const addonBasePath = `src/addons/${addonName}/src`;
 
 /**
- * Find files or directories in the addon using the find command
+ * Find files or directories in the addon using Node.js filesystem APIs
  * @param {string} name - The name to search for
  * @param {string} type - The type of item to find ('f' for files, 'd' for directories)
- * @param {string} [additionalOptions=''] - Additional options for the find command
+ * @param {string} [additionalOptions=''] - Additional options for flexible path matching
  * @returns {string|null} - The path of the found item or null if not found
  */
 const findInAddon = (name, type, additionalOptions = '') => {
-  try {
-    const cmd = `find ${addonBasePath} -type ${type} ${additionalOptions} -name "${name}"`;
-    const result = execSync(cmd).toString().trim();
+  const isFile = type === 'f';
+  const isDirectory = type === 'd';
+  const isFlexiblePathMatch = additionalOptions.includes('-path');
 
-    if (result) {
-      // If multiple items found, use the first one
-      return result.split('\n')[0];
+  // Extract the path pattern from additionalOptions if it's a flexible path match
+  let pathPattern = null;
+  if (isFlexiblePathMatch) {
+    const match = additionalOptions.match(/-path "([^"]+)"/);
+    if (match && match[1]) {
+      pathPattern = match[1].replace(/\*/g, '');
     }
-  } catch (error) {
-    // Ignore errors from find command
   }
-  return null;
+
+  // Function to search recursively through directories
+  const searchRecursive = (dir, results = []) => {
+    if (!fs.existsSync(dir)) {
+      return results;
+    }
+
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(dir, entry.name);
+
+        // Check if this entry matches our search criteria
+        if (
+          (isFile && entry.isFile()) ||
+          (isDirectory && entry.isDirectory())
+        ) {
+          if (isFlexiblePathMatch && pathPattern) {
+            // For flexible path matching, check if the path contains the pattern
+            if (fullPath.includes(pathPattern)) {
+              results.push(fullPath);
+            }
+          } else if (entry.name === name) {
+            // For exact name matching
+            results.push(fullPath);
+          }
+        }
+
+        // Recursively search subdirectories
+        if (entry.isDirectory()) {
+          searchRecursive(fullPath, results);
+        }
+      }
+    } catch (error) {
+      // Ignore errors for individual directories
+    }
+
+    return results;
+  };
+
+  try {
+    const results = searchRecursive(addonBasePath);
+    return results.length > 0 ? results[0] : null;
+  } catch (error) {
+    // Ignore errors during file search
+    return null;
+  }
 };
 
 /**
@@ -118,6 +168,68 @@ const getTestPath = () => {
         return flexibleDir;
       }
     }
+  } else if (
+    testPath.includes('.test.') &&
+    !testPath.startsWith('src/addons/')
+  ) {
+    // Handle relative paths with test files (e.g., layout-templates/VisualizationCards.test.jsx)
+    // Try to find the test file in the addon
+    const testFileName = path.basename(testPath);
+    const foundTestFile = findInAddon(testFileName, 'f');
+    if (foundTestFile) {
+      // Check if the found file path contains the relative path components
+      const relativePath = path.dirname(testPath);
+      if (foundTestFile.includes(relativePath)) {
+        return foundTestFile;
+      }
+
+      // If not found with the exact relative path, try to find a file with a similar path
+      // Helper function to find files that match a specific pattern
+      const findFilesWithPattern = (baseDir, fileName, pathPattern) => {
+        const results = [];
+
+        const searchRecursive = (dir) => {
+          if (!fs.existsSync(dir)) {
+            return;
+          }
+
+          try {
+            const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+            for (const entry of entries) {
+              const fullPath = path.join(dir, entry.name);
+
+              // Check if this is a file with the matching name
+              if (entry.isFile() && entry.name === fileName) {
+                // Check if the path contains the pattern
+                if (fullPath.includes(pathPattern)) {
+                  results.push(fullPath);
+                }
+              }
+
+              // Recursively search subdirectories
+              if (entry.isDirectory()) {
+                searchRecursive(fullPath);
+              }
+            }
+          } catch (error) {
+            // Ignore errors for individual directories
+          }
+        };
+
+        searchRecursive(baseDir);
+        return results;
+      };
+
+      const similarFiles = findFilesWithPattern(
+        addonBasePath,
+        testFileName,
+        relativePath,
+      );
+      if (similarFiles && similarFiles.length > 0) {
+        return similarFiles[0];
+      }
+    }
   }
 
   // If the path doesn't start with the addon base path and isn't absolute,
@@ -130,7 +242,18 @@ const getTestPath = () => {
   }
 
   // Verify the path exists
+  // First try with the path as is
   if (fs.existsSync(testPath)) {
+    return testPath;
+  }
+
+  // If path has a trailing slash and doesn't exist, try without the trailing slash
+  if (testPath.endsWith('/') && fs.existsSync(testPath.slice(0, -1))) {
+    return testPath.slice(0, -1);
+  }
+
+  // If path doesn't have a trailing slash and doesn't exist, try with a trailing slash
+  if (!testPath.endsWith('/') && fs.existsSync(`${testPath}/`)) {
     return testPath;
   }
 
@@ -248,10 +371,104 @@ const getCoveragePatterns = () => {
     }
   }
 
+  // Check for test file arguments with relative paths
+  const testFileArg = process.argv.find(
+    (arg) =>
+      arg.includes('.test.') &&
+      !arg.startsWith('--') &&
+      arg !== 'test' &&
+      arg !== 'node',
+  );
+
+  if (
+    testFileArg &&
+    testFileArg.includes('/') &&
+    !testFileArg.startsWith('src/addons/')
+  ) {
+    // This is a relative path to a test file (e.g., layout-templates/VisualizationCards.test.jsx)
+    const testFileName = path.basename(testFileArg);
+    const relativePath = path.dirname(testFileArg);
+
+    try {
+      // Helper function to find files that match a specific pattern
+      const findFilesWithPattern = (baseDir, fileName, pathPattern) => {
+        const results = [];
+
+        const searchRecursive = (dir) => {
+          if (!fs.existsSync(dir)) {
+            return;
+          }
+
+          try {
+            const entries = fs.readdirSync(dir, { withFileTypes: true });
+
+            for (const entry of entries) {
+              const fullPath = path.join(dir, entry.name);
+
+              // Check if this is a file with the matching name
+              if (entry.isFile() && entry.name === fileName) {
+                // Check if the path contains the pattern
+                if (fullPath.includes(pathPattern)) {
+                  results.push(fullPath);
+                }
+              }
+
+              // Recursively search subdirectories
+              if (entry.isDirectory()) {
+                searchRecursive(fullPath);
+              }
+            }
+          } catch (error) {
+            // Ignore errors for individual directories
+          }
+        };
+
+        searchRecursive(baseDir);
+        return results;
+      };
+
+      // Try to find the implementation file that corresponds to the test file
+      const testFiles = findFilesWithPattern(
+        addonBasePath,
+        testFileName,
+        relativePath,
+      );
+
+      if (testFiles && testFiles.length > 0) {
+        const testFile = testFiles[0];
+        const implFile = findImplementationFile(testFile);
+
+        if (implFile) {
+          return [implFile, '!src/**/*.d.ts'];
+        }
+
+        // If we couldn't find a specific implementation file, use the directory
+        const dirPath = path.dirname(testFile);
+        // Get the implementation file name (remove .test from the filename)
+        const implFileName = testFileName.replace('.test.', '.');
+
+        // Try to find the implementation file in the same directory
+        const implFilePath = path.join(dirPath, implFileName);
+        if (fs.existsSync(implFilePath)) {
+          return [implFilePath, '!src/**/*.d.ts'];
+        }
+
+        return [`${dirPath}/**/*.{js,jsx,ts,tsx}`, ...excludePatterns];
+      }
+    } catch (error) {
+      // If there's an error, continue with the normal flow
+    }
+  }
+
   // If no directory arg or directory not found, use the test path
-  const testPath = getTestPath();
+  let testPath = getTestPath();
   if (!testPath) {
     return defaultPatterns;
+  }
+
+  // Remove trailing slash if present to ensure consistent path handling
+  if (testPath.endsWith('/')) {
+    testPath = testPath.slice(0, -1);
   }
 
   // Check if the test path is a file or directory
