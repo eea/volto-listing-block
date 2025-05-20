@@ -7,13 +7,6 @@ import '@testing-library/jest-dom/extend-expect';
 import Item from './Item'; // Import the Item component
 const mockStore = configureStore();
 
-// 🡻 inside each test (or a beforeEach) to guarantee isolation
-const createStore = () =>
-  mockStore({
-    content: { data: { id: 'test', placeholder: 'placeholder' } },
-    intl: { locale: 'en', messages: {} },
-  });
-
 const store = mockStore({
   content: {
     data: {
