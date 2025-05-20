@@ -22,6 +22,9 @@ jest.mock('@eeacms/volto-listing-block/PreviewImage', () => {
     </div>
   ));
 });
+beforeEach(() => {
+  jest.clearAllMocks(); // resets ConditionalLink & PreviewImage mocks
+});
 
 describe('CardImage', () => {
   const mockItem = {

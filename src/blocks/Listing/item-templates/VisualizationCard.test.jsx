@@ -140,7 +140,7 @@ describe('CardEEABenchmarkLevel', () => {
       },
     });
 
-    const ConnectedVisualizationCard = require('./VisualizationCard').default;
+    const ConnectedVisualizationCard = VisualizationCardComponent;
 
     const { container } = render(
       <Provider store={store}>
@@ -167,7 +167,7 @@ describe('CardEEABenchmarkLevel', () => {
       },
     });
 
-    const ConnectedVisualizationCard = require('./VisualizationCard').default;
+    const ConnectedVisualizationCard = VisualizationCardComponent;
 
     const { container } = render(
       <Provider store={store}>
