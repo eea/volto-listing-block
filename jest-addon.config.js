@@ -17,6 +17,7 @@ require('dotenv').config({ path: __dirname + '/.env' });
 
 const path = require('path');
 const fs = require('fs');
+const fg = require('fast-glob');
 
 // Get the addon name from the current file path
 const pathParts = __filename.split(path.sep);
@@ -27,8 +28,96 @@ const addonName =
     : 'volto-listing-block';
 const addonBasePath = `src/addons/${addonName}/src`;
 
+// --- Performance caches ---
+const fileSearchCache = new Map();
+const dirSearchCache = new Map();
+const dirListingCache = new Map();
+const statCache = new Map();
+const implementationCache = new Map();
+
 /**
- * Find files or directories in the addon using Node.js filesystem APIs
+ * Cached fs.statSync wrapper to avoid redundant filesystem calls
+ * @param {string} p
+ * @returns {fs.Stats|null}
+ */
+const getStatSync = (p) => {
+  if (statCache.has(p)) return statCache.get(p);
+  try {
+    const s = fs.statSync(p);
+    statCache.set(p, s);
+    return s;
+  } catch {
+    statCache.set(p, null);
+    return null;
+  }
+};
+
+/**
+ * Find files that match a specific pattern using fast-glob
+ * @param {string} baseDir - The base directory to search in
+ * @param {string} fileName - The name of the file to find
+ * @param {string} [pathPattern=''] - Optional path pattern to filter results
+ * @returns {string[]} - Array of matching file paths
+ */
+const findFilesWithPattern = (baseDir, fileName, pathPattern = '') => {
+  const cacheKey = `${baseDir}|${fileName}|${pathPattern}`;
+  if (fileSearchCache.has(cacheKey)) {
+    return fileSearchCache.get(cacheKey);
+  }
+
+  let files = [];
+  try {
+    const patterns = fileName
+      ? [`${baseDir}/**/${fileName}`]
+      : [`${baseDir}/**/*.{js,jsx,ts,tsx}`];
+
+    files = fg.sync(patterns, { onlyFiles: true });
+
+    if (pathPattern) {
+      files = files.filter((file) => file.includes(pathPattern));
+    }
+  } catch {
+    files = [];
+  }
+
+  fileSearchCache.set(cacheKey, files);
+  return files;
+};
+
+/**
+ * Find directories that match a specific pattern using fast-glob
+ * @param {string} baseDir - The base directory to search in
+ * @param {string} dirName - The name of the directory to find
+ * @param {string} [pathPattern=''] - Optional path pattern to filter results
+ * @returns {string[]} - Array of matching directory paths
+ */
+const findDirsWithPattern = (baseDir, dirName, pathPattern = '') => {
+  const cacheKey = `${baseDir}|${dirName}|${pathPattern}`;
+  if (dirSearchCache.has(cacheKey)) {
+    return dirSearchCache.get(cacheKey);
+  }
+
+  let dirs = [];
+  try {
+    const patterns = dirName
+      ? [`${baseDir}/**/${dirName}`]
+      : [`${baseDir}/**/`];
+
+    dirs = fg.sync(patterns, { onlyDirectories: true });
+
+    if (pathPattern) {
+      dirs = dirs.filter((dir) => dir.includes(pathPattern));
+    }
+  } catch {
+    dirs = [];
+  }
+
+  dirSearchCache.set(cacheKey, dirs);
+  return dirs;
+};
+
+/**
+ * Find files or directories in the addon using fast-glob
  * @param {string} name - The name to search for
  * @param {string} type - The type of item to find ('f' for files, 'd' for directories)
  * @param {string} [additionalOptions=''] - Additional options for flexible path matching
@@ -40,7 +129,7 @@ const findInAddon = (name, type, additionalOptions = '') => {
   const isFlexiblePathMatch = additionalOptions.includes('-path');
 
   // Extract the path pattern from additionalOptions if it's a flexible path match
-  let pathPattern = null;
+  let pathPattern = '';
   if (isFlexiblePathMatch) {
     const match = additionalOptions.match(/-path "([^"]+)"/);
     if (match && match[1]) {
@@ -48,53 +137,105 @@ const findInAddon = (name, type, additionalOptions = '') => {
     }
   }
 
-  // Function to search recursively through directories
-  const searchRecursive = (dir, results = []) => {
-    if (!fs.existsSync(dir)) {
-      return results;
-    }
-
-    try {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-      for (const entry of entries) {
-        const fullPath = path.join(dir, entry.name);
-
-        // Check if this entry matches our search criteria
-        if (
-          (isFile && entry.isFile()) ||
-          (isDirectory && entry.isDirectory())
-        ) {
-          if (isFlexiblePathMatch && pathPattern) {
-            // For flexible path matching, check if the path contains the pattern
-            if (fullPath.includes(pathPattern)) {
-              results.push(fullPath);
-            }
-          } else if (entry.name === name) {
-            // For exact name matching
-            results.push(fullPath);
-          }
-        }
-
-        // Recursively search subdirectories
-        if (entry.isDirectory()) {
-          searchRecursive(fullPath, results);
-        }
-      }
-    } catch (error) {
-      // Ignore errors for individual directories
-    }
-
-    return results;
-  };
-
   try {
-    const results = searchRecursive(addonBasePath);
+    let results = [];
+
+    if (isFile) {
+      // Search for files
+      results = findFilesWithPattern(addonBasePath, name, pathPattern);
+    } else if (isDirectory) {
+      // Search for directories
+      results = findDirsWithPattern(addonBasePath, name, pathPattern);
+    }
+
     return results.length > 0 ? results[0] : null;
   } catch (error) {
     // Ignore errors during file search
     return null;
   }
+};
+
+/**
+ * Find the implementation file for a test file
+ * @param {string} testPath - Path to the test file
+ * @returns {string|null} - Path to the implementation file or null if not found
+ */
+const findImplementationFile = (testPath) => {
+  if (implementationCache.has(testPath)) {
+    return implementationCache.get(testPath);
+  }
+
+  if (!fs.existsSync(testPath)) {
+    implementationCache.set(testPath, null);
+    return null;
+  }
+
+  const dirPath = path.dirname(testPath);
+  const fileName = path.basename(testPath);
+
+  // Skip if it's not a test file
+  if (!fileName.includes('.test.')) {
+    implementationCache.set(testPath, null);
+    return null;
+  }
+
+  // Get the base name without extension and without .test
+  const baseFileName = path
+    .basename(fileName, path.extname(fileName))
+    .replace('.test', '');
+
+  // Try to find the implementation file
+  let dirFiles = dirListingCache.get(dirPath);
+  if (!dirFiles) {
+    dirFiles = fs.readdirSync(dirPath);
+    dirListingCache.set(dirPath, dirFiles);
+  }
+
+  // First, try exact match (e.g., PreviewImage.test.js -> PreviewImage.js)
+  const exactMatch = dirFiles.find((file) => {
+    const fileBaseName = path.basename(file, path.extname(file));
+    return (
+      fileBaseName === baseFileName &&
+      !file.includes('.test.') &&
+      !file.includes('.spec.')
+    );
+  });
+
+  if (exactMatch) {
+    const result = `${dirPath}/${exactMatch}`;
+    implementationCache.set(testPath, result);
+    return result;
+  }
+
+  // Try to find a file with a similar name
+  const similarMatch = dirFiles.find((file) => {
+    // Skip test files and directories
+    if (
+      file.includes('.test.') ||
+      file.includes('.spec.') ||
+      (getStatSync(`${dirPath}/${file}`)?.isDirectory() ?? false)
+    ) {
+      return false;
+    }
+
+    // Get the base name without extension
+    const fileBaseName = path.basename(file, path.extname(file));
+
+    // Check if the file name is similar to our test file name
+    return (
+      fileBaseName.toLowerCase().includes(baseFileName.toLowerCase()) ||
+      baseFileName.toLowerCase().includes(fileBaseName.toLowerCase())
+    );
+  });
+
+  if (similarMatch) {
+    const result = `${dirPath}/${similarMatch}`;
+    implementationCache.set(testPath, result);
+    return result;
+  }
+
+  implementationCache.set(testPath, null);
+  return null;
 };
 
 /**
@@ -184,43 +325,6 @@ const getTestPath = () => {
       }
 
       // If not found with the exact relative path, try to find a file with a similar path
-      // Helper function to find files that match a specific pattern
-      const findFilesWithPattern = (baseDir, fileName, pathPattern) => {
-        const results = [];
-
-        const searchRecursive = (dir) => {
-          if (!fs.existsSync(dir)) {
-            return;
-          }
-
-          try {
-            const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-            for (const entry of entries) {
-              const fullPath = path.join(dir, entry.name);
-
-              // Check if this is a file with the matching name
-              if (entry.isFile() && entry.name === fileName) {
-                // Check if the path contains the pattern
-                if (fullPath.includes(pathPattern)) {
-                  results.push(fullPath);
-                }
-              }
-
-              // Recursively search subdirectories
-              if (entry.isDirectory()) {
-                searchRecursive(fullPath);
-              }
-            }
-          } catch (error) {
-            // Ignore errors for individual directories
-          }
-        };
-
-        searchRecursive(baseDir);
-        return results;
-      };
-
       const similarFiles = findFilesWithPattern(
         addonBasePath,
         testFileName,
@@ -260,76 +364,6 @@ const getTestPath = () => {
   }
 
   return testPath;
-};
-
-/**
- * Find the implementation file for a test file
- * @param {string} testPath - Path to the test file
- * @returns {string|null} - Path to the implementation file or null if not found
- */
-const findImplementationFile = (testPath) => {
-  // If the test path doesn't exist, return null
-  if (!fs.existsSync(testPath)) {
-    return null;
-  }
-
-  // Get the directory and filename
-  const dirPath = path.dirname(testPath);
-  const fileName = path.basename(testPath);
-
-  // Skip if it's not a test file
-  if (!fileName.includes('.test.')) {
-    return null;
-  }
-
-  // Get the base name without extension and without .test
-  const baseFileName = path
-    .basename(fileName, path.extname(fileName))
-    .replace('.test', '');
-
-  // Try to find the implementation file
-  const dirFiles = fs.readdirSync(dirPath);
-
-  // First, try exact match (e.g., PreviewImage.test.js -> PreviewImage.js)
-  const exactMatch = dirFiles.find((file) => {
-    const fileBaseName = path.basename(file, path.extname(file));
-    return (
-      fileBaseName === baseFileName &&
-      !file.includes('.test.') &&
-      !file.includes('.spec.')
-    );
-  });
-
-  if (exactMatch) {
-    return `${dirPath}/${exactMatch}`;
-  }
-
-  // Try to find a file with a similar name
-  const similarMatch = dirFiles.find((file) => {
-    // Skip test files and directories
-    if (
-      file.includes('.test.') ||
-      file.includes('.spec.') ||
-      fs.statSync(`${dirPath}/${file}`).isDirectory()
-    ) {
-      return false;
-    }
-
-    // Get the base name without extension
-    const fileBaseName = path.basename(file, path.extname(file));
-
-    // Check if the file name is similar to our test file name
-    return (
-      fileBaseName.toLowerCase().includes(baseFileName.toLowerCase()) ||
-      baseFileName.toLowerCase().includes(fileBaseName.toLowerCase())
-    );
-  });
-
-  if (similarMatch) {
-    return `${dirPath}/${similarMatch}`;
-  }
-
-  return null;
 };
 
 /**
@@ -392,43 +426,6 @@ const getCoveragePatterns = () => {
     const relativePath = path.dirname(testFileArg);
 
     try {
-      // Helper function to find files that match a specific pattern
-      const findFilesWithPattern = (baseDir, fileName, pathPattern) => {
-        const results = [];
-
-        const searchRecursive = (dir) => {
-          if (!fs.existsSync(dir)) {
-            return;
-          }
-
-          try {
-            const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-            for (const entry of entries) {
-              const fullPath = path.join(dir, entry.name);
-
-              // Check if this is a file with the matching name
-              if (entry.isFile() && entry.name === fileName) {
-                // Check if the path contains the pattern
-                if (fullPath.includes(pathPattern)) {
-                  results.push(fullPath);
-                }
-              }
-
-              // Recursively search subdirectories
-              if (entry.isDirectory()) {
-                searchRecursive(fullPath);
-              }
-            }
-          } catch (error) {
-            // Ignore errors for individual directories
-          }
-        };
-
-        searchRecursive(baseDir);
-        return results;
-      };
-
       // Try to find the implementation file that corresponds to the test file
       const testFiles = findFilesWithPattern(
         addonBasePath,
@@ -474,26 +471,22 @@ const getCoveragePatterns = () => {
   }
 
   // Check if the test path is a file or directory
-  try {
-    const stats = fs.statSync(testPath);
+  const stats = getStatSync(testPath);
 
-    if (stats.isFile()) {
-      // If it's a specific test file, find the corresponding implementation file
-      const implFile = findImplementationFile(testPath);
+  if (stats && stats.isFile()) {
+    // If it's a specific test file, find the corresponding implementation file
+    const implFile = findImplementationFile(testPath);
 
-      if (implFile) {
-        return [implFile, '!src/**/*.d.ts'];
-      }
-
-      // If we couldn't find a specific implementation file, use the directory
-      const dirPath = path.dirname(testPath);
-      return [`${dirPath}/**/*.{js,jsx,ts,tsx}`, ...excludePatterns];
-    } else if (stats.isDirectory()) {
-      // If it's a directory, include ONLY files in that directory and its subdirectories
-      return [`${testPath}/**/*.{js,jsx,ts,tsx}`, ...excludePatterns];
+    if (implFile) {
+      return [implFile, '!src/**/*.d.ts'];
     }
-  } catch (error) {
-    // If there's an error (e.g., path doesn't exist), use default
+
+    // If we couldn't find a specific implementation file, use the directory
+    const dirPath = path.dirname(testPath);
+    return [`${dirPath}/**/*.{js,jsx,ts,tsx}`, ...excludePatterns];
+  } else if (stats && stats.isDirectory()) {
+    // If it's a directory, include ONLY files in that directory and its subdirectories
+    return [`${testPath}/**/*.{js,jsx,ts,tsx}`, ...excludePatterns];
   }
 
   return defaultPatterns;
