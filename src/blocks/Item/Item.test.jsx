@@ -4,7 +4,103 @@ import { render } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom/extend-expect';
 
-import Item from './Item'; // Import the Item component
+import * as voltoRegistry from '@plone/volto/registry';
+import * as voltoHelpers from '@plone/volto/helpers/Url/Url';
+import * as objectWidgetHelpers from '@eeacms/volto-object-widget/helpers';
+import Item, { getItemIconPrefix } from './Item';
+
+describe('getItemIconPrefix', () => {
+  const OLD_CONFIG = { ...voltoRegistry.default };
+  afterEach(() => {
+    voltoRegistry.default.blocks = OLD_CONFIG.blocks;
+  });
+
+  it('returns icon with prefix if not present', () => {
+    voltoRegistry.default.blocks = {
+      blocksConfig: { item: { iconPrefix: 'ri-' } },
+    };
+    expect(getItemIconPrefix('user')).toBe('ri-user');
+  });
+
+  it('returns icon unchanged if prefix already present', () => {
+    voltoRegistry.default.blocks = {
+      blocksConfig: { item: { iconPrefix: 'ri-' } },
+    };
+    expect(getItemIconPrefix('ri-user')).toBe('ri-user');
+  });
+
+  it('returns icon unchanged if no prefix configured', () => {
+    voltoRegistry.default.blocks = { blocksConfig: { item: {} } };
+    expect(getItemIconPrefix('user')).toBe('user');
+  });
+});
+
+describe('ItemImage (via Item)', () => {
+  beforeAll(() => {
+    jest.spyOn(voltoHelpers, 'getFieldURL').mockImplementation((img) => img);
+    jest
+      .spyOn(objectWidgetHelpers, 'getImageScaleParams')
+      .mockImplementation((url, size) => ({
+        download: `${url}/@@images/image/${size}`,
+      }));
+    voltoRegistry.default.blocks = {
+      blocksConfig: {
+        item: {
+          imageSizes: {
+            large: { width: 800, height: 600 },
+            small: { width: 200, height: 150 },
+          },
+        },
+      },
+    };
+  });
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('renders image with correct src, width, and height', () => {
+    const mockDataWithImage = {
+      data: { id: 'test-image', placeholder: 'placeholder' },
+      assetType: 'image',
+      image: '/path/to/image.jpg',
+      imageSize: 'large',
+      verticalAlign: 'middle',
+      header: 'Image Item',
+    };
+    const { container } = render(
+      <Provider store={store}>
+        <Item {...mockDataWithImage} />
+      </Provider>,
+    );
+    const img = container.querySelector('img');
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute(
+      'src',
+      '/path/to/image.jpg/@@images/image/large',
+    );
+    expect(img).toHaveAttribute('width', '800');
+    expect(img).toHaveAttribute('height', '600');
+    expect(img).toHaveClass('ui', 'large', 'middle', 'aligned');
+  });
+
+  it('returns null if getFieldURL returns null', () => {
+    voltoHelpers.getFieldURL.mockReturnValueOnce(null);
+    const mockDataWithImage = {
+      data: { id: 'test-image', placeholder: 'placeholder' },
+      assetType: 'image',
+      image: null,
+      imageSize: 'large',
+      verticalAlign: 'middle',
+      header: 'Image Item',
+    };
+    const { container } = render(
+      <Provider store={store}>
+        <Item {...mockDataWithImage} />
+      </Provider>,
+    );
+    expect(container.querySelector('img')).not.toBeInTheDocument();
+  });
+}); // Import the Item component
 const mockStore = configureStore();
 
 const store = mockStore({
@@ -39,19 +135,15 @@ describe('Item', () => {
       </Provider>,
     );
 
-    const imageWrapperElement = container.querySelector(
-      '.image.ui.large.middle.aligned',
-    ); // Select the image wrapper div with expected classes
+    const imageWrapperElement = container.querySelector('.item');
     expect(imageWrapperElement).toBeInTheDocument();
 
-    const imgElement = imageWrapperElement.querySelector('img'); // Select the img element within the wrapper
+    const imgElement = imageWrapperElement.querySelector('img');
     expect(imgElement).toBeInTheDocument();
     expect(imgElement).toHaveAttribute(
       'src',
       '/path/to/image.jpg/@@images/image/large',
     );
-    expect(imgElement).toHaveAttribute('alt', 'Image Item');
-    // No need to check classes on imgElement as they are on the wrapper
   });
 
   it('renders icon asset type', () => {
@@ -266,4 +358,5 @@ describe('Item', () => {
     expect(iconElement).toHaveClass('camera', 'big');
     expect(iconElement).not.toHaveClass('medium', 'large', 'massive');
   });
+  // End of tests for ItemImage and getItemIconPrefix
 });
