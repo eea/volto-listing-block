@@ -25,7 +25,7 @@ const addonsIdx = pathParts.lastIndexOf('addons');
 const addonName =
   addonsIdx !== -1 && addonsIdx < pathParts.length - 1
     ? pathParts[addonsIdx + 1]
-    : 'volto-listing-block'; // Fallback addon name
+    : path.basename(path.dirname(__filename)); // Fallback to folder name
 const addonBasePath = `src/addons/${addonName}/src`;
 
 // --- Performance caches ---

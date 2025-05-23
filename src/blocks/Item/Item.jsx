@@ -1,15 +1,13 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
 import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
-import { getFieldURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
 
 const ItemImage = ({ image, imageSize, verticalAlign }) => {
-  const imageURL = getFieldURL(image);
-  if (!imageURL) return null;
-  const scaledImage = getImageScaleParams(imageURL, imageSize);
-  const imageSizes = config.blocks.blocksConfig.item.imageSizes;
-  const size = imageSizes[imageSize];
+  if (!image) return null;
+  const scaledImage = getImageScaleParams(image, imageSize);
+  const imageSizes = config.blocks?.blocksConfig?.item?.imageSizes ?? {};
+  const size = imageSizes[imageSize] ?? { width: undefined, height: undefined };
 
   return (
     <img
@@ -45,7 +43,7 @@ function Item({
   meta,
   mode = 'view',
   block,
-  image: imageUrl,
+  image,
   ...props
 }) {
   return (
@@ -53,7 +51,7 @@ function Item({
       <UiItem className={cx(theme)}>
         {assetType === 'image' && (
           <ItemImage
-            image={imageUrl}
+            image={image}
             imageSize={imageSize}
             verticalAlign={verticalAlign}
           />
