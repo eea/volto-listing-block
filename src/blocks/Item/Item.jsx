@@ -1,18 +1,18 @@
 import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
-import { getFieldURL } from '@eeacms/volto-listing-block/helpers';
+import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
 import config from '@plone/volto/registry';
 
 const ItemImage = ({ image, imageSize, verticalAlign }) => {
-  const imageURL = getFieldURL(image);
-  if (!imageURL) return null;
-  const imageSizes = config.blocks.blocksConfig.item.imageSizes;
-  const size = imageSizes[imageSize];
+  if (!image) return null;
+  const scaledImage = getImageScaleParams(image, imageSize);
+  const imageSizes = config.blocks?.blocksConfig?.item?.imageSizes ?? {};
+  const size = imageSizes[imageSize] ?? { width: undefined, height: undefined };
 
   return (
     <img
-      src={`${imageURL}/@@images/image/${imageSize}`}
-      className={cx('ui', imageSize, verticalAlign, 'aligned')}
+      src={scaledImage?.download}
+      className={cx('ui image', imageSize, verticalAlign, 'aligned')}
       alt=""
       width={size.width}
       height={size.height}
@@ -20,6 +20,15 @@ const ItemImage = ({ image, imageSize, verticalAlign }) => {
     />
   );
 };
+
+// add an icon prefix if you want to prefix the icon
+// for eea we use remix so we would add ri-
+export function getItemIconPrefix(icon) {
+  const prefix = config.blocks?.blocksConfig?.item?.iconPrefix;
+  if (!prefix) return icon;
+  return icon.startsWith(prefix) ? icon : `${prefix}${icon}`;
+}
+
 function Item({
   assetType,
   children,
@@ -33,6 +42,8 @@ function Item({
   imageSize = 'big',
   meta,
   mode = 'view',
+  block,
+  image,
   ...props
 }) {
   return (
@@ -40,16 +51,22 @@ function Item({
       <UiItem className={cx(theme)}>
         {assetType === 'image' && (
           <ItemImage
-            image={props.image}
+            image={image}
             imageSize={imageSize}
             verticalAlign={verticalAlign}
           />
         )}
         {assetType === 'icon' && icon && (
           <Icon
-            className={cx(icon, theme, verticalAlign, 'aligned', {
-              medium: iconSize === 'medium',
-            })}
+            className={cx(
+              getItemIconPrefix(icon),
+              theme,
+              verticalAlign,
+              'aligned',
+              {
+                medium: iconSize === 'medium',
+              },
+            )}
             size={iconSize === 'medium' ? null : iconSize}
           />
         )}
