@@ -73,14 +73,16 @@
 }
 
 .benchmark_level_wrapper {
-  --padding: 0 0.5rem;
+  font-size: 0.875rem;
+  margin-top: auto;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.25rem;
 }
 
 .metadata.benchmark_level {
-  padding: var(--padding, 0.5rem 1.5rem);
+  height: 15px;
+  width: 15px;
   margin-bottom: 0;
   background-color: var(--background-color);
   color: var(--text-color, @buttonColor);
@@ -89,7 +91,7 @@
 }
 
 .grid.column-grid:has(.benchmark-level-column) {
-  align-items: baseline;
+  align-items: center;
 }
 
 .column.benchmark-level-column {
@@ -102,7 +104,7 @@
   }
 
   .card {
-    min-width: 220px !important;
+    min-width: 200px !important;
     min-height: 326px !important;
     border-top: 12px solid @tertiaryColor !important;
 
@@ -113,6 +115,10 @@
 
       .button {
         width: fit-content;
+      }
+
+      .benchmark_level_wrapper + .image {
+        margin-top: initial;
       }
     }
 
