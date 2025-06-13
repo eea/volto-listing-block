@@ -195,6 +195,7 @@ describe('VisualizationCards', () => {
       expect(enhancedSchema.properties.gridSize).toBeDefined();
       expect(enhancedSchema.properties.gridSize.title).toBe('Grid Size');
       expect(enhancedSchema.properties.gridSize.choices).toEqual([
+        ['four', 'Four'],
         ['five', 'Five'],
         ['six', 'Six'],
       ]);
