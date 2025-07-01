@@ -16,6 +16,21 @@
 @listingCardGridDescriptionMarginBottom: 2.5rem;
 @listingCardGridMinMax: minmax(275px, auto);
 @listingCardGridGap: 1.5rem;
+@roundedImageHeight: 176px;
+@roundedImageWidth: 176px;
+@imageObjectFit: cover;
+@cardImageHeight: 200px;
+@cardImageOverflow: hidden;
+@imageBackground: transparent;
+@imagePadding: 0em;
+@imageBorder: none;
+@imageBoxShadow: none;
+@imageBorder: none;
+@imageHeight: 100%;
+@imageWidth: 100%;
+@imageObjectFit: cover;
+@imageObjectPosition: center;
+@iconColor: @tertiaryColor;
 
 // Listing Item
 @listingBodyIconAlign: top;
