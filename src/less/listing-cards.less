@@ -35,8 +35,47 @@ each(range(5), {
 .ui.card {
   height: 100%;
   background-color: white;
-  color: var(--card-text-color, rgba(0, 0, 0, 0.6));
+  color: var(--card-text-color, rgba(48, 48, 48, 0.6));
   text-align: left;
+  a {
+    text-decoration: none;
+    color: rgba(30, 30, 30, 0.949);
+  }
+}
+
+.ui.card.rounded {
+  padding: @roundedCardPadding;
+  border: none;
+
+  .image {
+    display: flex;
+    justify-content: @roundedImageJustifyContent;
+  }
+
+  img {
+    width: @roundedImageWidth;
+    height: @roundedImageHeight;
+    border-radius: @roundedImageBorderRadius !important;
+    object-fit: var(--image-object-fit, @imageObjectFit);
+    object-position: var(--image-object-position, @imageObjectPosition);
+  }
+
+  .content {
+    border-top: none;
+
+    .header {
+      margin-bottom: @roundedContentTitleMarginBottom;
+      font-size: @roundedContentTitleFontSize;
+      font-weight: @roundedContentTitleFontWeight;
+      //text-align: @roundedContentTitleTextAlign;
+    }
+
+    .description {
+      //text-align: @roundedContentTitleTextAlign;
+      font-size: @roundedMetadataFontSize;
+      font-weight: @roundedMetadataFontWeight;
+    }
+  }
 }
 
 // remove extra margin from cards on edit, when they are inside a grid such as teaser

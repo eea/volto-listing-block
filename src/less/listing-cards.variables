@@ -31,6 +31,17 @@
 @imageObjectFit: cover;
 @imageObjectPosition: center;
 @iconColor: @tertiaryColor;
+@roundedCardPadding: 16 0;
+@roundedImageBorderRadius: @circularRadius;
+@roundedContentTitleMarginBottom: 8px;
+@roundedContentTitleTextAlign: left;
+@roundedContentTitleFontWeight: @bold;
+@roundedContentTitleFontSize: 1.25rem;
+@roundedImageJustifyContent: center;
+@roundedImageHeight: 176px;
+@roundedImageWidth: 176px;
+@roundedMetadataFontSize: 1rem;
+@roundedMetadataFontWeight: @normal;
 
 // Listing Item
 @listingBodyIconAlign: top;
