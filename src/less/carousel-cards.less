@@ -1,0 +1,98 @@
+@import 'listing-cards.variables';
+
+/* Carousel arrows */
+.cards-carousel .ui.button.icon.slider-arrow {
+  padding: @carouselButtonPadding;
+  margin: @carouselButtonMargin;
+
+  .active,
+  &:focus,
+  &:hover {
+    background: transparent;
+  }
+
+  &:focus-visible {
+    outline: auto;
+  }
+
+  .icon {
+    width: auto;
+    padding-top: @carouselButtonPaddingTop;
+    color: @carouselButtonIconColor;
+    font-size: @carouselButtonIconFontSize;
+    opacity: @carouselButtonIconOpacity;
+  }
+}
+
+.cards-carousel .slider-arrow {
+  position: absolute;
+  z-index: 1; // make arrows clickable even on events page with right column
+  top: 50%;
+  bottom: auto;
+  padding: 0;
+  border: none;
+  background: transparent !important;
+  cursor: pointer;
+  outline: none;
+  transform: translate(0, -50%);
+}
+
+.cards-carousel .slider-arrow.slick-disabled {
+  opacity: @carouselArrowDisabledOpacity;
+}
+
+.cards-carousel .prev-arrow {
+  right: auto;
+  left: @carouselButtonDistance;
+}
+
+.cards-carousel .next-arrow {
+  right: @carouselButtonDistance;
+  left: auto;
+}
+
+/* Custom carousel pagination bullets */
+// avoid dots going over content that follows sliders
+.slick-dots {
+  position: relative;
+  bottom: 0;
+}
+
+.cards-carousel .slick-dots li button:before {
+  content: none;
+}
+
+.cards-carousel .slick-dots li .slick-dot-icon:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: @mobileCarouselDotsWidth;
+  height: @mobileCarouselDotsHeight;
+  border: 1px solid black;
+  background-color: @carouselDotsBackgroundColor;
+  border-radius: @carouselDotsBorderRadius;
+  color: transparent;
+  content: '•';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  opacity: @carouselDotsOpacity;
+  text-align: center;
+}
+
+.cards-carousel .slick-dots li.slick-active .slick-dot-icon:before {
+  background-color: @carouselDotsActiveBackgroundColor;
+  color: transparent;
+}
+
+.slick-dots li button:focus-visible {
+  outline: black;
+  outline-style: auto;
+}
+
+@media only screen and (max-width: @tabletBreakpoint) {
+  .cards-carousel .slick-dots li,
+  .cards-carousel .slick-dots li button {
+    width: @mobileCarouselDotsButtonWidth;
+    height: @mobileCarouselDotsButtonHeight;
+  }
+}

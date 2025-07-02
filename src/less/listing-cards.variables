@@ -9,6 +9,11 @@
 @imageWrapperDisplay: flex;
 @imageWrapperMargin: 24px;
 
+@circularRadius: 50%;
+@bold: 700;
+
+@tabletBreakpoint: 768px;
+
 // Listing Card
 @listingCardBorderBottom: 1px solid #bcbec0;
 @listingCardExtraTopMargin: -3rem;
@@ -41,7 +46,7 @@
 @roundedImageHeight: 176px;
 @roundedImageWidth: 176px;
 @roundedMetadataFontSize: 1rem;
-@roundedMetadataFontWeight: @normal;
+@roundedMetadataFontWeight: normal;
 
 // Listing Item
 @listingBodyIconAlign: top;
@@ -62,3 +67,35 @@
 @secondaryColor: #007b6c;
 @tertiaryColor: #3d5265;
 @buttonColor: #323232;
+
+/*  Title */
+@carouselTitleFontWeight: 700;
+@carouselTitleMargin: 0;
+@carouselTitleColor: @tertiaryColor;
+
+/* Button */
+@carouselButtonPadding: 0;
+@carouselButtonMargin: 0;
+@carouselButtonIconColor: @tertiaryColor;
+@carouselButtonIconFontSize: 3.125rem;
+@carouselButtonIconOpacity: 1;
+@carouselButtonDistance: -3.5rem;
+@carouselButtonPaddingTop: 0;
+@carouselArrowDisabledOpacity: 0.25;
+
+/* Dots */
+@carouselDotsFontSize: 0.75rem;
+@carouselDotsBorderRadius: 50%;
+@carouselDotsOpacity: 1;
+@carouselDotsBorder: 1px solid black;
+@carouselDotsBackgroundColor: white;
+@carouselDotsActiveBackgroundColor: black;
+@mobileCarouselDotsWidth: 1.25rem;
+@mobileCarouselDotsHeight: 1.25rem;
+@mobileCarouselDotsButtonWidth: 1.875rem;
+@mobileCarouselDotsButtonHeight: 1.875rem;
+
+/* Slick wrapper */
+@slickListMargin: 0 -0.75em;
+@slickTrackMargin: 1rem 0;
+@slickSlideMargin: 0 10px;
