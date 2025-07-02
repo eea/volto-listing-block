@@ -61,7 +61,7 @@
 }
 
 .visualization-card-modal {
-  max-width: var(--visualization-modal-max-width, 1300px);
+  max-width: var(--visualization-modal-max-width, 1120px);
   overflow-x: hidden;
 
   &.enlarge-modal.ui.modal .close.icon {
@@ -69,15 +69,15 @@
     right: 1.5rem;
   }
 
-  &.enlarge-modal.ui.modal .close.icon > i {
+  &.enlarge-modal.ui.modal .close.icon>i {
     color: #fff;
     font-size: 44px;
   }
 
   #references-and-footnotes,
-  #references-and-footnotes + *,
+  #references-and-footnotes+*,
   #related-content,
-  #related-content + * {
+  #related-content+* {
     display: none;
   }
 }
@@ -132,7 +132,7 @@
         width: fit-content;
       }
 
-      .benchmark_level_wrapper + .image {
+      .benchmark_level_wrapper+.image {
         margin-top: initial;
       }
     }
@@ -156,7 +156,7 @@
     position: absolute;
     z-index: -1;
     left: -1.5rem;
-    width: var(--visualization-modal-max-width, 1300px);
+    width: var(--visualization-modal-max-width, 1120px);
     height: 100%;
     background: #007b6c;
     content: ' ';
