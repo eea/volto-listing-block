@@ -38,20 +38,32 @@
   --text-color: #fff;
 }
 
-.benchmark_level[class~='2'] {
+.benchmark_level[class~='2'],
+.benchmark_level[class~='3'] {
   --background-color: #47b3ff;
 }
 
-.benchmark_level[class~='4'] {
+.benchmark_level[class~='4'],
+.benchmark_level[class~='5'] {
   --background-color: #e7bc91;
 }
 
-.benchmark_level[class~='6'] {
+.benchmark_level[class~='6'],
+.benchmark_level[class~='7'] {
   --background-color: #8b5e34;
   --text-color: #fff;
 }
 
+.benchmark_level[class~='8'],
+.benchmark_level[class~='9'] {
+  --background-color: #e6e6e6;
+  --text-color: #3d5265;
+}
+
 .visualization-card-modal {
+  max-width: var(--visualization-modal-max-width, 1120px);
+  overflow-x: hidden;
+
   &.enlarge-modal.ui.modal .close.icon {
     top: 1.5rem;
     right: 1.5rem;
@@ -61,12 +73,20 @@
     color: #fff;
     font-size: 44px;
   }
+
+  #references-and-footnotes,
+  #references-and-footnotes + *,
+  #related-content,
+  #related-content + * {
+    display: none;
+  }
 }
 
 .benchmark_level_wrapper {
-  --padding: 0 0.5rem;
   display: flex;
-  align-items: baseline;
+  align-items: center;
+  margin-top: auto;
+  font-size: 0.875rem;
   gap: 0.25rem;
 }
 
@@ -79,8 +99,14 @@
   text-align: center;
 }
 
+.metadata.benchmark_level:not(.array) {
+  --padding: 0;
+  width: 15px;
+  height: 15px;
+}
+
 .grid.column-grid:has(.benchmark-level-column) {
-  align-items: baseline;
+  align-items: center;
 }
 
 .column.benchmark-level-column {
@@ -93,7 +119,7 @@
   }
 
   .card {
-    min-width: 220px !important;
+    min-width: 200px !important;
     min-height: 326px !important;
     border-top: 12px solid @tertiaryColor !important;
 
@@ -104,6 +130,10 @@
 
       .button {
         width: fit-content;
+      }
+
+      .benchmark_level_wrapper + .image {
+        margin-top: initial;
       }
     }
 
@@ -126,7 +156,7 @@
     position: absolute;
     z-index: -1;
     left: -1.5rem;
-    width: 103%;
+    width: var(--visualization-modal-max-width, 1120px);
     height: 100%;
     background: #007b6c;
     content: ' ';
