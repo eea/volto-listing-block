@@ -3,7 +3,7 @@ import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 
 import Carousel from './layout-templates/Carousel';
 import Gallery from './layout-templates/Gallery';
-import VisualizationCards from './layout-templates/VisualizationCards';
+import VisualizationCards from '@eeacms/volto-listing-block/blocks/Listing/layout-templates/VisualizationCards';
 import Listing from './layout-templates/Listing';
 import {
   setCardModelSchema,
