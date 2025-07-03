@@ -28,18 +28,15 @@ const getStyles = (props) => {
 
 const CardEEABenchmarkLevel = ({ item, benchmark_level_items }) => {
   const benchmark_level = item?.['benchmark_level']?.[0];
-  if (!benchmark_level) {
-    return null;
-  }
   const benchmark_level_item = benchmark_level_items?.find(
     (item) => item.value === benchmark_level,
   );
   return (
     <div className="benchmark_level_wrapper">
-      <div className={`metadata benchmark_level ${benchmark_level}`}>
+      <div className={`metadata benchmark_level ${benchmark_level ?? -1}`}>
         &nbsp;
       </div>
-      {benchmark_level_item?.label}
+      {benchmark_level_item?.label || 'No benchmark provided'}
     </div>
   );
 };
