@@ -29,6 +29,7 @@ const Edit = (props) => {
     properties,
     onChangeBlock,
     onSelectBlock,
+    id,
   } = props;
   const { description } = data;
   const schema = React.useMemo(() => getSchema(props, intl), [props, intl]);
@@ -49,7 +50,7 @@ const Edit = (props) => {
 
   return (
     <>
-      <Item {...data} mode="edit">
+      <Item {...data} block={id} mode="edit">
         <SlateEditor
           index={index}
           properties={properties}
@@ -75,6 +76,7 @@ const Edit = (props) => {
           block={block}
           schema={schema}
           title={schema.title}
+          onChangeBlock={onChangeBlock}
           onChangeField={(id, value) => {
             onChangeBlock(block, {
               ...data,
