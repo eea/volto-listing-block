@@ -9,11 +9,10 @@ export const serializeText = (text) => {
 };
 
 const View = (props) => {
-  const { data = {}, id } = props;
+  const { data = {} } = props;
   return (
     <Item
       {...data}
-      block={id}
       description={data.description ? serializeText(data.description) : null}
     />
   );

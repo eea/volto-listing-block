@@ -3,13 +3,12 @@ import { render } from '@testing-library/react';
 import { SearchItemLayout } from './SearchItemTemplate';
 import '@testing-library/jest-dom/extend-expect';
 
-describe('SearchItemTemplates', () => {
+describe('SimpleItemTemplates', () => {
   it('renders correctly', () => {
     const item = {
       title: 'Search listing title',
       description: 'Search listing description',
       meta: 'Search listing meta',
-      url: '/my-item-url',
     };
 
     const itemModel = {

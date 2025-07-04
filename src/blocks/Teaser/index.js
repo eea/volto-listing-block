@@ -40,7 +40,7 @@ const applyConfig = (config) => {
     config.blocks.blocksConfig?.teaser
   ) {
     //because grid uses teaser from blocksConfig.__grid.blocksConfig.teaser
-    //and we need that teaser overridden as well
+    //and we need that teaser overriden as well
     config.blocks.blocksConfig.gridBlock.blocksConfig.teaser =
       config.blocks.blocksConfig.teaser;
   }
@@ -49,7 +49,7 @@ const applyConfig = (config) => {
     return <Label key={index}>{tag}</Label>;
   };
 
-  //make sure that teaserGrid is compatible with the current frontend
+  //make sure that is compatiable with the current frontend
   if (!config.blocks.blocksConfig.teaserGrid) {
     config.blocks.blocksConfig.teaserGrid = {
       ...config.blocks.blocksConfig.gridBlock,

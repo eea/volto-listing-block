@@ -14,7 +14,6 @@ describe('ItemTemplates', () => {
     description: 'Default listing description',
     meta: 'Default listing meta',
     EffectiveDate: '2023-10-05T08:21:00+02:00',
-    url: '/my-item-url',
   };
   it('renders correctly', () => {
     const itemModel = {

@@ -5,14 +5,8 @@ export const adjustTeaserSchema = ({ schema }) => {
   }
 
   //use the attached image widget for image override
-  if (schema?.properties?.preview_image?.widget) {
+  if (schema?.properties?.preview_image?.widget)
     schema.properties.preview_image.widget = 'attachedimage';
-    schema.properties.preview_image.selectedItemAttrs = [
-      'image_field',
-      'image_scales',
-      '@type',
-    ];
-  }
   schema.properties.href.selectedItemAttrs.push('Subject');
   schema.properties.href.selectedItemAttrs.push('@type');
   schema.properties.href.selectedItemAttrs.push('EffectiveDate');

@@ -50,7 +50,6 @@ VisualizationCards.schemaEnhancer = ({ schema }) => {
     gridSize: {
       title: 'Grid Size',
       choices: [
-        ['four', 'Four'],
         ['five', 'Five'],
         ['six', 'Six'],
       ],

@@ -42,7 +42,6 @@ const ItemBlockSchema = ({ data, intl }) => {
       image: {
         title: intl.formatMessage(messages.image),
         widget: 'attachedimage',
-        selectedItemAttrs: ['image_field', 'image_scales', '@type'],
       },
       imageSize: {
         title: intl.formatMessage(messages.imageSize),
