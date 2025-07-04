@@ -151,8 +151,10 @@ describe('CardEEABenchmarkLevel', () => {
       </Provider>,
     );
 
-    // Benchmark level wrapper should not be present
-    expect(container.querySelector('.benchmark_level_wrapper')).toBeNull();
+    // Benchmark level wrapper should contain fallback text
+    expect(
+      container.querySelector('.benchmark_level_wrapper').textContent.trim(),
+    ).toContain('No benchmark provided');
   });
 
   it('renders benchmark level when present', () => {
@@ -233,7 +235,7 @@ describe('CardEEABenchmarkLevel', () => {
     expect(benchmarkLevel).not.toBeNull();
     expect(benchmarkLevel.classList.contains('unknown-level')).toBe(true);
 
-    // No label should be present (or it should be empty)
-    expect(benchmarkWrapper.textContent.trim()).toBe('');
+    // We now have No benchmark provided fallback text
+    expect(benchmarkWrapper.textContent.trim()).toBe('No benchmark provided');
   });
 });
