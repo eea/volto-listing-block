@@ -22,6 +22,9 @@ const applyConfig = (config) => {
       big: { width: 80, height: 80 },
       preview: { width: 400, height: 400 },
     },
+    // add an icon prefix if you want to prefix the icon
+    // for eea we use remix so we would add ri-
+    iconPrefix: '',
     security: {
       addPermission: [],
       view: [],
