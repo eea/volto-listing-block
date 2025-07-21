@@ -44,7 +44,7 @@ const getButtonClassName = (styles) => {
 
 const LinkCTAButton = React.memo(({ url, className, label }) => {
   return (
-    <Button as="a" href={url} className={className}>
+    <Button as="a" href={url} className={className} role={''}>
       {label}
     </Button>
   );
