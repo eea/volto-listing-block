@@ -31,9 +31,79 @@ each(range(5), {
   -webkit-line-clamp: var(--title-max-lines, @value);
 }
 
-.ui.cards > .card,
+/* Cards must have same height */
 .ui.card {
-  height: unset;
+  height: 100%;
+  background-color: white;
+  color: var(--card-text-color, rgba(48, 48, 48, 0.6));
+
+  a {
+    color: rgba(30, 30, 30, 0.949);
+    text-decoration: none;
+  }
+}
+
+.ui.card.rounded {
+  padding: @roundedCardPadding;
+  border: none;
+
+  .image {
+    display: flex;
+    justify-content: @roundedImageJustifyContent;
+  }
+
+  img {
+    width: @roundedImageWidth;
+    height: @roundedImageHeight;
+    border-radius: @roundedImageBorderRadius !important;
+    object-fit: var(--image-object-fit, @imageObjectFit);
+    object-position: var(--image-object-position, @imageObjectPosition);
+  }
+
+  .content {
+    border-top: none;
+
+    .header {
+      margin-bottom: @roundedContentTitleMarginBottom;
+      font-size: @roundedContentTitleFontSize;
+      font-weight: @roundedContentTitleFontWeight;
+      //text-align: @roundedContentTitleTextAlign;
+    }
+
+    .description {
+      //text-align: @roundedContentTitleTextAlign;
+      font-size: @roundedMetadataFontSize;
+      font-weight: @roundedMetadataFontWeight;
+    }
+  }
+}
+
+// remove extra margin from cards on edit, when they are inside a grid such as teaser
+// the outline is cut before the theme background with margin 1em set
+.block .ui.card {
+  margin: 0;
+}
+
+.ui.cards > .card:not(.rounded) > .image,
+.ui.card:not(.rounded) > .image {
+  overflow: hidden;
+  height: 200px;
+
+  img {
+    width: var(--card-image-width, @imageWidth);
+    height: var(--card-image-width, @imageHeight);
+  }
+}
+
+.ui.card img,
+img.ui.image {
+  object-fit: var(--image-object-fit, @imageObjectFit);
+  object-position: var(--image-object-position, @imageObjectPosition);
+}
+
+// Align image inside card content
+.ui.card > .content > .image {
+  margin-top: auto;
 }
 
 .ui.cards > .card > .content > .header:not(.ui),
@@ -56,7 +126,7 @@ each(range(5), {
 .u-item.listing-item {
   a,
   a p {
-    color: var(--text-color, #3d5265);
+    color: var(--text-color, #1d242b);
   }
 }
 

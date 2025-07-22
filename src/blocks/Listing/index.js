@@ -28,6 +28,7 @@ import { SearchItemLayout } from './item-templates/SearchItemTemplate';
 import { SimpleItemLayout } from './item-templates/SimpleItemTemplates';
 
 import messages from '@eeacms/volto-listing-block/messages';
+import 'remixicon/fonts/remixicon.css';
 
 const applyConfig = (config) => {
   // moment date locale. See https://momentjs.com/ - Multiple Locale Support

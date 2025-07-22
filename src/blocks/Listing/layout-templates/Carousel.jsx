@@ -5,6 +5,7 @@ import ResponsiveContainer from '@eeacms/volto-listing-block/components/Responsi
 
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import '../../../less/carousel-cards.less';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import messages from '@eeacms/volto-listing-block/messages';
