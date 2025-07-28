@@ -24,7 +24,8 @@
     "@eeacms/volto-widget-theme-picker": "*",
     "react-resize-detector": "7.1.2",
     "react-slick": "^0.30.1",
-    "slick-carousel": "1.8.1"
+    "slick-carousel": "1.8.1",
+    "remixicon": "4.6.0"
   },
   "devDependencies": {
     "@cypress/code-coverage": "^3.10.0",
