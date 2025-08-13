@@ -23,7 +23,10 @@ const TeaserCardTemplate = (props) => {
         ...data,
       }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
-      itemModel={data.itemModel || {}}
+      itemModel={{
+        ...(data.itemModel || {}),
+        hasLink: item ? data.itemModel?.hasLink : false,
+      }}
     />
   ) : isEditMode ? (
     <Message>

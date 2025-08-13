@@ -41,7 +41,11 @@ const BodyText = ({ item, isEditMode, itemModel }) => {
         condition={hasIcon && icon}
         wrapper={(children) => <div className="listing-wrap">{children}</div>}
       >
-        <ConditionalLink to={item['@id']} item={item} condition={!isEditMode}>
+        <ConditionalLink
+          to={item['@id']}
+          item={item}
+          condition={!isEditMode && item['@id']}
+        >
           <h3 className={'listing-header'}>
             {item.title ? item.title : item.id}
           </h3>
