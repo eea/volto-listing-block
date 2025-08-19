@@ -36,7 +36,7 @@ const CardEEABenchmarkLevel = ({ item, benchmark_level_items }) => {
       <div className={`metadata benchmark_level ${benchmark_level ?? -1}`}>
         &nbsp;
       </div>
-      {benchmark_level_item?.label || 'No benchmark provided'}
+      {benchmark_level_item?.label}
     </div>
   );
 };
