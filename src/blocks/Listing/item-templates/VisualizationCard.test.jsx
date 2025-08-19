@@ -142,7 +142,7 @@ describe('CardEEABenchmarkLevel', () => {
 
     const ConnectedVisualizationCard = VisualizationCardComponent;
 
-    const { container } = render(
+    render(
       <Provider store={store}>
         <ConnectedVisualizationCard
           item={{ '@id': '/test-item' }}
