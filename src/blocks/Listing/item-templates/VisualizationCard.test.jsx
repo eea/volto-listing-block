@@ -230,7 +230,7 @@ describe('CardEEABenchmarkLevel', () => {
     expect(benchmarkLevel).not.toBeNull();
     expect(benchmarkLevel.classList.contains('unknown-level')).toBe(true);
 
-    // We now have No benchmark provided fallback text
-    expect(benchmarkWrapper.textContent.trim()).toBe('No benchmark provided');
+    // No fallback text should be shown when benchmark level is not found
+    expect(benchmarkWrapper.textContent.trim()).toBe('');
   });
 });

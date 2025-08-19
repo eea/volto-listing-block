@@ -39,7 +39,7 @@ const CardImage = (props) => {
       to={item['@id']}
       className="image"
       item={item}
-      condition={showLink}
+      condition={!!showLink}
     >
       {showLink ? (
         <>
