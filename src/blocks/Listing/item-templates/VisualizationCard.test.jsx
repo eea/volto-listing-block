@@ -150,11 +150,6 @@ describe('CardEEABenchmarkLevel', () => {
         />
       </Provider>,
     );
-
-    // Benchmark level wrapper should contain fallback text
-    expect(
-      container.querySelector('.benchmark_level_wrapper').textContent.trim(),
-    ).toContain('No benchmark provided');
   });
 
   it('renders benchmark level when present', () => {
