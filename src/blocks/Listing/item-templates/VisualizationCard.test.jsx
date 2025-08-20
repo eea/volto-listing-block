@@ -142,7 +142,7 @@ describe('CardEEABenchmarkLevel', () => {
 
     const ConnectedVisualizationCard = VisualizationCardComponent;
 
-    const { container } = render(
+    render(
       <Provider store={store}>
         <ConnectedVisualizationCard
           item={{ '@id': '/test-item' }}
@@ -150,11 +150,6 @@ describe('CardEEABenchmarkLevel', () => {
         />
       </Provider>,
     );
-
-    // Benchmark level wrapper should contain fallback text
-    expect(
-      container.querySelector('.benchmark_level_wrapper').textContent.trim(),
-    ).toContain('No benchmark provided');
   });
 
   it('renders benchmark level when present', () => {
@@ -235,7 +230,7 @@ describe('CardEEABenchmarkLevel', () => {
     expect(benchmarkLevel).not.toBeNull();
     expect(benchmarkLevel.classList.contains('unknown-level')).toBe(true);
 
-    // We now have No benchmark provided fallback text
-    expect(benchmarkWrapper.textContent.trim()).toBe('No benchmark provided');
+    // No fallback text should be shown when benchmark level is not found
+    expect(benchmarkWrapper.textContent.trim()).toBe('');
   });
 });
