@@ -13,7 +13,7 @@ const CardTitle = (props) => {
         className="header-link"
         to={item['@id']}
         item={item}
-        condition={!isEditMode && itemModel?.hasLink}
+        condition={!isEditMode && itemModel?.hasLink && item['@id']}
       >
         {t}
       </ConditionalLink>

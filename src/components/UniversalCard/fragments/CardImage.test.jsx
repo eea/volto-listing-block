@@ -210,8 +210,8 @@ describe('CardImage', () => {
     // Check if ConditionalLink is rendered
     const conditionalLink = screen.getByTestId('conditional-link');
     expect(conditionalLink).toBeInTheDocument();
-    // When itemModel is undefined, condition will be null
-    expect(conditionalLink.getAttribute('data-condition')).toBeNull();
+    // When itemModel is undefined, condition will be false
+    expect(conditionalLink.getAttribute('data-condition')).toBe('false');
 
     // Check if PreviewImage is rendered
     expect(screen.getByTestId('preview-image')).toBeInTheDocument();
