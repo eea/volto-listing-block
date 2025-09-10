@@ -115,8 +115,8 @@ each(range(5), {
 .imageCard-items,
 .card-items {
   display: grid;
-  // Let rows auto-size based on content, cards will match height within each row
-  // Remove grid-auto-rows to allow natural height
+  gap: @listingCardGridGap;
+  grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
   align-items: stretch; // Cards stretch to row height
   gap: @listingCardGridGap;
   grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
@@ -129,8 +129,6 @@ each(range(5), {
   // Ensure cards stretch to fill their grid cell
   height: 100%;
   flex-direction: column;
-  // Force consistent margins for all cards (override Semantic UI defaults)
-  margin: 0 !important;
 
   &:first-child {
     margin-top: 0 !important;
@@ -140,44 +138,64 @@ each(range(5), {
     margin-bottom: 0 !important;
   }
 
-  // Fixed height for images to ensure alignment
   .image,
   > .image {
+    height: 250px;
     overflow: hidden;
-    height: 250px; // Fixed height for all card images
-    flex-shrink: 0; // Prevent image from shrinking
+    flex-shrink: 0;
+    position: relative; // Needed for absolute positioning of gradient overlay
 
     img {
       width: 100%;
       height: 100%;
-      object-fit: cover; // Ensure image covers the area
-      object-position: center; // Center the image
+      object-fit: cover;
+      object-position: center;
+    }
+
+    // Only renders when "Display title on image" is checked
+    .gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      padding: 2rem 1rem 1rem;
+
+      .header {
+        color: white;
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      }
     }
   }
 
-  // Make content area flexible to push elements properly
   > .content {
     display: flex;
     flex: 1;
     flex-direction: column;
 
     .description {
-      flex: 1; // Allow description to grow
+      flex: 1;
     }
   }
 
-  // Push extra content to bottom
   > .extra.content {
     margin-top: auto;
   }
 }
 
 .card.u-card.item-card {
-  // Use flexbox instead of grid for better height control
   display: flex;
   height: 100%; // Ensure it fills the grid cell
   flex-direction: column;
   padding: @listingCardPadding;
+  height: 100%;
 }
 
 .card.u-card.item-card:not(:last-child) {
@@ -396,13 +414,35 @@ each(range(5), {
   .image,
   > .image {
     overflow: hidden;
-    height: 250px;
+    position: relative; // For title overlay positioning
 
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
+    }
+
+    // Title overlay - only shows when "Display title on image" is checked
+    .gradient {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.7) 100%
+      );
+      padding: 2rem 1rem 1rem;
+
+      .header {
+        color: white;
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+      }
     }
   }
 
