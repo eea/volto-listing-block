@@ -117,11 +117,67 @@ each(range(5), {
   display: grid;
   gap: @listingCardGridGap;
   grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
+  // Let rows auto-size based on content, cards will match height within each row
+  // Remove grid-auto-rows to allow natural height
+  align-items: stretch; // Cards stretch to row height
+}
+
+// Override Semantic UI's first/last child margin rules
+.ui.cards.card-items > .card,
+.card-items > .ui.card {
+  // Force consistent margins for all cards (override Semantic UI defaults)
+  margin: 0 !important;
+  // Ensure cards stretch to fill their grid cell
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  
+  &:first-child {
+    margin-top: 0 !important;
+  }
+  
+  &:last-child {
+    margin-bottom: 0 !important;
+  }
+  
+  // Fixed height for images to ensure alignment
+  .image,
+  > .image {
+    height: 250px; // Fixed height for all card images
+    overflow: hidden;
+    flex-shrink: 0; // Prevent image from shrinking
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; // Ensure image covers the area
+      object-position: center; // Center the image
+    }
+  }
+  
+  // Make content area flexible to push elements properly
+  > .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    
+    .description {
+      flex: 1; // Allow description to grow
+    }
+  }
+  
+  // Push extra content to bottom
+  > .extra.content {
+    margin-top: auto;
+  }
 }
 
 .card.u-card.item-card {
-  display: grid;
+  // Use flexbox instead of grid for better height control
+  display: flex;
+  flex-direction: column;
   padding: @listingCardPadding;
+  height: 100%; // Ensure it fills the grid cell
 }
 
 .card.u-card.item-card:not(:last-child) {
@@ -336,6 +392,20 @@ each(range(5), {
 }
 
 .ui.card.u-card {
+  // Fixed height for u-card images
+  .image,
+  > .image {
+    height: 250px;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+  
   .meta:after {
     content: '\200b';
   }
