@@ -115,23 +115,25 @@ each(range(5), {
 .imageCard-items,
 .card-items {
   display: grid;
-  align-items: stretch; // Cards stretch to row height
-  gap: @listingCardGridGap;
   gap: @listingCardGridGap;
   grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
-  grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
+  // Ensure all cards start at the same vertical position
+  align-items: start;
 }
 
 // Override Semantic UI's first/last child margin rules
 .ui.cards.card-items > .card,
 .card-items > .ui.card {
-  display: flex;
+  // Force consistent margins for all cards (override Semantic UI defaults)
+  margin: 0 !important;
   // Ensure cards stretch to fill their grid cell
   height: 100%;
+  display: flex;
   flex-direction: column;
 
   &:first-child {
     margin-top: 0 !important;
+    padding-top: 0 !important; // Ensure no extra padding on first card
   }
 
   &:last-child {
@@ -192,10 +194,11 @@ each(range(5), {
 
 .card.u-card.item-card {
   display: flex;
-  height: 100%; // Ensure it fills the grid cell
-  height: 100%;
   flex-direction: column;
+  height: 100%; // Ensure it fills the grid cell
   padding: @listingCardPadding;
+  margin: 0; // Reset any default margins
+  align-self: start; // Align card to the start of grid cell
 }
 
 .card.u-card.item-card:not(:last-child) {
