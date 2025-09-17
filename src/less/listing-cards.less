@@ -202,12 +202,12 @@ each(range(5), {
 }
 
 .card.u-card.item-card {
-  display: flex;
-  height: 100%; // Ensure it fills the grid cell
-  flex-direction: column;
-  align-self: start; // Align card to the start of grid cell
+  display: grid;
+  // height: 100%; // Ensure it fills the grid cell
+  // flex-direction: column;
+  // align-self: start; // Align card to the start of grid cell
   padding: @listingCardPadding;
-  margin: 0; // Reset any default margins
+  // margin: 0; // Reset any default margins
 }
 
 .card.u-card.item-card:not(:last-child) {
