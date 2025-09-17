@@ -121,6 +121,15 @@ each(range(5), {
   grid-template-columns: repeat(auto-fit, @listingCardGridMinMax);
 }
 
+.imageCard-items > .ui.card {
+  height: 250px;
+  margin: 0;
+  .image,
+  > .image {
+    flex: 1;
+  }
+}
+
 // Override Semantic UI's first/last child margin rules
 .ui.cards.card-items > .card,
 .card-items > .ui.card {
