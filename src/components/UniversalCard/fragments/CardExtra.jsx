@@ -53,7 +53,7 @@ const LinkCTAButton = React.memo(({ url, className, label }) => {
 const PopupCTAButton = React.memo(({ url, className, label }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isPopupEnabled, setIsPopupEnabled] = useState(true);
-  const screenWidth = useSelector((state) => state.screen.width);
+  const screenWidth = useSelector((state) => state.screen?.width);
 
   const handleOpenModal = useCallback(() => setIsModalOpen(true), []);
   const handleCloseModal = useCallback(() => setIsModalOpen(false), []);

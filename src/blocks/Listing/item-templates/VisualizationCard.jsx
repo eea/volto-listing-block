@@ -50,9 +50,14 @@ CardEEABenchmarkLevel.propTypes = {
 
 const VisualizationCard = (props) => {
   const { className, item, benchmark_level_items } = props;
+  console.log('here item', item);
   const imagePosition = props.imagePosition;
+  // Try plotly preview first for visualizations, then fall back to regular images
   const preview_image_url =
-    item['@id'] + '/@@plotly_preview.svg/soer_miniature';
+    item['@type'] === 'visualization'
+      ? item['@id'] + '/@@plotly_preview.svg/soer_miniature'
+      : null;
+
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
       <UiCard.Content>
