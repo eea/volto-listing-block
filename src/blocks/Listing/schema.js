@@ -169,12 +169,11 @@ export const setCardModelSchema = (args) => {
 };
 
 export const setVisualizationCardModelSchema = (args) => {
-  const { formData, schema, intl } = args;
+  const { formData, schema } = args;
 
   const itemModelSchema = schema.properties.itemModel.schema;
   itemModelSchema.fieldsets[0].fields = [
     ...itemModelSchema.fieldsets[0].fields,
-    'hasLink',
     'maxTitle',
     'hasDescription',
     'maxDescription',
@@ -183,12 +182,6 @@ export const setVisualizationCardModelSchema = (args) => {
   ];
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
-    hasLink: {
-      title: intl.formatMessage(messages.enableLink),
-      description: intl.formatMessage(messages.enableLinkDescription),
-      type: 'boolean',
-      default: false,
-    },
     hasDescription: {
       title: 'Description',
       type: 'boolean',
