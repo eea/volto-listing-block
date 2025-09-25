@@ -13,7 +13,12 @@ const CardTitle = (props) => {
         className="header-link"
         to={item['@id']}
         item={item}
-        condition={!isEditMode && itemModel?.hasLink && item['@id']}
+        condition={
+          !isEditMode &&
+          itemModel?.hasLink &&
+          itemModel?.['@type'] !== 'visualizationCard' &&
+          item['@id']
+        }
       >
         {t}
       </ConditionalLink>
