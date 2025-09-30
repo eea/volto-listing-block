@@ -6,6 +6,11 @@
 
 @import (multiple, reference, optional) '../../theme.config';
 
+/* Remix Icons */
+& {
+  @import (less) 'remixicon/fonts/remixicon.css';
+}
+
 each(range(5), {
   .max-@{value}-lines {
     --max-lines: @value;
@@ -473,18 +478,180 @@ each(range(5), {
   float: none;
 }
 
-// we set max width for the carousel instead of inline styles
 .cards-carousel {
+  position: relative;
   max-width: var(--carousel-max-width, @carouselMaxWidth);
   margin: 0 auto;
-}
 
-.cards-carousel .slick-slide {
-  visibility: hidden;
+  .slick-list {
+    margin: @slickListMargin;
+  }
+
+  .slick-track {
+    display: flex;
+    margin: @slickTrackMargin;
+  }
+
+  .slick-slide {
+    display: flex;
+    height: auto;
+    flex: 1;
+    flex-direction: column;
+    margin: @slickSlideMargin;
+    visibility: hidden;
+
+    > div {
+      height: 100%;
+    }
+  }
 }
 
 .cards-carousel .slick-active {
   visibility: visible;
+}
+
+// Carousel arrows
+.cards-carousel .ui.button.icon.slider-arrow {
+  padding: @carouselButtonPadding;
+  margin: @carouselButtonMargin;
+  background: transparent !important;
+  box-shadow: none !important;
+
+  .active,
+  &:focus,
+  &:hover {
+    background: transparent !important;
+  }
+
+  &:focus-visible {
+    outline: auto;
+  }
+
+  .icon {
+    width: auto;
+    padding-top: @carouselButtonPaddingTop;
+    color: @carouselButtonIconColor;
+    font-size: @carouselButtonIconFontSize;
+    opacity: @carouselButtonIconOpacity;
+  }
+}
+
+// Override the hidden class to make arrows visible
+.cards-carousel .slider-arrow.tablet.or.lower.hidden {
+  display: flex !important;
+}
+
+.cards-carousel .slider-arrow {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  bottom: auto;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  transform: translate(0, -50%);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.cards-carousel .slider-arrow.slick-disabled {
+  opacity: @carouselArrowDisabledOpacity;
+}
+
+.cards-carousel .prev-arrow {
+  right: auto;
+  left: @carouselButtonDistance;
+}
+
+.cards-carousel .next-arrow {
+  right: @carouselButtonDistance;
+  left: auto;
+}
+
+// Custom carousel pagination bullets
+.slick-dots {
+  position: relative;
+  bottom: 0;
+}
+
+.cards-carousel .slick-dots li button:before {
+  content: none;
+}
+
+.cards-carousel .slick-dots li .slick-dot-icon:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: @mobileCarouselDotsWidth;
+  height: @mobileCarouselDotsHeight;
+  border: @carouselDotsBorder;
+  background-color: @carouselDotsBackgroundColor;
+  border-radius: @carouselDotsBorderRadius;
+  color: transparent;
+  content: '•';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  opacity: @carouselDotsOpacity;
+  text-align: center;
+}
+
+.cards-carousel .slick-dots li.slick-active .slick-dot-icon:before {
+  background-color: @carouselDotsActiveBackgroundColor;
+  color: transparent;
+}
+
+.slick-dots li button:focus-visible {
+  outline: black;
+  outline-style: auto;
+}
+
+@media only screen and (max-width: @tabletBreakpoint) {
+  .cards-carousel .slick-dots li,
+  .cards-carousel .slick-dots li button {
+    width: @mobileCarouselDotsButtonWidth;
+    height: @mobileCarouselDotsButtonHeight;
+  }
+}
+
+// Ensure cards in carousel have equal height and proper alignment
+.cards-carousel .ui.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  // Fix image heights to be consistent
+  .image,
+  > .image {
+    height: 200px;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .description {
+      flex-grow: 1;
+    }
+  }
+
+  .extra.content {
+    margin-top: auto;
+  }
 }
 
 @media only screen and (max-width: (@largestMobileScreen)) {

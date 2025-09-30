@@ -50,7 +50,6 @@ CardEEABenchmarkLevel.propTypes = {
 
 const VisualizationCard = (props) => {
   const { className, item, benchmark_level_items } = props;
-  console.log('here item', item);
   const imagePosition = props.imagePosition;
   // Try plotly preview first for visualizations, then fall back to regular images
   const preview_image_url =
