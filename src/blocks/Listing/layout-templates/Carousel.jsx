@@ -124,11 +124,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
   };
 
   return itemsLength > 0 ? (
-    <div
-      className="cards-carousel"
-      role={'region'}
-      aria-label={'carousel'}
-    >
+    <div className="cards-carousel" role={'region'} aria-label={'carousel'}>
       <Slider {...settings} ref={slider}>
         {items.map((item, index) => (
           <UniversalCard
