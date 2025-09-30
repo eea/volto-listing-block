@@ -21,6 +21,7 @@ jest.mock('@eeacms/volto-listing-block/components/UniversalCard', () => ({
 describe('VisualizationCard', () => {
   const mockItem = {
     '@id': '/test-item',
+    '@type': 'visualization',
     title: 'Test Item',
     description: 'Test Description',
   };
