@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2025-01-30T17:29:22.567Z\n"
+"POT-Creation-Date: 2026-02-11T14:37:48.130Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -19,28 +19,18 @@ msgid "Bordered"
 msgstr ""
 
 #. Default: "Browse the site"
-#: blocks/Teaser/ImageWidget
+#: messages
 msgid "Browse the site"
 msgstr ""
 
 #. Default: "Browse the site, drop an image, or type an URL"
-#: blocks/Teaser/ImageWidget
+#: messages
 msgid "Browse the site, drop an image, or type an URL"
 msgstr ""
 
 #. Default: "Card type"
 #: messages
 msgid "Card type"
-msgstr ""
-
-#. Default: "Carousel"
-#: messages
-msgid "Carousel"
-msgstr ""
-
-#. Default: "Gallery"
-#: messages
-msgid "Gallery"
 msgstr ""
 
 #. Default: "Inverted"
@@ -84,7 +74,7 @@ msgid "ObjectPositionHelp"
 msgstr ""
 
 #. Default: "Please choose an existing content as source for this element"
-#: blocks/Teaser/Card
+#: messages
 msgid "Please choose an existing content as source for this element"
 msgstr ""
 
@@ -174,7 +164,7 @@ msgid "cardStyling"
 msgstr ""
 
 #. Default: "Carousel"
-#: blocks/Listing/layout-templates/Carousel
+#: messages
 msgid "carouselTitle"
 msgstr ""
 
@@ -199,7 +189,6 @@ msgid "defaultLabel"
 msgstr ""
 
 #. Default: "Description"
-#: blocks/Listing/layout-templates/NewsList
 #: messages
 msgid "description"
 msgstr ""
@@ -230,17 +219,17 @@ msgid "fill"
 msgstr ""
 
 #. Default: "Four"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "four"
 msgstr ""
 
 #. Default: "Gallery"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "galleryTitle"
 msgstr ""
 
 #. Default: "Grid Size"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "gridSize"
 msgstr ""
 
@@ -330,12 +319,12 @@ msgid "middle"
 msgstr ""
 
 #. Default: "News item"
-#: blocks/Listing/layout-templates/NewsList
+#: messages
 msgid "newsItem"
 msgstr ""
 
 #. Default: "There are no items to show in this view."
-#: blocks/Listing/layout-templates/Listing
+#: messages
 msgid "noItemsToShow"
 msgstr ""
 
@@ -350,7 +339,6 @@ msgid "preview"
 msgstr ""
 
 #. Default: "Publication date"
-#: blocks/Listing/layout-templates/NewsList
 #: messages
 msgid "publicationDate"
 msgstr ""
@@ -421,12 +409,12 @@ msgid "sizeTiny"
 msgstr ""
 
 #. Default: "Slides to scroll"
-#: blocks/Listing/layout-templates/Carousel
+#: messages
 msgid "slidesToScroll"
 msgstr ""
 
 #. Default: "Slides to show"
-#: blocks/Listing/layout-templates/Carousel
+#: messages
 msgid "slidesToShow"
 msgstr ""
 
@@ -436,7 +424,7 @@ msgid "textAlign"
 msgstr ""
 
 #. Default: "Three"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "three"
 msgstr ""
 
