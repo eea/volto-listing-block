@@ -44,7 +44,7 @@ const BodyText = ({ item, isEditMode, itemModel }) => {
         <ConditionalLink
           to={item['@id']}
           item={item}
-          condition={!isEditMode && item['@id']}
+          condition={!!(!isEditMode && item['@id'])}
         >
           <h3 className={'listing-header'}>
             {item.title ? item.title : item.id}

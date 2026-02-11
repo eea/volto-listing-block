@@ -14,10 +14,12 @@ const CardTitle = (props) => {
         to={item['@id']}
         item={item}
         condition={
-          !isEditMode &&
-          itemModel?.hasLink &&
-          itemModel?.['@type'] !== 'visualizationCard' &&
-          item['@id']
+          !!(
+            !isEditMode &&
+            itemModel?.hasLink &&
+            itemModel?.['@type'] !== 'visualizationCard' &&
+            item['@id']
+          )
         }
       >
         {t}
