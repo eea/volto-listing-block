@@ -17,12 +17,12 @@ msgid "Bordered"
 msgstr "Eingerahmt"
 
 #. Default: "Browse the site"
-#: blocks/Teaser/ImageWidget
+#: messages
 msgid "Browse the site"
 msgstr "Durchsuchen Sie die Website"
 
 #. Default: "Browse the site, drop an image, or type an URL"
-#: blocks/Teaser/ImageWidget
+#: messages
 msgid "Browse the site, drop an image, or type an URL"
 msgstr "Durchsuchen Sie die Website, legen Sie ein Bild ab, oder geben Sie eine URL ein."
 
@@ -30,16 +30,6 @@ msgstr "Durchsuchen Sie die Website, legen Sie ein Bild ab, oder geben Sie eine 
 #: messages
 msgid "Card type"
 msgstr "Kartentyp"
-
-#. Default: "Carousel"
-#: messages
-msgid "Carousel"
-msgstr "Karussell"
-
-#. Default: "Gallery"
-#: messages
-msgid "Gallery"
-msgstr "Galerie"
 
 #. Default: "Inverted"
 #: messages
@@ -82,7 +72,7 @@ msgid "ObjectPositionHelp"
 msgstr "Css-Eigenschaft object-position angewendet auf Kartenbild"
 
 #. Default: "Please choose an existing content as source for this element"
-#: blocks/Teaser/Card
+#: messages
 msgid "Please choose an existing content as source for this element"
 msgstr "Bitte wählen Sie einen bestehenden Inhalt als Quelle für dieses Element"
 
@@ -172,7 +162,7 @@ msgid "cardStyling"
 msgstr "Gestaltung der Karte"
 
 #. Default: "Carousel"
-#: blocks/Listing/layout-templates/Carousel
+#: messages
 msgid "carouselTitle"
 msgstr "Karussell"
 
@@ -197,7 +187,6 @@ msgid "defaultLabel"
 msgstr "Standard"
 
 #. Default: "Description"
-#: blocks/Listing/layout-templates/NewsList
 #: messages
 msgid "description"
 msgstr "Beschreibung"
@@ -228,17 +217,17 @@ msgid "fill"
 msgstr "Füllen"
 
 #. Default: "Four"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "four"
 msgstr "Vier"
 
 #. Default: "Gallery"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "galleryTitle"
 msgstr "Galerie"
 
 #. Default: "Grid Size"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "gridSize"
 msgstr "Rastergröße"
 
@@ -328,12 +317,12 @@ msgid "middle"
 msgstr "Mitte"
 
 #. Default: "News item"
-#: blocks/Listing/layout-templates/NewsList
+#: messages
 msgid "newsItem"
 msgstr "Neuigkeiten Element"
 
 #. Default: "There are no items to show in this view."
-#: blocks/Listing/layout-templates/Listing
+#: messages
 msgid "noItemsToShow"
 msgstr "In dieser Ansicht sind keine Elemente zu sehen."
 
@@ -348,7 +337,6 @@ msgid "preview"
 msgstr "Vorschau"
 
 #. Default: "Publication date"
-#: blocks/Listing/layout-templates/NewsList
 #: messages
 msgid "publicationDate"
 msgstr "Datum der Veröffentlichung"
@@ -419,12 +407,12 @@ msgid "sizeTiny"
 msgstr "sehr klein"
 
 #. Default: "Slides to scroll"
-#: blocks/Listing/layout-templates/Carousel
+#: messages
 msgid "slidesToScroll"
 msgstr "Slides bis zum scrollen"
 
 #. Default: "Slides to show"
-#: blocks/Listing/layout-templates/Carousel
+#: messages
 msgid "slidesToShow"
 msgstr "Zu zeigende Slides"
 
@@ -434,7 +422,7 @@ msgid "textAlign"
 msgstr "Text ausrichten"
 
 #. Default: "Three"
-#: blocks/Listing/layout-templates/Gallery
+#: messages
 msgid "three"
 msgstr "Drei"
 
