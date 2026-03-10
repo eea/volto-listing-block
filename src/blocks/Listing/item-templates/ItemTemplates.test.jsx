@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { DefaultItemLayout } from './ItemTemplates';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 jest.mock('@plone/volto/components', () => ({
   ConditionalLink: () => <div>ConditionalLink</div>,
