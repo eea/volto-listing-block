@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-intl-redux';
 import { render, fireEvent } from '@testing-library/react';
 import configureStore from 'redux-mock-store';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 // Import the component after mocking dependencies
 import Edit, { createSlateParagraph } from './Edit';
