@@ -21,7 +21,9 @@ describe('ControlPanel: Dexterity Content-Types Layout', () => {
     // Wait a bit for draftjs to load, without this the title block
     // custom placeholder is missing and cypress gives a timeout error
     cy.wait(1000);
-    cy.get('input[id="field-placeholder"]:visible').first().type('Book title');
+    cy.get('.block.title').first().click();
+    cy.contains('.tabs-wrapper .menu .item, .sidebar-container a.item', 'Settings').click();
+    cy.get('input[id="field-placeholder"]').type('Book title');
     cy.get('label[for="field-required"]').click();
     cy.get('label[for="field-fixed"]').click();
 

@@ -4,6 +4,13 @@ describe('Blocks Tests', () => {
   beforeEach(slateBeforeEach);
   afterEach(slateAfterEach);
 
+  const selectCardType = (cardType) => {
+    cy.get(
+      'input[aria-labelledby="fieldset-default-field-label-@type-0-itemModel"]',
+    ).click({ force: true });
+    cy.contains('.react-select__option', cardType).click({ force: true });
+  };
+
   it('Add Block: Listing variation', () => {
     // Change page title
     cy.get('[contenteditable=true]').first().click();
@@ -28,8 +35,7 @@ describe('Blocks Tests', () => {
 
     cy.contains('Add criteria').click();
     cy.get('.react-select__menu').contains('Creator').click();
-    cy.contains('Card (default)').click({ force: true });
-    cy.contains('Image on left').click({ force: true });
+    selectCardType('Image on left');
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
     cy.get('.react-select__option').contains('Right').click();
@@ -101,8 +107,7 @@ describe('Blocks Tests', () => {
     cy.get('[contenteditable=true]').first().click();
 
     cy.contains('Test Headline').click();
-    cy.contains('Image on left').click();
-    cy.contains('Image on right').click();
+    selectCardType('Image on right');
     cy.get('.inline.field.field-wrapper-hasTags-9-itemModel input').click({
       force: true,
     });
@@ -142,8 +147,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.contains('Image on right').click({ force: true });
-    cy.contains('Image Card').click();
+    selectCardType('Image Card');
     cy.contains('Image Card');
     cy.get('#toolbar-save').click();
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
@@ -151,9 +155,11 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.contains('Image Card').click();
-    cy.contains('Listing Item').click();
+    selectCardType('Listing Item');
     cy.get('.inline.field.field-wrapper-hasDate-2-itemModel input').click({
+      force: true,
+    });
+    cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
     cy.get(
@@ -178,14 +184,12 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.contains('Listing Item').click();
-    cy.contains('Search Item').click({ force: true });
+    selectCardType('Search Item');
     cy.get('#toolbar-save').click();
 
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.contains('Search Item').click();
     cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
     });
@@ -197,8 +201,7 @@ describe('Blocks Tests', () => {
     cy.get('.edit').click();
     cy.get('[contenteditable=true]').first().click();
     cy.contains('Test Headline').click();
-    cy.contains('Search Item').click();
-    cy.contains('Simple Item').click();
+    selectCardType('Simple Item');
     cy.get('#toolbar-save').click();
   });
   it('Add Block: Carousel variation', () => {
@@ -224,8 +227,7 @@ describe('Blocks Tests', () => {
     cy.get('.react-select__option').contains('Carousel').click();
 
     cy.get('.title').contains('Carousel').click();
-    cy.contains('Card (default)').click();
-    cy.contains('Image Card').click();
+    selectCardType('Image Card');
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
     cy.get('.react-select__option').contains('Right').click();
@@ -388,8 +390,7 @@ describe('Blocks Tests', () => {
     cy.get('.react-select__option').contains('Gallery').click();
 
     cy.get('.title').contains('Gallery').click();
-    cy.contains('Card (default)').click();
-    cy.contains('Image Card').click();
+    selectCardType('Image Card');
     cy.get('.ui.attached.tabular.menu').contains('Styling').click();
     cy.get('#field-objectPosition-5-styles-0-itemModel').click();
     cy.get('.react-select__option').contains('Right').click();
@@ -593,9 +594,7 @@ describe('Blocks Tests', () => {
     cy.get('.blocks-chooser .button.teaser').click({
       force: true,
     });
-    cy.get('#toolbar-save').click();
-    cy.get('.toolbar-actions .edit').click();
-    cy.get('.block-editor-teaser').click();
+    cy.contains('label', 'Customize teaser content').click({ force: true });
     cy.get('#blockform-fieldset-default .field-wrapper-href input')
       .click()
       .type('https://github.com/eea/volto-listing-block');
