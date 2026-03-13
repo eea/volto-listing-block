@@ -13,11 +13,10 @@ describe('Blocks Tests', () => {
 
   it('Add Block: Listing variation', () => {
     // Change page title
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Listing Block Demo');
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -63,11 +62,10 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-1');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Page with Description');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Page with Description');
     cy.get('.documentFirstHeading').contains('Page with Description');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -104,7 +102,7 @@ describe('Blocks Tests', () => {
     cy.get('.header-link').contains('Cypress');
     cy.get('.header-link').contains('Page with Description');
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
 
     cy.contains('Test Headline').click();
     selectCardType('Image on right');
@@ -145,7 +143,7 @@ describe('Blocks Tests', () => {
     cy.get('.items.imageOnRight-items');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     selectCardType('Image Card');
     cy.contains('Image Card');
@@ -153,7 +151,7 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     selectCardType('Listing Item');
     cy.get('.inline.field.field-wrapper-hasDate-2-itemModel input').click({
@@ -174,7 +172,7 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
@@ -182,13 +180,13 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     selectCardType('Search Item');
     cy.get('#toolbar-save').click();
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     cy.get('.inline.field.field-wrapper-hasImage-6-itemModel input').click({
       force: true,
@@ -199,18 +197,17 @@ describe('Blocks Tests', () => {
     cy.get('#toolbar-save').click();
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     selectCardType('Simple Item');
     cy.get('#toolbar-save').click();
   });
   it('Add Block: Carousel variation', () => {
     // Change page title
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Listing Block Demo');
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -252,11 +249,10 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-1');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Page with Description');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Page with Description');
     cy.get('.documentFirstHeading').contains('Page with Description');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -297,11 +293,10 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-2');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Page with Description');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Page with Description');
     cy.get('.documentFirstHeading').contains('Page with Description');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -358,7 +353,7 @@ describe('Blocks Tests', () => {
     cy.get('button[aria-label="Next slide"]').click({ force: true });
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     cy.get('#field-slidesToShow').type('{downArrow}{downArrow}{downArrow}');
     cy.get('#field-slidesToScroll').type('{upArrow}');
@@ -369,11 +364,10 @@ describe('Blocks Tests', () => {
   });
   it('Add Block: Gallery variation', () => {
     // Change page title
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Listing Block Demo');
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -415,11 +409,10 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-1');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Page with Description');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Page with Description');
     cy.get('.documentFirstHeading').contains('Page with Description');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -460,11 +453,10 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page/page-2');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Page with Description');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Page with Description');
     cy.get('.documentFirstHeading').contains('Page with Description');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add description block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -518,7 +510,7 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().click();
+    cy.getSlateTitle().click();
     cy.contains('Test Headline').click();
     cy.get('#blockform-fieldset-cardsGallery .react-select__control').click();
     cy.get('.react-select__menu-list').contains('Four').click({ force: true });
@@ -529,11 +521,10 @@ describe('Blocks Tests', () => {
   });
   it('Add Block: Item', () => {
     // Change page title
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Listing Block Demo');
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
@@ -558,7 +549,7 @@ describe('Blocks Tests', () => {
     cy.url().should('eq', Cypress.config().baseUrl + '/cypress/my-page');
 
     cy.get('.edit').click();
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlateTitle().type('{enter}');
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
     cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
       'item',
@@ -580,11 +571,10 @@ describe('Blocks Tests', () => {
 
   it('Add Block: teaserGrid', () => {
     // Change page title
-    cy.get('[contenteditable=true]').first().click();
-    cy.get('[contenteditable=true]').first().clear();
-    cy.get('[contenteditable=true]').first().type('Listing Block Demo');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Listing Block Demo');
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
-    cy.get('[contenteditable=true]').first().type('{enter}');
+    cy.getSlate().click();
 
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
