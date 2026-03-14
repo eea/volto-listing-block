@@ -5,15 +5,13 @@ describe('Blocks Tests', () => {
   afterEach(slateAfterEach);
 
   it('Add Block: Listing', () => {
-    const titleSelector = '.block.inner.title [contenteditable="true"]';
-
     // Change page title
-    cy.get(titleSelector).clear();
-    cy.get(titleSelector).type('Listing Block Demo');
+    cy.clearSlateTitle();
+    cy.getSlateTitle().type('Listing Block Demo');
 
     cy.get('.documentFirstHeading').contains('Listing Block Demo');
 
-    cy.get(titleSelector).type('{enter}');
+    cy.getSlate().click();
 
     // Add listing block
     cy.get('.ui.basic.icon.button.block-add-button').first().click();
