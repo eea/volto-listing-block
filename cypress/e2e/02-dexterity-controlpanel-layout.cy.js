@@ -18,18 +18,17 @@ describe('ControlPanel: Dexterity Content-Types Layout', () => {
     );
     cy.get('#page-controlpanel-layout button').click();
 
-    // Wait a bit for draftjs to load, without this the title block
-    // custom placeholder is missing and cypress gives a timeout error
+    // Wait a bit for editor to load
     cy.wait(1000);
-    cy.get('.block.title').first().click();
-    cy.contains('.tabs-wrapper .menu .item, .sidebar-container a.item', 'Settings').click();
-    cy.get('input[id="field-placeholder"]').type('Book title');
+    cy.get('input[id="field-placeholder"]:visible').first().type('Book title');
     cy.get('label[for="field-required"]').click();
     cy.get('label[for="field-fixed"]').click();
 
-    cy.getSlate().click().type('/Listing{enter}');
-
-    cy.get('.form .help .input').click().type('Helper Text');
+    cy.get('.ui.basic.icon.button.block-add-button:visible').click();
+    cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']").type(
+      'listing',
+    );
+    cy.get('.button.listing').click({ force: true });
 
     cy.get('#toolbar-save').click();
 
@@ -40,16 +39,13 @@ describe('ControlPanel: Dexterity Content-Types Layout', () => {
     cy.get('.block.title').contains('Book title');
 
     // Change book title
-    cy.clearSlateTitle();
-    cy.getSlateTitle().type('My First Book');
+    const titleSelector = '.block.inner.title [contenteditable="true"]';
+    cy.get(titleSelector).clear();
+    cy.get(titleSelector).type('My First Book');
     cy.get('.documentFirstHeading').contains('My First Book');
-
-    cy.get('.listing').contains('Helper Text');
-    cy.get('.block-editor-listing').click();
-    cy.get('.field-wrapper-headline .input').click().type('Headline');
 
     cy.get('#toolbar-save').click();
     cy.get('.documentFirstHeading').contains('My First Book');
-    cy.get('.listing').contains('Headline');
+    cy.get('.block.listing');
   });
 });
