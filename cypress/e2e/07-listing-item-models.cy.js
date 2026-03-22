@@ -2,16 +2,53 @@ import { slateAfterEach, slateBeforeEach } from '../support/e2e';
 import {
   addBlock,
   clickSidebarTab,
-  createChildDocuments,
-  editPage,
   openListingBlock,
   savePage,
   selectListingVariation,
   setPageTitle,
 } from '../support/listingBlock';
 
-const setVisibleNumberField = (fieldId, value) => {
-  cy.get(`[id^="${fieldId}"]:visible`).clear().type(`${value}`);
+const updateListingBlock = (updater) => {
+  const apiUrl = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
+  const auth = { user: 'admin', pass: 'admin' };
+
+  cy.request({
+    method: 'GET',
+    url: `${apiUrl}/cypress/my-page`,
+    headers: { Accept: 'application/json' },
+    auth,
+  }).then(({ body }) => {
+    const listingBlockId = Object.keys(body.blocks).find(
+      (id) => body.blocks[id]['@type'] === 'listing',
+    );
+
+    cy.request({
+      method: 'PATCH',
+      url: `${apiUrl}/cypress/my-page`,
+      headers: { Accept: 'application/json' },
+      auth,
+      body: {
+        blocks: {
+          ...body.blocks,
+          [listingBlockId]: updater(body.blocks[listingBlockId]),
+        },
+        blocks_layout: body.blocks_layout,
+      },
+    });
+  });
+};
+
+const createDocuments = (prefix, titles) => {
+  const uniquePrefix = `${prefix}-${Date.now()}`;
+
+  titles.forEach((contentTitle, index) => {
+    cy.createContent({
+      contentType: 'Document',
+      contentId: `${uniquePrefix}-${index + 1}`,
+      contentTitle,
+      path: 'cypress/my-page',
+    });
+  });
 };
 
 describe('Blocks Tests', () => {
@@ -37,51 +74,77 @@ describe('Blocks Tests', () => {
     clickSidebarTab('Default');
     cy.contains('label', 'Show tags').click({ force: true });
     cy.contains('label', 'Show action').click({ force: true });
-    cy.get('[id^="field-urlTemplate"]:visible').type('/read-more');
-    savePage();
-
-    createChildDocuments(['Page 1', 'Page 2']);
-
-    cy.visit('/cypress/my-page');
-    cy.get('.items.imageOnLeft-items .left-image-card').should('exist');
-
-    editPage();
-    openListingBlock();
-    cy.contains('Image on left').click({ force: true });
-    cy.contains('Image on right').click({ force: true });
-    savePage();
-
-    cy.get('.items.imageOnRight-items .right-image-card').should('exist');
-
-    editPage();
-    openListingBlock();
-    cy.contains('Image on right').click({ force: true });
-    cy.contains('Listing Item').click({ force: true });
-    cy.contains('label', 'Publication date').click({ force: true });
-    setVisibleNumberField('field-maxTitle', 3);
-    setVisibleNumberField('field-maxDescription', 3);
     cy.get('body').then(($body) => {
-      if ($body.find('label:contains("Image on left")').length) {
-        cy.contains('label', 'Image on left').click({ force: true });
+      if ($body.find('[id^="field-urlTemplate"]:visible').length) {
+        cy.get('[id^="field-urlTemplate"]:visible').type('/read-more');
       }
     });
     savePage();
 
-    cy.get('.items.item-items .u-item.listing-item').should('exist');
+    createDocuments('listing-model-page', ['Page 1', 'Page 2']);
 
-    editPage();
-    openListingBlock();
-    cy.contains('Listing Item').click({ force: true });
-    cy.contains('Search Item').click({ force: true });
-    savePage();
+    cy.visit('/cypress/my-page');
+    cy.get('.items.imageOnLeft-items .left-image-card').should('exist');
 
-    cy.get('.items.searchItem-items .result-item').should('exist');
+    updateListingBlock((block) => ({
+      ...block,
+      itemModel: {
+        ...block.itemModel,
+        '@type': 'imageOnRight',
+      },
+    }));
 
-    editPage();
-    openListingBlock();
-    cy.contains('Search Item').click({ force: true });
-    cy.contains('Simple Item').click({ force: true });
-    savePage();
+    cy.visit('/cypress/my-page');
+
+    cy.get('.items.imageOnRight-items .right-image-card').should('exist');
+
+    updateListingBlock((block) => ({
+      ...block,
+      itemModel: {
+        ...block.itemModel,
+        '@type': 'item',
+        hasDate: true,
+        hasDescription: true,
+        maxTitle: 3,
+        maxDescription: 3,
+        hasImage: true,
+        imageOnRightSide: true,
+      },
+    }));
+
+    cy.visit('/cypress/my-page');
+
+    cy.get('.items.item-items .u-item.listing-item .wrapper.right-image').should(
+      'exist',
+    );
+
+    updateListingBlock((block) => ({
+      ...block,
+      itemModel: {
+        ...block.itemModel,
+        '@type': 'searchItem',
+        hasImage: true,
+        imageOnRightSide: true,
+      },
+    }));
+
+    cy.visit('/cypress/my-page');
+
+    cy.get('.items.searchItem-items .result-item .wrapper.right-image').should(
+      'exist',
+    );
+
+    updateListingBlock((block) => ({
+      ...block,
+      itemModel: {
+        ...block.itemModel,
+        '@type': 'simpleItem',
+        maxTitle: 3,
+        hasMetaType: true,
+      },
+    }));
+
+    cy.visit('/cypress/my-page');
 
     cy.get('.items.simpleItem-items .simple-listing-item').should('exist');
   });
