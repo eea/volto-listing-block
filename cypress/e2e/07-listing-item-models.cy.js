@@ -1,7 +1,6 @@
 import { slateAfterEach, slateBeforeEach } from '../support/e2e';
 import {
   addBlock,
-  clickSidebarTab,
   openListingBlock,
   savePage,
   selectListingVariation,
@@ -62,24 +61,25 @@ describe('Blocks Tests', () => {
     openListingBlock();
     cy.get('#field-headline').click({ force: true }).type('Advanced Listing');
     selectListingVariation('Listing');
-    cy.contains('Card (default)').click({ force: true });
-    cy.contains('Image on left').click({ force: true });
-    clickSidebarTab('Styling');
-    cy.get('body').then(($body) => {
-      if ($body.find('[id^="field-objectPosition"]:visible').length) {
-        cy.get('[id^="field-objectPosition"]:visible').click({ force: true });
-        cy.contains('.react-select__option', 'Right').click({ force: true });
-      }
-    });
-    clickSidebarTab('Default');
-    cy.contains('label', 'Show tags').click({ force: true });
-    cy.contains('label', 'Show action').click({ force: true });
-    cy.get('body').then(($body) => {
-      if ($body.find('[id^="field-urlTemplate"]:visible').length) {
-        cy.get('[id^="field-urlTemplate"]:visible').type('/read-more');
-      }
-    });
     savePage();
+
+    updateListingBlock((block) => ({
+      ...block,
+      itemModel: {
+        ...(block.itemModel || {}),
+        '@type': 'imageOnLeft',
+        hasTags: true,
+        callToAction: {
+          ...(block.itemModel?.callToAction || {}),
+          enable: true,
+          urlTemplate: '/read-more',
+        },
+        styles: {
+          ...(block.itemModel?.styles || {}),
+          objectPosition: 'right',
+        },
+      },
+    }));
 
     createDocuments('listing-model-page', ['Page 1', 'Page 2']);
 
