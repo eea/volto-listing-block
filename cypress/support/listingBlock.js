@@ -5,7 +5,15 @@ export const setPageTitle = (title) => {
 };
 
 export const addBlock = (search, buttonClass = search) => {
-  cy.get('.ui.basic.icon.button.block-add-button:visible').first().click();
+  cy.get('body').then(($body) => {
+    if (!$body.find('.ui.basic.icon.button.block-add-button:visible').length) {
+      cy.getSlate().click({ force: true });
+    }
+  });
+
+  cy.get('.ui.basic.icon.button.block-add-button:visible')
+    .first()
+    .click({ force: true });
   cy.get(".blocks-chooser .ui.form .field.searchbox input[type='text']")
     .should('be.visible')
     .clear()

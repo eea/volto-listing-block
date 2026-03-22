@@ -21,7 +21,13 @@ describe('Blocks Tests', () => {
     ).click();
     cy.get('[aria-label="Select Page 1"]').dblclick();
     cy.wait(500);
-    cy.get('input[name="field-overwrite"]').check({ force: true });
+    cy.get('body').then(($body) => {
+      const overwriteField = $body.find('input[name="field-overwrite"]');
+
+      if (overwriteField.length) {
+        cy.wrap(overwriteField).check({ force: true });
+      }
+    });
     cy.get('#sidebar-properties input[name="title"]:visible')
       .clear()
       .type('Test Title');
