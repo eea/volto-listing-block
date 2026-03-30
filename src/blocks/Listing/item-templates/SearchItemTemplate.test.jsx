@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { SearchItemLayout } from './SearchItemTemplate';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 
 describe('SearchItemTemplates', () => {
   it('renders correctly', () => {
