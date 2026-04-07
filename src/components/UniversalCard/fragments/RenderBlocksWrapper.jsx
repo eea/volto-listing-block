@@ -1,10 +1,10 @@
-import { RenderBlocks } from '@plone/volto/components';
+import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { getContent } from '@plone/volto/actions';
+import { getContent } from '@plone/volto/actions/content/content';
 import { useSelector } from 'react-redux';
 
-import { flattenToAppURL } from '@plone/volto/helpers';
+import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 
 import config from '@plone/volto/registry';
 

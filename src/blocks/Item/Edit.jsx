@@ -1,8 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isArray } from 'lodash';
+import isArray from 'lodash/isArray';
 import config from '@plone/volto/registry';
-import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
+import SidebarPortal from '@plone/volto/components/manage/Sidebar/SidebarPortal';
+import { BlockDataForm } from '@plone/volto/components/manage/Form';
 import SlateEditor from '@plone/volto-slate/editor/SlateEditor';
 import { handleKey } from '@plone/volto-slate/blocks/Text/keyboard';
 import {

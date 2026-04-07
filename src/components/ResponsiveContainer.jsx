@@ -7,7 +7,8 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import ReactResizeDetector from 'react-resize-detector';
-import { isString, debounce } from 'lodash';
+import isString from 'lodash/isString';
+import debounce from 'lodash/debounce';
 
 const isPercent = (value) =>
   isString(value) && value.indexOf('%') === value.length - 1;

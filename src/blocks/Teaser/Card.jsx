@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { useIntl } from 'react-intl';
 import messages from '@eeacms/volto-listing-block/messages';
