@@ -21,8 +21,9 @@ jest.mock('@plone/volto/registry', () => ({
   },
 }));
 
-jest.mock('@plone/volto/components/manage/Form', () => ({
-  BlockDataForm: jest.fn(({ children, onChangeField, schema, formData }) => (
+jest.mock('@plone/volto/components/manage/Form/BlockDataForm', () => ({
+  __esModule: true,
+  default: jest.fn(({ children, onChangeField, schema, formData }) => (
     <div data-testid="block-data-form">
       <button
         data-testid="change-field-button"
