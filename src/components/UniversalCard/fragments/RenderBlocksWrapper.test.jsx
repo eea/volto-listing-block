@@ -3,30 +3,37 @@ import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import RenderBlocksWrapper from './RenderBlocksWrapper';
+import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
+import { getContent } from '@plone/volto/actions/content/content';
+import config from '@plone/volto/registry';
 import '@testing-library/jest-dom';
 
 const mockStore = configureStore([]);
 
-jest.mock('@plone/volto/components', () => ({
-  RenderBlocks: jest.fn(() => <div data-testid="render-blocks" />),
-}));
+jest.mock('@plone/volto/components/theme/View/RenderBlocks', () =>
+  jest.fn(() => <div data-testid="render-blocks" />),
+);
 
-jest.mock('@plone/volto/actions', () => ({
+jest.mock('@plone/volto/actions/content/content', () => ({
   getContent: jest.fn(() => ({
     type: 'GET_CONTENT',
-    finally: jest.fn((cb) => cb()),
   })),
 }));
 
-jest.mock('@plone/volto/helpers', () => ({
+jest.mock('@plone/volto/helpers/Url/Url', () => ({
   flattenToAppURL: jest.fn((url) => url),
 }));
 
-jest.mock('@plone/volto/registry', () => ({
-  settings: {
+jest.mock('@plone/volto/registry', () => {
+  const settings = {
     apiExpanders: [],
-  },
-}));
+  };
+  return {
+    __esModule: true,
+    default: { settings },
+    settings,
+  };
+});
 
 describe('RenderBlocksWrapper', () => {
   let store;
@@ -37,9 +44,8 @@ describe('RenderBlocksWrapper', () => {
 
   it('should dispatch getContent and show loading when content is not in store and not loading (apiExpanders undefined)', () => {
     // Temporarily set apiExpanders to undefined for this test case
-    const originalApiExpandersConfig = require('@plone/volto/registry').settings
-      .apiExpanders;
-    require('@plone/volto/registry').settings.apiExpanders = undefined;
+    const originalApiExpandersConfig = config.settings.apiExpanders;
+    config.settings.apiExpanders = undefined;
 
     store = mockStore({
       content: {
@@ -54,15 +60,10 @@ describe('RenderBlocksWrapper', () => {
     );
 
     expect(getByText('Loading...')).toBeInTheDocument();
-    expect(require('@plone/volto/actions').getContent).toHaveBeenCalledWith(
-      '/test-path',
-      null,
-      '/test-path',
-    );
+    expect(getContent).toHaveBeenCalledWith('/test-path', null, '/test-path');
 
     // Restore the original mock for apiExpanders to avoid affecting other tests
-    require('@plone/volto/registry').settings.apiExpanders =
-      originalApiExpandersConfig;
+    config.settings.apiExpanders = originalApiExpandersConfig;
   });
 
   it('should show loading when content is loading', () => {
@@ -109,9 +110,7 @@ describe('RenderBlocksWrapper', () => {
 
     expect(getByText('Test Title')).toBeInTheDocument();
     expect(getByTestId('render-blocks')).toBeInTheDocument();
-    expect(
-      require('@plone/volto/components').RenderBlocks,
-    ).toHaveBeenCalledWith(
+    expect(RenderBlocks).toHaveBeenCalledWith(
       {
         content: mockContent,
         location: { pathname: '/test-path' },
@@ -122,15 +121,12 @@ describe('RenderBlocksWrapper', () => {
 
   it('should restore apiExpanders after getContent is dispatched', async () => {
     const originalApiExpanders = [{ an: 'expander' }];
-    require('@plone/volto/registry').settings.apiExpanders = [
-      ...originalApiExpanders,
-    ];
+    config.settings.apiExpanders = [...originalApiExpanders];
 
     const getContentMock = jest.fn(() => ({
       type: 'GET_CONTENT_SUCCESS',
-      finally: jest.fn((cb) => cb()),
     }));
-    require('@plone/volto/actions').getContent = getContentMock;
+    getContent.mockImplementation(getContentMock);
 
     store = mockStore({
       content: {
@@ -147,14 +143,10 @@ describe('RenderBlocksWrapper', () => {
     await Promise.resolve();
 
     expect(getContentMock).toHaveBeenCalledTimes(1);
-    expect(require('@plone/volto/registry').settings.apiExpanders).toEqual(
-      originalApiExpanders,
-    );
+    expect(config.settings.apiExpanders).toEqual(originalApiExpanders);
 
     // Clean up mock for other tests
-    require('@plone/volto/actions').getContent = jest.fn(() => ({
-      type: 'GET_CONTENT',
-    }));
-    require('@plone/volto/registry').settings.apiExpanders = [];
+    getContent.mockImplementation(() => ({ type: 'GET_CONTENT' }));
+    config.settings.apiExpanders = [];
   });
 });

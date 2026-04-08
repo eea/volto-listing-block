@@ -1,10 +1,10 @@
-import { RenderBlocks } from '@plone/volto/components';
+import RenderBlocks from '@plone/volto/components/theme/View/RenderBlocks';
 import { useDispatch } from 'react-redux';
 import React from 'react';
-import { getContent } from '@plone/volto/actions';
+import { getContent } from '@plone/volto/actions/content/content';
 import { useSelector } from 'react-redux';
 
-import { flattenToAppURL } from '@plone/volto/helpers';
+import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 
 import config from '@plone/volto/registry';
 
@@ -25,9 +25,11 @@ const RenderBlocksWrapper = (props) => {
 
       // Clear the apiExpanders configuration
       config.settings.apiExpanders = [];
-      dispatch(
+      const request = dispatch(
         getContent(props.location.pathname, null, props.location.pathname),
-      ).finally(() => {
+      );
+
+      Promise.resolve(request).finally(() => {
         // Restore the original apiExpanders configuration
         config.settings.apiExpanders = originalApiExpanders;
       });

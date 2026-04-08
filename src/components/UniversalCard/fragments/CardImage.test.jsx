@@ -4,13 +4,17 @@ import '@testing-library/jest-dom';
 import CardImage from './CardImage';
 
 // Mock the dependencies
-jest.mock('@plone/volto/components', () => ({
-  ConditionalLink: ({ children, condition }) => (
-    <div data-testid="conditional-link" data-condition={condition}>
-      {children}
-    </div>
-  ),
-}));
+jest.mock(
+  '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
+  () => ({
+    __esModule: true,
+    default: ({ children, condition }) => (
+      <div data-testid="conditional-link" data-condition={condition}>
+        {children}
+      </div>
+    ),
+  }),
+);
 
 jest.mock('@eeacms/volto-listing-block/PreviewImage', () => {
   return jest.fn(({ item, preview_image, preview_image_url, alt, label }) => (

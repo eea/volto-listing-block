@@ -3,14 +3,18 @@ import { render } from '@testing-library/react';
 import { SimpleItemLayout } from './SimpleItemTemplates';
 import '@testing-library/jest-dom';
 
-jest.mock('@plone/volto/components', () => ({
-  ConditionalLink: ({ children }) => (
-    <>
-      <div>ConditionalLink</div>
-      {children}
-    </>
-  ),
-}));
+jest.mock(
+  '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
+  () => ({
+    __esModule: true,
+    default: ({ children }) => (
+      <>
+        <div>ConditionalLink</div>
+        {children}
+      </>
+    ),
+  }),
+);
 
 describe('SimpleItemLayout', () => {
   const props = {

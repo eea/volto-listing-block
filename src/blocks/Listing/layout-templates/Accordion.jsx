@@ -5,7 +5,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { Accordion } from 'semantic-ui-react';
 
 import AnimateHeight from 'react-animate-height';
-import { Icon } from '@plone/volto/components';
+import Icon from '@plone/volto/components/theme/Icon/Icon';
 
 import upSVG from '@plone/volto/icons/up-key.svg';
 import downSVG from '@plone/volto/icons/down-key.svg';

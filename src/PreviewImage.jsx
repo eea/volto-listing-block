@@ -42,8 +42,8 @@ function PreviewImage(props) {
     (preview_image?.[0]
       ? getImageScaleParams(preview_image, size).download
       : item.image_field
-      ? getImageScaleParams(item, size).download
-      : DefaultImageSVG);
+        ? getImageScaleParams(item, size).download
+        : DefaultImageSVG);
 
   return (
     <>
