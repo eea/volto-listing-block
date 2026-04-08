@@ -25,9 +25,11 @@ const RenderBlocksWrapper = (props) => {
 
       // Clear the apiExpanders configuration
       config.settings.apiExpanders = [];
-      dispatch(
+      const request = dispatch(
         getContent(props.location.pathname, null, props.location.pathname),
-      ).finally(() => {
+      );
+
+      Promise.resolve(request).finally(() => {
         // Restore the original apiExpanders configuration
         config.settings.apiExpanders = originalApiExpanders;
       });
