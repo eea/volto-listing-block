@@ -6,25 +6,14 @@ import '@testing-library/jest-dom';
 import VisualizationCards from './VisualizationCards';
 
 // Mock the dependencies
-// First mock the default export
 jest.mock('@plone/volto/registry', () => ({
+  __esModule: true,
   default: {
     settings: {
       dateLocale: 'en',
     },
   },
 }));
-
-// Then mock the direct import of config
-jest.mock(
-  '@plone/volto/registry',
-  () => ({
-    settings: {
-      dateLocale: 'en',
-    },
-  }),
-  { virtual: true },
-);
 
 jest.mock(
   '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard',
@@ -50,7 +39,7 @@ jest.mock('moment', () => {
 
 // Mock the getVocabulary action
 const mockGetVocabulary = jest.fn();
-jest.mock('@plone/volto/actions', () => ({
+jest.mock('@plone/volto/actions/vocabularies/vocabularies', () => ({
   getVocabulary: (...args) => {
     mockGetVocabulary(...args);
     return { type: 'GET_VOCABULARY' };

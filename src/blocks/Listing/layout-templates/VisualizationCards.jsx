@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import config from '@plone/volto/registry';
 import '@eeacms/volto-listing-block/less/visualization-cards.less';
-import { getVocabulary } from '@plone/volto/actions';
+import { getVocabulary } from '@plone/volto/actions/vocabularies/vocabularies';
 import { useDispatch } from 'react-redux';
 
 const VisualizationCards = ({

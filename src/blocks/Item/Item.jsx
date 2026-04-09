@@ -2,6 +2,7 @@ import cx from 'classnames';
 import { Item as UiItem, Icon } from 'semantic-ui-react';
 import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
 import config from '@plone/volto/registry';
+import Image from '@plone/volto/components/theme/Image/Image';
 
 const ItemImage = ({ image, imageSize, verticalAlign }) => {
   if (!image) return null;
@@ -10,7 +11,7 @@ const ItemImage = ({ image, imageSize, verticalAlign }) => {
   const size = imageSizes[imageSize] ?? { width: undefined, height: undefined };
 
   return (
-    <img
+    <Image
       src={scaledImage?.download}
       className={cx('ui image', imageSize, verticalAlign, 'aligned')}
       alt=""

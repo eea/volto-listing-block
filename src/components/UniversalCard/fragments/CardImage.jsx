@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConditionalLink } from '@plone/volto/components';
+import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
 import { Card } from 'semantic-ui-react';
 
 import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';

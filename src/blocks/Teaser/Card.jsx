@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { omit } from 'lodash';
+import omit from 'lodash/omit';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { useIntl } from 'react-intl';
 import messages from '@eeacms/volto-listing-block/messages';
 import { Message } from 'semantic-ui-react';
 import imageBlockSVG from '@plone/volto/components/manage/Blocks/Image/block-image.svg';
+import Image from '@plone/volto/components/theme/Image/Image';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
 const TeaserCardTemplate = (props) => {
@@ -31,7 +32,7 @@ const TeaserCardTemplate = (props) => {
   ) : isEditMode ? (
     <Message>
       <div className="teaser-item placeholder">
-        <img src={imageBlockSVG} alt="" />
+        <Image src={imageBlockSVG} alt="" />
         <p>{intl.formatMessage(messages.PleaseChooseContent)}</p>
       </div>
     </Message>

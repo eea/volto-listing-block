@@ -1,6 +1,6 @@
 import { Button, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
-import { flattenToAppURL } from '@plone/volto/helpers';
+import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import RenderBlocksWrapper from './RenderBlocksWrapper';
 import { Modal } from 'semantic-ui-react';

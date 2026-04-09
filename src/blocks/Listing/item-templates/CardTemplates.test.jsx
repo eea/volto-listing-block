@@ -8,10 +8,18 @@ import {
 } from './CardTemplates';
 import '@testing-library/jest-dom';
 
-jest.mock('@plone/volto/components', () => ({
-  ConditionalLink: () => <div>ConditionalLink</div>,
-  UniversalLink: () => <div>UniversalLink:</div>,
-}));
+jest.mock(
+  '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
+  () => ({
+    __esModule: true,
+    default: ({ children }) => (
+      <>
+        <div>ConditionalLink</div>
+        {children}
+      </>
+    ),
+  }),
+);
 
 describe('DefaultCardLayout', () => {
   it('renders correctly', () => {

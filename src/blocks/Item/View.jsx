@@ -1,7 +1,7 @@
 import React from 'react';
 import Item from './Item';
 
-import { isArray } from 'lodash';
+import isArray from 'lodash/isArray';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 export const serializeText = (text) => {

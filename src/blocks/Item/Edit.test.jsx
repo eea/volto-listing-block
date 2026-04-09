@@ -21,8 +21,9 @@ jest.mock('@plone/volto/registry', () => ({
   },
 }));
 
-jest.mock('@plone/volto/components', () => ({
-  BlockDataForm: jest.fn(({ children, onChangeField, schema, formData }) => (
+jest.mock('@plone/volto/components/manage/Form/BlockDataForm', () => ({
+  __esModule: true,
+  default: jest.fn(({ children, onChangeField, schema, formData }) => (
     <div data-testid="block-data-form">
       <button
         data-testid="change-field-button"
@@ -32,7 +33,11 @@ jest.mock('@plone/volto/components', () => ({
       </button>
     </div>
   )),
-  SidebarPortal: jest.fn(({ selected, children }) => (
+}));
+
+jest.mock('@plone/volto/components/manage/Sidebar/SidebarPortal', () => ({
+  __esModule: true,
+  default: jest.fn(({ selected, children }) => (
     <div data-testid="sidebar-portal">{selected ? children : null}</div>
   )),
 }));
