@@ -26,17 +26,84 @@ export const getIndicatorPreviewSubrequestId = (block, indicatorPaths) =>
     indicatorPaths,
   ).toString(36)}`;
 
-export const getIndicatorPreviewUrl = (indicator, visualizations = []) => {
-  const indicatorPath = flattenToAppURL(indicator?.['@id'] || '').replace(
-    /\/$/,
-    '',
-  );
+export const getIndicatorContentSubrequestId = (block, indicatorPaths) =>
+  `visualization-card-indicator-content-${block || 'listing'}-${hashPaths(
+    indicatorPaths,
+  ).toString(36)}`;
+
+const getIndicatorPath = (item) =>
+  flattenToAppURL(item?.['@id'] || '').replace(/\/$/, '');
+
+export const getDataFigurePreviewUrl = (value, visited = new Set()) => {
+  if (!value || typeof value !== 'object' || visited.has(value)) return;
+  visited.add(value);
+
+  if (value['@type'] === 'dataFigure') {
+    const previewUrl = value.url || value.svgs?.find((item) => item?.url)?.url;
+    if (previewUrl) return flattenToAppURL(previewUrl);
+  }
+
+  const orderedBlocks = value.blocks
+    ? [
+        ...(value.blocks_layout?.items || [])
+          .map((id) => value.blocks[id])
+          .filter(Boolean),
+        ...Object.entries(value.blocks)
+          .filter(([id]) => !(value.blocks_layout?.items || []).includes(id))
+          .map(([, block]) => block),
+      ]
+    : [];
+
+  for (const block of orderedBlocks) {
+    const previewUrl = getDataFigurePreviewUrl(block, visited);
+    if (previewUrl) return previewUrl;
+  }
+
+  for (const [key, child] of Object.entries(value)) {
+    if (key === 'blocks' || key === 'blocks_layout') continue;
+    const previewUrl = getDataFigurePreviewUrl(child, visited);
+    if (previewUrl) return previewUrl;
+  }
+};
+
+const getLeadImagePreviewUrl = (indicator) => {
+  if (!indicator?.image && !indicator?.image_field) return;
+  return getImageScaleParams(indicator, 'preview')?.download;
+};
+
+const getVisualizationPreviewUrl = (visualization) => {
+  if (!visualization?.image_field || !visualization?.image_scales) return;
+  return getImageScaleParams(visualization, 'preview')?.download;
+};
+
+export const getIndicatorPreviewUrl = (
+  indicator,
+  visualizations = [],
+  indicatorContents = [],
+) => {
+  const indicatorPath = getIndicatorPath(indicator);
+  const indicatorContent =
+    indicatorContents.find(
+      (item) => getIndicatorPath(item) === indicatorPath,
+    ) || indicator;
+
+  const leadImagePreviewUrl =
+    getLeadImagePreviewUrl(indicatorContent) ||
+    getLeadImagePreviewUrl(indicator);
+  if (leadImagePreviewUrl) return leadImagePreviewUrl;
+
+  const dataFigurePreviewUrl = getDataFigurePreviewUrl(indicatorContent);
+  if (dataFigurePreviewUrl) return dataFigurePreviewUrl;
+
   const visualization = visualizations.find((item) => {
     const visualizationPath = flattenToAppURL(item?.['@id'] || '');
-    return visualizationPath.startsWith(`${indicatorPath}/`);
+    return (
+      visualizationPath.startsWith(`${indicatorPath}/`) &&
+      getVisualizationPreviewUrl(item)
+    );
   });
 
-  return getImageScaleParams(visualization, 'preview')?.download;
+  return getVisualizationPreviewUrl(visualization);
 };
 
 const VisualizationCards = ({
@@ -62,8 +129,15 @@ const VisualizationCards = ({
     () => getIndicatorPreviewSubrequestId(block, indicatorPaths),
     [block, indicatorPaths],
   );
+  const indicatorContentSubrequestId = useMemo(
+    () => getIndicatorContentSubrequestId(block, indicatorPaths),
+    [block, indicatorPaths],
+  );
   const indicatorPreviewRequest = useSelector(
     (state) => state.search?.subrequests?.[indicatorPreviewSubrequestId],
+  );
+  const indicatorContentRequest = useSelector(
+    (state) => state.search?.subrequests?.[indicatorContentSubrequestId],
   );
 
   useEffect(() => {
@@ -103,7 +177,38 @@ const VisualizationCards = ({
     indicatorPreviewSubrequestId,
   ]);
 
+  useEffect(() => {
+    if (
+      indicatorPaths.length > 0 &&
+      !indicatorContentRequest?.loading &&
+      !indicatorContentRequest?.loaded &&
+      !indicatorContentRequest?.error
+    ) {
+      dispatch(
+        searchContent(
+          '',
+          {
+            portal_type: INDICATOR_TYPE,
+            path: indicatorPaths,
+            'path.depth': 0,
+            b_size: Math.min(Math.max(indicatorPaths.length, 25), 1000),
+            fullobjects: 1,
+          },
+          indicatorContentSubrequestId,
+        ),
+      );
+    }
+  }, [
+    dispatch,
+    indicatorContentRequest?.error,
+    indicatorContentRequest?.loaded,
+    indicatorContentRequest?.loading,
+    indicatorContentSubrequestId,
+    indicatorPaths,
+  ]);
+
   const indicatorVisualizations = indicatorPreviewRequest?.items || [];
+  const indicatorContents = indicatorContentRequest?.items || [];
 
   return (
     <>
@@ -117,7 +222,11 @@ const VisualizationCards = ({
               item={item}
               preview_image_url={
                 item?.['@type'] === INDICATOR_TYPE
-                  ? getIndicatorPreviewUrl(item, indicatorVisualizations)
+                  ? getIndicatorPreviewUrl(
+                      item,
+                      indicatorVisualizations,
+                      indicatorContents,
+                    )
                   : undefined
               }
             />
