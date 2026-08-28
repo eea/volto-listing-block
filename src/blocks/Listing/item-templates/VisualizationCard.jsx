@@ -52,7 +52,10 @@ const VisualizationCard = (props) => {
   const { className, item, benchmark_level_items } = props;
   const imagePosition = props.imagePosition;
   const preview_image_url =
-    item['@id'] + '/@@plotly_preview.svg/soer_miniature';
+    props.preview_image_url ??
+    (item['@type'] === 'ims_indicator'
+      ? undefined
+      : item['@id'] + '/@@plotly_preview.svg/soer_miniature');
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
       <UiCard.Content>
@@ -85,6 +88,7 @@ VisualizationCard.propTypes = {
   }).isRequired,
   className: PropTypes.string,
   imagePosition: PropTypes.string,
+  preview_image_url: PropTypes.string,
   benchmark_level_items: PropTypes.arrayOf(PropTypes.object),
 };
 

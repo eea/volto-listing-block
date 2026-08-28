@@ -3,7 +3,11 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
-import VisualizationCards from './VisualizationCards';
+import VisualizationCards, {
+  getIndicatorPreviewSubrequestId,
+} from './VisualizationCards';
+
+const mockSearchContent = jest.fn();
 
 // Mock the dependencies
 jest.mock('@plone/volto/registry', () => ({
@@ -12,6 +16,13 @@ jest.mock('@plone/volto/registry', () => ({
     settings: {
       dateLocale: 'en',
     },
+  },
+}));
+
+jest.mock('@plone/volto/actions/search/search', () => ({
+  searchContent: (...args) => {
+    mockSearchContent(...args);
+    return { type: 'SEARCH_CONTENT' };
   },
 }));
 
@@ -53,6 +64,9 @@ describe('VisualizationCards', () => {
 
   beforeEach(() => {
     store = mockStore({
+      search: {
+        subrequests: {},
+      },
       vocabularies: {
         'collective.taxonomy.benchmark_level': {
           items: [
@@ -63,6 +77,7 @@ describe('VisualizationCards', () => {
       },
     });
     mockGetVocabulary.mockClear();
+    mockSearchContent.mockClear();
   });
 
   const items = [
@@ -164,6 +179,101 @@ describe('VisualizationCards', () => {
     expect(mockGetVocabulary).toHaveBeenCalledWith({
       vocabNameOrURL: 'collective.taxonomy.benchmark_level',
     });
+  });
+
+  it('fetches direct visualization children for indicator items', () => {
+    const indicatorItems = [
+      {
+        '@id': '/en/analysis/indicators/test-indicator',
+        '@type': 'ims_indicator',
+        title: 'Test indicator',
+      },
+    ];
+    const subrequestId = getIndicatorPreviewSubrequestId(
+      'test-block',
+      indicatorItems.map((item) => item['@id']),
+    );
+
+    render(
+      <Provider store={store}>
+        <VisualizationCards items={indicatorItems} block="test-block" />
+      </Provider>,
+    );
+
+    expect(mockSearchContent).toHaveBeenCalledWith(
+      '',
+      expect.objectContaining({
+        portal_type: 'visualization',
+        path: ['/en/analysis/indicators/test-indicator'],
+        'path.depth': 1,
+        metadata_fields: ['image_field', 'image_scales'],
+      }),
+      subrequestId,
+    );
+  });
+
+  it('passes an indicator child visualization preview to the card', () => {
+    const UniversalCardMock = require('@eeacms/volto-listing-block/components/UniversalCard/UniversalCard');
+    UniversalCardMock.mockClear();
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+      title: 'Test indicator',
+    };
+    const indicatorPaths = [indicator['@id']];
+    const subrequestId = getIndicatorPreviewSubrequestId(
+      'test-block',
+      indicatorPaths,
+    );
+    const previewDownload = '@@images/preview_image-400-preview-hash.svg';
+
+    store = mockStore({
+      search: {
+        subrequests: {
+          [subrequestId]: {
+            loaded: true,
+            loading: false,
+            items: [
+              {
+                '@id': `${indicator['@id']}/figure-1`,
+                '@type': 'visualization',
+                image_field: 'preview_image',
+                image_scales: {
+                  preview_image: [
+                    {
+                      download: '@@images/preview_image.svg',
+                      scales: {
+                        preview: {
+                          download: previewDownload,
+                          width: 400,
+                          height: 300,
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+      vocabularies: {},
+    });
+
+    render(
+      <Provider store={store}>
+        <VisualizationCards items={[indicator]} block="test-block" />
+      </Provider>,
+    );
+
+    expect(UniversalCardMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        item: indicator,
+        preview_image_url: `${indicator['@id']}/figure-1/${previewDownload}`,
+      }),
+      expect.anything(),
+    );
+    expect(mockSearchContent).not.toHaveBeenCalled();
   });
 
   describe('schemaEnhancer', () => {
