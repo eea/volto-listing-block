@@ -4,10 +4,10 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
 import VisualizationCards, {
-  getDataFigurePreviewUrl,
+  getEmbedContentReferences,
+  getEmbeddedContentSubrequestId,
   getIndicatorContentSubrequestId,
   getIndicatorPreviewUrl,
-  getIndicatorPreviewSubrequestId,
 } from './VisualizationCards';
 
 const mockSearchContent = jest.fn();
@@ -184,38 +184,7 @@ describe('VisualizationCards', () => {
     });
   });
 
-  it('fetches direct visualization children for indicator items', () => {
-    const indicatorItems = [
-      {
-        '@id': '/en/analysis/indicators/test-indicator',
-        '@type': 'ims_indicator',
-        title: 'Test indicator',
-      },
-    ];
-    const subrequestId = getIndicatorPreviewSubrequestId(
-      'test-block',
-      indicatorItems.map((item) => item['@id']),
-    );
-
-    render(
-      <Provider store={store}>
-        <VisualizationCards items={indicatorItems} block="test-block" />
-      </Provider>,
-    );
-
-    expect(mockSearchContent).toHaveBeenCalledWith(
-      '',
-      expect.objectContaining({
-        portal_type: 'visualization',
-        path: ['/en/analysis/indicators/test-indicator'],
-        'path.depth': 1,
-        metadata_fields: ['image_field', 'image_scales'],
-      }),
-      subrequestId,
-    );
-  });
-
-  it('fetches full indicator objects for lead images and embedded figures', () => {
+  it('fetches full indicator objects for lead images and embed blocks', () => {
     const indicatorItems = [
       {
         '@id': '/en/analysis/indicators/test-indicator',
@@ -246,107 +215,24 @@ describe('VisualizationCards', () => {
     );
   });
 
-  it('passes an indicator child visualization preview to the card', () => {
-    const UniversalCardMock = require('@eeacms/volto-listing-block/components/UniversalCard/UniversalCard');
-    UniversalCardMock.mockClear();
+  it('fetches preview metadata for the contents referenced by embed blocks', () => {
     const indicator = {
       '@id': '/en/analysis/indicators/test-indicator',
       '@type': 'ims_indicator',
       title: 'Test indicator',
     };
-    const indicatorPaths = [indicator['@id']];
-    const subrequestId = getIndicatorPreviewSubrequestId(
+    const embeddedUIDs = ['first-uid', 'second-uid'];
+    const contentSubrequestId = getIndicatorContentSubrequestId('test-block', [
+      indicator['@id'],
+    ]);
+    const embeddedContentSubrequestId = getEmbeddedContentSubrequestId(
       'test-block',
-      indicatorPaths,
+      embeddedUIDs,
     );
-    const contentSubrequestId = getIndicatorContentSubrequestId(
-      'test-block',
-      indicatorPaths,
-    );
-    const previewDownload = '@@images/preview_image-400-preview-hash.svg';
 
     store = mockStore({
       search: {
         subrequests: {
-          [subrequestId]: {
-            loaded: true,
-            loading: false,
-            items: [
-              {
-                '@id': `${indicator['@id']}/figure-1`,
-                '@type': 'visualization',
-                image_field: 'preview_image',
-                image_scales: {
-                  preview_image: [
-                    {
-                      download: '@@images/preview_image.svg',
-                      scales: {
-                        preview: {
-                          download: previewDownload,
-                          width: 400,
-                          height: 300,
-                        },
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-          },
-          [contentSubrequestId]: {
-            loaded: true,
-            loading: false,
-            items: [],
-          },
-        },
-      },
-      vocabularies: {},
-    });
-
-    render(
-      <Provider store={store}>
-        <VisualizationCards items={[indicator]} block="test-block" />
-      </Provider>,
-    );
-
-    expect(UniversalCardMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        item: indicator,
-        preview_image_url: `${indicator['@id']}/figure-1/${previewDownload}`,
-      }),
-      expect.anything(),
-    );
-    expect(mockSearchContent).not.toHaveBeenCalled();
-  });
-
-  it('uses the data figure embedded in the indicator page', () => {
-    const UniversalCardMock = require('@eeacms/volto-listing-block/components/UniversalCard/UniversalCard');
-    UniversalCardMock.mockClear();
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-      title: 'Test indicator',
-    };
-    const indicatorPaths = [indicator['@id']];
-    const previewSubrequestId = getIndicatorPreviewSubrequestId(
-      'test-block',
-      indicatorPaths,
-    );
-    const contentSubrequestId = getIndicatorContentSubrequestId(
-      'test-block',
-      indicatorPaths,
-    );
-    const previewUrl =
-      '/en/analysis/maps-and-charts/test-figure/@@images/preview_image-400.png';
-
-    store = mockStore({
-      search: {
-        subrequests: {
-          [previewSubrequestId]: {
-            loaded: true,
-            loading: false,
-            items: [],
-          },
           [contentSubrequestId]: {
             loaded: true,
             loading: false,
@@ -354,18 +240,99 @@ describe('VisualizationCards', () => {
               {
                 ...indicator,
                 blocks: {
-                  group: {
-                    '@type': 'group',
-                    blocks_layout: { items: ['figure'] },
-                    blocks: {
-                      figure: {
-                        '@type': 'dataFigure',
-                        url: previewUrl,
-                      },
-                    },
+                  first: {
+                    '@type': 'embed_content',
+                    url: '../../../../resolveuid/first-uid',
+                  },
+                  second: {
+                    '@type': 'embed_content',
+                    url: '../../../../resolveuid/second-uid',
                   },
                 },
-                blocks_layout: { items: ['group'] },
+                blocks_layout: { items: ['first', 'second'] },
+              },
+            ],
+          },
+        },
+      },
+      vocabularies: {},
+    });
+
+    render(
+      <Provider store={store}>
+        <VisualizationCards items={[indicator]} block="test-block" />
+      </Provider>,
+    );
+
+    expect(mockSearchContent).toHaveBeenCalledWith(
+      '',
+      {
+        UID: embeddedUIDs,
+        b_size: 25,
+        metadata_fields: ['UID', 'image_field', 'image_scales'],
+      },
+      embeddedContentSubrequestId,
+    );
+    expect(mockSearchContent).not.toHaveBeenCalledWith(
+      '',
+      expect.objectContaining({ portal_type: 'visualization' }),
+      expect.anything(),
+    );
+  });
+
+  it('passes an embedded content preview to the indicator card', () => {
+    const UniversalCardMock = require('@eeacms/volto-listing-block/components/UniversalCard/UniversalCard');
+    UniversalCardMock.mockClear();
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+      title: 'Test indicator',
+    };
+    const embeddedUIDs = ['embedded-uid'];
+    const previewDownload = '@@images/preview_image-400.svg';
+    const contentSubrequestId = getIndicatorContentSubrequestId('test-block', [
+      indicator['@id'],
+    ]);
+    const embeddedContentSubrequestId = getEmbeddedContentSubrequestId(
+      'test-block',
+      embeddedUIDs,
+    );
+
+    store = mockStore({
+      search: {
+        subrequests: {
+          [contentSubrequestId]: {
+            loaded: true,
+            loading: false,
+            items: [
+              {
+                ...indicator,
+                blocks: {
+                  figure: {
+                    '@type': 'embed_content',
+                    url: '../../../../resolveuid/embedded-uid',
+                  },
+                },
+                blocks_layout: { items: ['figure'] },
+              },
+            ],
+          },
+          [embeddedContentSubrequestId]: {
+            loaded: true,
+            loading: false,
+            items: [
+              {
+                UID: 'embedded-uid',
+                '@id': '/visualizations/embedded',
+                image_field: 'preview_image',
+                image_scales: {
+                  preview_image: [
+                    {
+                      base_path: '/visualizations/embedded',
+                      scales: { preview: { download: previewDownload } },
+                    },
+                  ],
+                },
               },
             ],
           },
@@ -383,14 +350,14 @@ describe('VisualizationCards', () => {
     expect(UniversalCardMock).toHaveBeenCalledWith(
       expect.objectContaining({
         item: indicator,
-        preview_image_url: previewUrl,
+        preview_image_url: `/visualizations/embedded/${previewDownload}`,
       }),
       expect.anything(),
     );
     expect(mockSearchContent).not.toHaveBeenCalled();
   });
 
-  it('prefers an indicator lead image over embedded and child previews', () => {
+  it('prefers an indicator lead image over embedded previews', () => {
     const indicator = {
       '@id': '/en/analysis/indicators/test-indicator',
       '@type': 'ims_indicator',
@@ -412,33 +379,88 @@ describe('VisualizationCards', () => {
     };
 
     expect(
-      getIndicatorPreviewUrl(
-        indicator,
-        [
-          {
-            '@id': `${indicator['@id']}/figure`,
-            image_field: 'preview_image',
-            image_scales: {},
-          },
-        ],
-        [
-          {
-            '@id': indicator['@id'],
-            blocks: {
-              figure: {
-                '@type': 'dataFigure',
-                url: '/embedded-preview.png',
-              },
+      getIndicatorPreviewUrl(indicator, [
+        {
+          '@id': indicator['@id'],
+          blocks: {
+            figure: {
+              '@type': 'embed_content',
+              url: '../../../../resolveuid/embedded-uid',
             },
           },
-        ],
-      ),
+        },
+      ]),
     ).toBe(
       '/en/analysis/indicators/test-indicator/@@images/image/preview-image.png',
     );
   });
 
-  it('skips child visualizations without a usable preview', () => {
+  it('uses the first embed content that has a preview image', () => {
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+    };
+    const indicatorContent = {
+      ...indicator,
+      blocks_layout: { items: ['group'] },
+      blocks: {
+        group: {
+          '@type': 'group',
+          data: {
+            blocks_layout: { items: ['first', 'second'] },
+            blocks: {
+              first: {
+                '@type': 'embed_content',
+                url: '../../../../resolveuid/first-uid',
+              },
+              second: {
+                '@type': 'embed_content',
+                url: '../../../../resolveuid/second-uid',
+              },
+            },
+          },
+        },
+      },
+    };
+    const previewDownload = '@@images/preview_image-400.svg';
+
+    expect(
+      getIndicatorPreviewUrl(
+        indicator,
+        [indicatorContent],
+        [
+          {
+            UID: 'second-uid',
+            '@id': '/visualizations/second',
+            image_field: 'preview_image',
+            image_scales: {
+              preview_image: [
+                {
+                  base_path: '/visualizations/second',
+                  scales: { preview: { download: previewDownload } },
+                },
+              ],
+            },
+          },
+          {
+            UID: 'first-uid',
+            '@id': '/visualizations/first',
+            image_field: 'preview_image',
+            image_scales: {
+              preview_image: [
+                {
+                  base_path: '/visualizations/first',
+                  scales: { preview: { download: previewDownload } },
+                },
+              ],
+            },
+          },
+        ],
+      ),
+    ).toBe(`/visualizations/first/${previewDownload}`);
+  });
+
+  it('uses the second embed when the first has no preview image', () => {
     const indicator = {
       '@id': '/en/analysis/indicators/test-indicator',
       '@type': 'ims_indicator',
@@ -446,46 +468,74 @@ describe('VisualizationCards', () => {
     const previewDownload = '@@images/preview_image-400.svg';
 
     expect(
-      getIndicatorPreviewUrl(indicator, [
-        {
-          '@id': `${indicator['@id']}/figure-without-preview`,
-        },
-        {
-          '@id': `${indicator['@id']}/figure-with-preview`,
-          image_field: 'preview_image',
-          image_scales: {
-            preview_image: [
-              {
-                base_path: `${indicator['@id']}/figure-with-preview`,
-                scales: {
-                  preview: { download: previewDownload },
-                },
+      getIndicatorPreviewUrl(
+        indicator,
+        [
+          {
+            ...indicator,
+            blocks_layout: { items: ['first', 'second'] },
+            blocks: {
+              first: {
+                '@type': 'embed_content',
+                url: '../../../../resolveuid/first-uid',
               },
-            ],
+              second: {
+                '@type': 'embed_content',
+                url: '../../../../resolveuid/second-uid',
+              },
+            },
           },
-        },
-      ]),
-    ).toBe(`${indicator['@id']}/figure-with-preview/${previewDownload}`);
+        ],
+        [
+          { UID: 'first-uid', '@id': '/visualizations/first' },
+          {
+            UID: 'second-uid',
+            '@id': '/visualizations/second',
+            image_field: 'preview_image',
+            image_scales: {
+              preview_image: [
+                {
+                  base_path: '/visualizations/second',
+                  scales: { preview: { download: previewDownload } },
+                },
+              ],
+            },
+          },
+        ],
+      ),
+    ).toBe(`/visualizations/second/${previewDownload}`);
   });
 
-  it('finds a data figure nested inside block containers', () => {
+  it('finds nested embed contents in block layout order', () => {
     expect(
-      getDataFigurePreviewUrl({
+      getEmbedContentReferences({
         blocks_layout: { items: ['group'] },
         blocks: {
           group: {
             '@type': 'group',
-            blocks_layout: { items: ['figure'] },
-            blocks: {
-              figure: {
-                '@type': 'dataFigure',
-                url: '/nested-preview.svg',
+            data: {
+              blocks_layout: { items: ['second', 'first'] },
+              blocks: {
+                first: {
+                  '@type': 'embed_content',
+                  url: '../../../../resolveuid/first-uid',
+                },
+                second: {
+                  '@type': 'embed_content',
+                  href: '../../../../resolveuid/second-uid',
+                },
               },
             },
           },
         },
       }),
-    ).toBe('/nested-preview.svg');
+    ).toEqual([
+      {
+        uid: 'second-uid',
+        url: '../../../../resolveuid/second-uid',
+      },
+      { uid: 'first-uid', url: '../../../../resolveuid/first-uid' },
+    ]);
   });
 
   describe('schemaEnhancer', () => {
