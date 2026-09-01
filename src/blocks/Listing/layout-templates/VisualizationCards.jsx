@@ -14,6 +14,7 @@ const INDICATOR_TYPE = 'ims_indicator';
 const EMBED_CONTENT_TYPE = 'embed_content';
 const EMBED_VISUALIZATION_TYPES = ['embed_visualization', 'embed_chart'];
 const DATA_FIGURE_TYPE = 'dataFigure';
+const PLOTLY_PREVIEW_PATH = '/@@plotly_preview.svg/soer_miniature';
 
 const hashPaths = (paths) => {
   return paths
@@ -109,11 +110,13 @@ const getVisualizationReference = (block) => {
     !uid && getInternalReferencePath(referenceUrl, isEmbedVisualization);
   const previewUrl =
     getDirectBlockPreviewUrl(block) ||
-    (isDataFigure && block.url
-      ? flattenToAppURL(block.url)
-      : isEmbedContent && isPreviewImageURL(referenceUrl)
-        ? flattenToAppURL(referenceUrl)
-        : undefined);
+    (isEmbedVisualization && path
+      ? `${path}${PLOTLY_PREVIEW_PATH}`
+      : isDataFigure && block.url
+        ? flattenToAppURL(block.url)
+        : isEmbedContent && isPreviewImageURL(referenceUrl)
+          ? flattenToAppURL(referenceUrl)
+          : undefined);
 
   return {
     ...(uid ? { uid } : {}),

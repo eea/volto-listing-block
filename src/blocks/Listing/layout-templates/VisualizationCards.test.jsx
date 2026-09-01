@@ -5,7 +5,6 @@ import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
 import VisualizationCards, {
   getEmbedContentReferences,
-  getEmbeddedContentPathSubrequestId,
   getEmbeddedContentSubrequestId,
   getIndicatorContentSubrequestId,
   getIndicatorPreviewUrl,
@@ -285,7 +284,9 @@ describe('VisualizationCards', () => {
     );
   });
 
-  it('fetches preview metadata for Plotly embed paths', () => {
+  it('uses the Plotly preview endpoint without fetching image metadata', () => {
+    const UniversalCardMock = require('@eeacms/volto-listing-block/components/UniversalCard/UniversalCard');
+    UniversalCardMock.mockClear();
     const indicator = {
       '@id': '/en/analysis/indicators/test-indicator',
       '@type': 'ims_indicator',
@@ -298,11 +299,6 @@ describe('VisualizationCards', () => {
     const contentSubrequestId = getIndicatorContentSubrequestId('test-block', [
       indicator['@id'],
     ]);
-    const embeddedContentPathSubrequestId = getEmbeddedContentPathSubrequestId(
-      'test-block',
-      embeddedContentPaths,
-    );
-
     store = mockStore({
       search: {
         subrequests: {
@@ -333,15 +329,12 @@ describe('VisualizationCards', () => {
       </Provider>,
     );
 
-    expect(mockSearchContent).toHaveBeenCalledWith(
-      '',
-      {
-        path: embeddedContentPaths,
-        'path.depth': 0,
-        b_size: 25,
-        metadata_fields: ['UID', 'image_field', 'image_scales'],
-      },
-      embeddedContentPathSubrequestId,
+    expect(mockSearchContent).not.toHaveBeenCalled();
+    expect(UniversalCardMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        preview_image_url: `${embeddedContentPaths[0]}/@@plotly_preview.svg/soer_miniature`,
+      }),
+      expect.anything(),
     );
   });
 
@@ -633,39 +626,21 @@ describe('VisualizationCards', () => {
       '@type': 'ims_indicator',
     };
     const chartPath = '/en/analysis/maps-and-charts/chart';
-    const previewDownload = '@@images/preview_image-400.svg';
 
     expect(
-      getIndicatorPreviewUrl(
-        indicator,
-        [
-          {
-            ...indicator,
-            blocks: {
-              chart: {
-                '@type': 'embed_visualization',
-                vis_url: chartPath,
-              },
-            },
-            blocks_layout: { items: ['chart'] },
-          },
-        ],
-        [
-          {
-            '@id': chartPath,
-            image_field: 'preview_image',
-            image_scales: {
-              preview_image: [
-                {
-                  base_path: chartPath,
-                  scales: { preview: { download: previewDownload } },
-                },
-              ],
+      getIndicatorPreviewUrl(indicator, [
+        {
+          ...indicator,
+          blocks: {
+            chart: {
+              '@type': 'embed_visualization',
+              vis_url: chartPath,
             },
           },
-        ],
-      ),
-    ).toBe(`${chartPath}/${previewDownload}`);
+          blocks_layout: { items: ['chart'] },
+        },
+      ]),
+    ).toBe(`${chartPath}/@@plotly_preview.svg/soer_miniature`);
   });
 
   it('uses the first Plotly preview when its internal URL is absolute', () => {
@@ -676,45 +651,25 @@ describe('VisualizationCards', () => {
     const firstChartPath =
       '/en/analysis/indicators/status-of-marine-fish-and.1/state-of-assessed-commercially-exploited';
     const firstChartUrl = `https://demo-www.eea.europa.eu${firstChartPath}`;
-    const firstPreviewDownload = '@@images/preview_image-400.svg';
 
     expect(
-      getIndicatorPreviewUrl(
-        indicator,
-        [
-          {
-            ...indicator,
-            blocks: {
-              first: {
-                '@type': 'embed_visualization',
-                vis_url: firstChartUrl,
-              },
-              second: {
-                '@type': 'embed_content',
-                url: '/visualizations/second-chart.png',
-              },
+      getIndicatorPreviewUrl(indicator, [
+        {
+          ...indicator,
+          blocks: {
+            first: {
+              '@type': 'embed_visualization',
+              vis_url: firstChartUrl,
             },
-            blocks_layout: { items: ['first', 'second'] },
-          },
-        ],
-        [
-          {
-            '@id': firstChartPath,
-            image_field: 'preview_image',
-            image_scales: {
-              preview_image: [
-                {
-                  base_path: firstChartPath,
-                  scales: {
-                    preview: { download: firstPreviewDownload },
-                  },
-                },
-              ],
+            second: {
+              '@type': 'embed_content',
+              url: '/visualizations/second-chart.png',
             },
           },
-        ],
-      ),
-    ).toBe(`${firstChartPath}/${firstPreviewDownload}`);
+          blocks_layout: { items: ['first', 'second'] },
+        },
+      ]),
+    ).toBe(`${firstChartPath}/@@plotly_preview.svg/soer_miniature`);
   });
 
   it('recognizes Plotly, legacy Plotly, and data figure references', () => {
@@ -741,10 +696,14 @@ describe('VisualizationCards', () => {
       {
         path: '/visualizations/plotly',
         url: '/visualizations/plotly',
+        previewUrl:
+          '/visualizations/plotly/@@plotly_preview.svg/soer_miniature',
       },
       {
         path: '/visualizations/legacy',
         url: '/visualizations/legacy',
+        previewUrl:
+          '/visualizations/legacy/@@plotly_preview.svg/soer_miniature',
       },
       {
         path: '/visualizations/data-figure',
