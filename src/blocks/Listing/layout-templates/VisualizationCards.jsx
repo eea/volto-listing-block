@@ -6,12 +6,14 @@ import config from '@plone/volto/registry';
 import '@eeacms/volto-listing-block/less/visualization-cards.less';
 import { getVocabulary } from '@plone/volto/actions/vocabularies/vocabularies';
 import { searchContent } from '@plone/volto/actions/search/search';
-import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
+import { flattenToAppURL, isInternalURL } from '@plone/volto/helpers/Url/Url';
 import { getImageScaleParams } from '@eeacms/volto-object-widget/helpers';
 import { useDispatch, useSelector } from 'react-redux';
 
 const INDICATOR_TYPE = 'ims_indicator';
 const EMBED_CONTENT_TYPE = 'embed_content';
+const EMBED_VISUALIZATION_TYPES = ['embed_visualization', 'embed_chart'];
+const DATA_FIGURE_TYPE = 'dataFigure';
 
 const hashPaths = (paths) => {
   return paths
@@ -32,21 +34,79 @@ export const getEmbeddedContentSubrequestId = (block, embeddedContentUIDs) =>
     embeddedContentUIDs,
   ).toString(36)}`;
 
+export const getEmbeddedContentPathSubrequestId = (
+  block,
+  embeddedContentPaths,
+) =>
+  `visualization-card-embedded-content-paths-${
+    block || 'listing'
+  }-${hashPaths(embeddedContentPaths).toString(36)}`;
+
 const getIndicatorPath = (item) =>
   flattenToAppURL(item?.['@id'] || '').replace(/\/$/, '');
 
 const getResolveUID = (url) =>
   url?.match(/(?:^|\/)resolveuid\/([^/?#]+)/i)?.[1];
 
+const isPreviewImageURL = (url) =>
+  /\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#]|$)/i.test(url || '');
+
+const getDirectBlockPreviewUrl = (block) => {
+  const imageField =
+    block?.image_field ||
+    (block?.image_scales?.preview_image
+      ? 'preview_image'
+      : Object.keys(block?.image_scales || {})[0]);
+  const url = block?.url || block?.href || block?.vis_url;
+
+  if (!imageField || !url) return;
+
+  return getImageScaleParams(
+    { ...block, '@id': url, image_field: imageField },
+    'preview',
+  )?.download;
+};
+
+const getVisualizationReference = (block) => {
+  const blockType = block?.['@type'];
+  const isEmbedContent = blockType === EMBED_CONTENT_TYPE;
+  const isEmbedVisualization = EMBED_VISUALIZATION_TYPES.includes(blockType);
+  const isDataFigure = blockType === DATA_FIGURE_TYPE;
+
+  if (!isEmbedContent && !isEmbedVisualization && !isDataFigure) return;
+
+  const referenceUrl = isEmbedVisualization
+    ? block.vis_url
+    : isDataFigure
+      ? block.figureUrl || block.href
+      : block.url || block.href;
+  const uid = getResolveUID(referenceUrl);
+  const path =
+    !uid && referenceUrl && isInternalURL(referenceUrl)
+      ? flattenToAppURL(referenceUrl).replace(/\/$/, '')
+      : undefined;
+  const previewUrl =
+    getDirectBlockPreviewUrl(block) ||
+    (isDataFigure && block.url
+      ? flattenToAppURL(block.url)
+      : isEmbedContent && isPreviewImageURL(referenceUrl)
+        ? flattenToAppURL(referenceUrl)
+        : undefined);
+
+  return {
+    ...(uid ? { uid } : {}),
+    ...(path ? { path } : {}),
+    ...(referenceUrl ? { url: referenceUrl } : {}),
+    ...(previewUrl ? { previewUrl } : {}),
+  };
+};
+
 export const getEmbedContentReferences = (value, visited = new Set()) => {
   if (!value || typeof value !== 'object' || visited.has(value)) return [];
   visited.add(value);
 
-  if (value['@type'] === EMBED_CONTENT_TYPE) {
-    const url = value.url || value.href;
-    const uid = getResolveUID(url);
-    return uid ? [{ uid, url }] : [];
-  }
+  const reference = getVisualizationReference(value);
+  if (reference) return [reference];
 
   const blockIds = value.blocks_layout?.items || [];
   const orderedBlocks = value.blocks
@@ -98,11 +158,20 @@ export const getIndicatorPreviewUrl = (
   const embeddedContentByUID = new Map(
     embeddedContents.map((content) => [content.UID, content]),
   );
+  const embeddedContentByPath = new Map(
+    embeddedContents.map((content) => [getIndicatorPath(content), content]),
+  );
   const embeddedContentReferences = getEmbedContentReferences(indicatorContent);
 
-  for (const { uid } of embeddedContentReferences) {
+  for (const {
+    uid,
+    path,
+    previewUrl: directPreviewUrl,
+  } of embeddedContentReferences) {
+    if (directPreviewUrl) return directPreviewUrl;
+
     const previewUrl = getEmbeddedContentPreviewUrl(
-      embeddedContentByUID.get(uid),
+      uid ? embeddedContentByUID.get(uid) : embeddedContentByPath.get(path),
     );
     if (previewUrl) return previewUrl;
   }
@@ -179,7 +248,21 @@ const VisualizationCards = ({
     () => [
       ...new Set(
         indicatorContents.flatMap((indicator) =>
-          getEmbedContentReferences(indicator).map(({ uid }) => uid),
+          getEmbedContentReferences(indicator)
+            .filter(({ uid, previewUrl }) => uid && !previewUrl)
+            .map(({ uid }) => uid),
+        ),
+      ),
+    ],
+    [indicatorContents],
+  );
+  const embeddedContentPaths = useMemo(
+    () => [
+      ...new Set(
+        indicatorContents.flatMap((indicator) =>
+          getEmbedContentReferences(indicator)
+            .filter(({ uid, path, previewUrl }) => !uid && path && !previewUrl)
+            .map(({ path }) => path),
         ),
       ),
     ],
@@ -191,6 +274,13 @@ const VisualizationCards = ({
   );
   const embeddedContentRequest = useSelector(
     (state) => state.search?.subrequests?.[embeddedContentSubrequestId],
+  );
+  const embeddedContentPathSubrequestId = useMemo(
+    () => getEmbeddedContentPathSubrequestId(block, embeddedContentPaths),
+    [block, embeddedContentPaths],
+  );
+  const embeddedContentPathRequest = useSelector(
+    (state) => state.search?.subrequests?.[embeddedContentPathSubrequestId],
   );
 
   useEffect(() => {
@@ -221,7 +311,39 @@ const VisualizationCards = ({
     embeddedContentUIDs,
   ]);
 
-  const embeddedContents = embeddedContentRequest?.items || [];
+  useEffect(() => {
+    if (
+      embeddedContentPaths.length > 0 &&
+      !embeddedContentPathRequest?.loading &&
+      !embeddedContentPathRequest?.loaded &&
+      !embeddedContentPathRequest?.error
+    ) {
+      dispatch(
+        searchContent(
+          '',
+          {
+            path: embeddedContentPaths,
+            'path.depth': 0,
+            b_size: Math.min(Math.max(embeddedContentPaths.length, 25), 1000),
+            metadata_fields: ['UID', 'image_field', 'image_scales'],
+          },
+          embeddedContentPathSubrequestId,
+        ),
+      );
+    }
+  }, [
+    dispatch,
+    embeddedContentPathRequest?.error,
+    embeddedContentPathRequest?.loaded,
+    embeddedContentPathRequest?.loading,
+    embeddedContentPathSubrequestId,
+    embeddedContentPaths,
+  ]);
+
+  const embeddedContents = [
+    ...(embeddedContentRequest?.items || []),
+    ...(embeddedContentPathRequest?.items || []),
+  ];
 
   return (
     <>

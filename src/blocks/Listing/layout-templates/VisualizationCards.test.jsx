@@ -5,6 +5,7 @@ import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
 import VisualizationCards, {
   getEmbedContentReferences,
+  getEmbeddedContentPathSubrequestId,
   getEmbeddedContentSubrequestId,
   getIndicatorContentSubrequestId,
   getIndicatorPreviewUrl,
@@ -280,6 +281,63 @@ describe('VisualizationCards', () => {
     );
   });
 
+  it('fetches preview metadata for Plotly embed paths', () => {
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+      title: 'Test indicator',
+    };
+    const embeddedContentPaths = ['/en/analysis/maps-and-charts/chart'];
+    const contentSubrequestId = getIndicatorContentSubrequestId('test-block', [
+      indicator['@id'],
+    ]);
+    const embeddedContentPathSubrequestId = getEmbeddedContentPathSubrequestId(
+      'test-block',
+      embeddedContentPaths,
+    );
+
+    store = mockStore({
+      search: {
+        subrequests: {
+          [contentSubrequestId]: {
+            loaded: true,
+            loading: false,
+            items: [
+              {
+                ...indicator,
+                blocks: {
+                  chart: {
+                    '@type': 'embed_visualization',
+                    vis_url: embeddedContentPaths[0],
+                  },
+                },
+                blocks_layout: { items: ['chart'] },
+              },
+            ],
+          },
+        },
+      },
+      vocabularies: {},
+    });
+
+    render(
+      <Provider store={store}>
+        <VisualizationCards items={[indicator]} block="test-block" />
+      </Provider>,
+    );
+
+    expect(mockSearchContent).toHaveBeenCalledWith(
+      '',
+      {
+        path: embeddedContentPaths,
+        'path.depth': 0,
+        b_size: 25,
+        metadata_fields: ['UID', 'image_field', 'image_scales'],
+      },
+      embeddedContentPathSubrequestId,
+    );
+  });
+
   it('passes an embedded content preview to the indicator card', () => {
     const UniversalCardMock = require('@eeacms/volto-listing-block/components/UniversalCard/UniversalCard');
     UniversalCardMock.mockClear();
@@ -504,6 +562,140 @@ describe('VisualizationCards', () => {
         ],
       ),
     ).toBe(`/visualizations/second/${previewDownload}`);
+  });
+
+  it('uses preview scales included directly in an embed content block', () => {
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+    };
+    const previewDownload = '@@images/preview_image-400.svg';
+
+    expect(
+      getIndicatorPreviewUrl(indicator, [
+        {
+          ...indicator,
+          blocks: {
+            chart: {
+              '@type': 'embed_content',
+              url: '/en/analysis/maps-and-charts/chart',
+              image_scales: {
+                preview_image: [
+                  {
+                    scales: {
+                      preview: { download: previewDownload },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          blocks_layout: { items: ['chart'] },
+        },
+      ]),
+    ).toBe(`/en/analysis/maps-and-charts/chart/${previewDownload}`);
+  });
+
+  it('uses an external image referenced directly by embed content', () => {
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+    };
+    const previewUrl =
+      'https://www.eea.europa.eu/data-and-maps/figures/chart/chart.png';
+
+    expect(
+      getIndicatorPreviewUrl(indicator, [
+        {
+          ...indicator,
+          blocks: {
+            chart: {
+              '@type': 'embed_content',
+              url: previewUrl,
+            },
+          },
+          blocks_layout: { items: ['chart'] },
+        },
+      ]),
+    ).toBe(previewUrl);
+  });
+
+  it('uses the preview of a Plotly embed referenced by path', () => {
+    const indicator = {
+      '@id': '/en/analysis/indicators/test-indicator',
+      '@type': 'ims_indicator',
+    };
+    const chartPath = '/en/analysis/maps-and-charts/chart';
+    const previewDownload = '@@images/preview_image-400.svg';
+
+    expect(
+      getIndicatorPreviewUrl(
+        indicator,
+        [
+          {
+            ...indicator,
+            blocks: {
+              chart: {
+                '@type': 'embed_visualization',
+                vis_url: chartPath,
+              },
+            },
+            blocks_layout: { items: ['chart'] },
+          },
+        ],
+        [
+          {
+            '@id': chartPath,
+            image_field: 'preview_image',
+            image_scales: {
+              preview_image: [
+                {
+                  base_path: chartPath,
+                  scales: { preview: { download: previewDownload } },
+                },
+              ],
+            },
+          },
+        ],
+      ),
+    ).toBe(`${chartPath}/${previewDownload}`);
+  });
+
+  it('recognizes Plotly, legacy Plotly, and data figure references', () => {
+    expect(
+      getEmbedContentReferences({
+        blocks_layout: { items: ['plotly', 'legacy', 'figure'] },
+        blocks: {
+          plotly: {
+            '@type': 'embed_visualization',
+            vis_url: '/visualizations/plotly',
+          },
+          legacy: {
+            '@type': 'embed_chart',
+            vis_url: '/visualizations/legacy',
+          },
+          figure: {
+            '@type': 'dataFigure',
+            figureUrl: '/visualizations/data-figure',
+            url: '/visualizations/data-figure/preview.svg',
+          },
+        },
+      }),
+    ).toEqual([
+      {
+        path: '/visualizations/plotly',
+        url: '/visualizations/plotly',
+      },
+      {
+        path: '/visualizations/legacy',
+        url: '/visualizations/legacy',
+      },
+      {
+        path: '/visualizations/data-figure',
+        url: '/visualizations/data-figure',
+        previewUrl: '/visualizations/data-figure/preview.svg',
+      },
+    ]);
   });
 
   it('finds nested embed contents in block layout order', () => {
