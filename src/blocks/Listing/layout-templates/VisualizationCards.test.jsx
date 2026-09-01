@@ -19,6 +19,10 @@ jest.mock('@plone/volto/registry', () => ({
   default: {
     settings: {
       dateLocale: 'en',
+      publicURL: '',
+      apiPath: '',
+      internalApiPath: '',
+      externalRoutes: [],
     },
   },
 }));
@@ -287,7 +291,10 @@ describe('VisualizationCards', () => {
       '@type': 'ims_indicator',
       title: 'Test indicator',
     };
-    const embeddedContentPaths = ['/en/analysis/maps-and-charts/chart'];
+    const embeddedContentPaths = [
+      '/en/analysis/indicators/status-of-marine-fish-and.1/state-of-assessed-commercially-exploited',
+    ];
+    const absoluteChartUrl = `https://demo-www.eea.europa.eu${embeddedContentPaths[0]}`;
     const contentSubrequestId = getIndicatorContentSubrequestId('test-block', [
       indicator['@id'],
     ]);
@@ -308,7 +315,7 @@ describe('VisualizationCards', () => {
                 blocks: {
                   chart: {
                     '@type': 'embed_visualization',
-                    vis_url: embeddedContentPaths[0],
+                    vis_url: absoluteChartUrl,
                   },
                 },
                 blocks_layout: { items: ['chart'] },
@@ -659,6 +666,55 @@ describe('VisualizationCards', () => {
         ],
       ),
     ).toBe(`${chartPath}/${previewDownload}`);
+  });
+
+  it('uses the first Plotly preview when its internal URL is absolute', () => {
+    const indicator = {
+      '@id': '/en/analysis/indicators/status-of-marine-fish-and.1',
+      '@type': 'ims_indicator',
+    };
+    const firstChartPath =
+      '/en/analysis/indicators/status-of-marine-fish-and.1/state-of-assessed-commercially-exploited';
+    const firstChartUrl = `https://demo-www.eea.europa.eu${firstChartPath}`;
+    const firstPreviewDownload = '@@images/preview_image-400.svg';
+
+    expect(
+      getIndicatorPreviewUrl(
+        indicator,
+        [
+          {
+            ...indicator,
+            blocks: {
+              first: {
+                '@type': 'embed_visualization',
+                vis_url: firstChartUrl,
+              },
+              second: {
+                '@type': 'embed_content',
+                url: '/visualizations/second-chart.png',
+              },
+            },
+            blocks_layout: { items: ['first', 'second'] },
+          },
+        ],
+        [
+          {
+            '@id': firstChartPath,
+            image_field: 'preview_image',
+            image_scales: {
+              preview_image: [
+                {
+                  base_path: firstChartPath,
+                  scales: {
+                    preview: { download: firstPreviewDownload },
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      ),
+    ).toBe(`${firstChartPath}/${firstPreviewDownload}`);
   });
 
   it('recognizes Plotly, legacy Plotly, and data figure references', () => {

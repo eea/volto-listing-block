@@ -51,6 +51,30 @@ const getResolveUID = (url) =>
 const isPreviewImageURL = (url) =>
   /\.(?:avif|gif|jpe?g|png|svg|webp)(?:[?#]|$)/i.test(url || '');
 
+const getInternalReferencePath = (url, assumeInternal = false) => {
+  if (!url) return;
+
+  if (isInternalURL(url)) {
+    const flattenedUrl = flattenToAppURL(url);
+
+    if (!/^https?:\/\//i.test(flattenedUrl)) {
+      return flattenedUrl.replace(/[?#].*$/, '').replace(/\/$/, '');
+    }
+  }
+
+  // The Plotly block's `vis_url` comes from an internal content widget, but
+  // older content can store the public absolute URL. Its host may differ from
+  // Volto's configured publicURL (for example behind the demo proxy), so use
+  // the URL pathname as the catalog path.
+  if (assumeInternal) {
+    try {
+      return new URL(url).pathname.replace(/\/$/, '');
+    } catch {
+      return;
+    }
+  }
+};
+
 const getDirectBlockPreviewUrl = (block) => {
   const imageField =
     block?.image_field ||
@@ -82,9 +106,7 @@ const getVisualizationReference = (block) => {
       : block.url || block.href;
   const uid = getResolveUID(referenceUrl);
   const path =
-    !uid && referenceUrl && isInternalURL(referenceUrl)
-      ? flattenToAppURL(referenceUrl).replace(/\/$/, '')
-      : undefined;
+    !uid && getInternalReferencePath(referenceUrl, isEmbedVisualization);
   const previewUrl =
     getDirectBlockPreviewUrl(block) ||
     (isDataFigure && block.url
