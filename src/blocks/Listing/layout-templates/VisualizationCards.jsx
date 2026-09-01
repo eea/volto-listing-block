@@ -15,6 +15,13 @@ const EMBED_CONTENT_TYPE = 'embed_content';
 const EMBED_VISUALIZATION_TYPES = ['embed_visualization', 'embed_chart'];
 const DATA_FIGURE_TYPE = 'dataFigure';
 const PLOTLY_PREVIEW_PATH = '/@@plotly_preview.svg/soer_miniature';
+const INDICATOR_PREVIEW_METADATA_FIELDS = [
+  'blocks',
+  'blocks_layout',
+  'image',
+  'image_field',
+  'image_scales',
+];
 
 const hashPaths = (paths) => {
   return paths
@@ -250,7 +257,7 @@ const VisualizationCards = ({
             path: indicatorPaths,
             'path.depth': 0,
             b_size: Math.min(Math.max(indicatorPaths.length, 25), 1000),
-            fullobjects: 1,
+            metadata_fields: INDICATOR_PREVIEW_METADATA_FIELDS,
           },
           indicatorContentSubrequestId,
         ),

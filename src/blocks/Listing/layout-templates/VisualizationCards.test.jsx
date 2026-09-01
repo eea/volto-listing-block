@@ -188,7 +188,7 @@ describe('VisualizationCards', () => {
     });
   });
 
-  it('fetches full indicator objects for lead images and embed blocks', () => {
+  it('fetches only the indicator metadata needed for preview images', () => {
     const indicatorItems = [
       {
         '@id': '/en/analysis/indicators/test-indicator',
@@ -213,7 +213,13 @@ describe('VisualizationCards', () => {
         portal_type: 'ims_indicator',
         path: ['/en/analysis/indicators/test-indicator'],
         'path.depth': 0,
-        fullobjects: 1,
+        metadata_fields: [
+          'blocks',
+          'blocks_layout',
+          'image',
+          'image_field',
+          'image_scales',
+        ],
       }),
       subrequestId,
     );
