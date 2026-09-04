@@ -116,9 +116,7 @@ describe('VisualizationCard', () => {
     );
 
     // Check if CardImage is called with the correct preview_image_url
-    expect(
-      CardImage,
-    ).toHaveBeenCalledWith(
+    expect(CardImage).toHaveBeenCalledWith(
       expect.objectContaining({
         preview_image_url: '/test-item/@@plotly_preview.svg/soer_miniature',
       }),

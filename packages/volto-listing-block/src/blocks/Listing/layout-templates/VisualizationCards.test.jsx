@@ -20,12 +20,14 @@ vi.mock('@plone/volto/registry', () => ({
 vi.mock(
   '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard',
   () => {
-    return { default: vi.fn(({ item }) => (
-      <div data-testid="universal-card">
-        <div data-testid="card-title">{item.title}</div>
-        <div data-testid="card-id">{item['@id']}</div>
-      </div>
-    )) };
+    return {
+      default: vi.fn(({ item }) => (
+        <div data-testid="universal-card">
+          <div data-testid="card-title">{item.title}</div>
+          <div data-testid="card-id">{item['@id']}</div>
+        </div>
+      )),
+    };
   },
 );
 

@@ -39,11 +39,11 @@ describe('getItemIconPrefix', () => {
 describe('ItemImage (via Item)', () => {
   beforeAll(() => {
     vi.spyOn(voltoHelpers, 'getFieldURL').mockImplementation((img) => img);
-    vi
-      .spyOn(objectWidgetHelpers, 'getImageScaleParams')
-      .mockImplementation((url, size) => ({
+    vi.spyOn(objectWidgetHelpers, 'getImageScaleParams').mockImplementation(
+      (url, size) => ({
         download: `${url}/@@images/image/${size}`,
-      }));
+      }),
+    );
     voltoRegistry.default.blocks = {
       blocksConfig: {
         item: {

@@ -47,35 +47,37 @@ vi.mock('@plone/volto/components/manage/Sidebar/SidebarPortal', () => ({
 let capturedRenderExtensions = [];
 
 vi.mock('@plone/volto-slate/editor/SlateEditor', () => {
-  return { default: vi.fn((props) => {
-    // Capture the renderExtensions when the component is rendered
-    if (props.renderExtensions && props.renderExtensions.length > 0) {
-      capturedRenderExtensions = props.renderExtensions;
-    }
+  return {
+    default: vi.fn((props) => {
+      // Capture the renderExtensions when the component is rendered
+      if (props.renderExtensions && props.renderExtensions.length > 0) {
+        capturedRenderExtensions = props.renderExtensions;
+      }
 
-    return (
-      <div
-        data-testid="slate-editor"
-        onClick={() => props.onFocus && props.onFocus()}
-        onKeyDown={(e) => props.onKeyDown && props.onKeyDown(e)}
-        role="textbox"
-        tabIndex={0}
-        aria-multiline="true"
-      >
-        <button
-          data-testid="change-description-button"
-          onClick={() =>
-            props.onChange &&
-            props.onChange([
-              { type: 'p', children: [{ text: 'Updated description' }] },
-            ])
-          }
+      return (
+        <div
+          data-testid="slate-editor"
+          onClick={() => props.onFocus && props.onFocus()}
+          onKeyDown={(e) => props.onKeyDown && props.onKeyDown(e)}
+          role="textbox"
+          tabIndex={0}
+          aria-multiline="true"
         >
-          Change Description
-        </button>
-      </div>
-    );
-  }) };
+          <button
+            data-testid="change-description-button"
+            onClick={() =>
+              props.onChange &&
+              props.onChange([
+                { type: 'p', children: [{ text: 'Updated description' }] },
+              ])
+            }
+          >
+            Change Description
+          </button>
+        </div>
+      );
+    }),
+  };
 });
 
 vi.mock('@plone/volto-slate/blocks/Text/keyboard', () => ({
@@ -83,19 +85,23 @@ vi.mock('@plone/volto-slate/blocks/Text/keyboard', () => ({
 }));
 
 vi.mock('./Item', () => {
-  return { default: vi.fn(({ children, ...props }) => (
-    <div data-testid="item-component" data-mode={props.mode}>
-      {children}
-    </div>
-  )) };
+  return {
+    default: vi.fn(({ children, ...props }) => (
+      <div data-testid="item-component" data-mode={props.mode}>
+        {children}
+      </div>
+    )),
+  };
 });
 
 vi.mock('./schema', () => {
-  return { default: vi.fn().mockImplementation(() => ({
-    title: 'Test Schema',
-    fieldsets: [{ id: 'default', title: 'Default', fields: ['title'] }],
-    properties: { title: { title: 'Title' } },
-  })) };
+  return {
+    default: vi.fn().mockImplementation(() => ({
+      title: 'Test Schema',
+      fieldsets: [{ id: 'default', title: 'Default', fields: ['title'] }],
+      properties: { title: { title: 'Title' } },
+    })),
+  };
 });
 
 const mockStore = configureStore();

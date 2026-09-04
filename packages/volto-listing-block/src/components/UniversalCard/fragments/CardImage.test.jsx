@@ -18,14 +18,16 @@ vi.mock(
 );
 
 vi.mock('@eeacms/volto-listing-block/PreviewImage', () => {
-  return { default: vi.fn(({ item, preview_image, preview_image_url, alt, label }) => (
-    <div data-testid="preview-image">
-      <span data-testid="preview-image-item">{JSON.stringify(item)}</span>
-      <span data-testid="preview-image-url">{preview_image_url}</span>
-      <span data-testid="preview-image-alt">{alt}</span>
-      <span data-testid="preview-image-label">{JSON.stringify(label)}</span>
-    </div>
-  )) };
+  return {
+    default: vi.fn(({ item, preview_image, preview_image_url, alt, label }) => (
+      <div data-testid="preview-image">
+        <span data-testid="preview-image-item">{JSON.stringify(item)}</span>
+        <span data-testid="preview-image-url">{preview_image_url}</span>
+        <span data-testid="preview-image-alt">{alt}</span>
+        <span data-testid="preview-image-label">{JSON.stringify(label)}</span>
+      </div>
+    )),
+  };
 });
 beforeEach(() => {
   vi.clearAllMocks(); // resets ConditionalLink & PreviewImage mocks
