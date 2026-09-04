@@ -1,0 +1,46 @@
+import { vi } from 'vitest';
+import React from 'react';
+import { render } from '@testing-library/react';
+import { SimpleItemLayout } from './SimpleItemTemplates';
+import '@testing-library/jest-dom';
+
+vi.mock(
+  '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
+  () => ({
+    __esModule: true,
+    default: ({ children }) => (
+      <>
+        <div>ConditionalLink</div>
+        {children}
+      </>
+    ),
+  }),
+);
+
+describe('SimpleItemLayout', () => {
+  const props = {
+    item: {
+      title: 'Test Title',
+      description: 'Test Description',
+    },
+    itemModel: {
+      '@type': 'Document',
+    },
+    className: 'my-class',
+  };
+
+  it('renders without crashing', () => {
+    const { container } = render(<SimpleItemLayout {...props} />);
+    expect(container).toBeInTheDocument();
+  });
+
+  it('renders the title', () => {
+    const { getByText } = render(<SimpleItemLayout {...props} />);
+    expect(getByText(props.item.title)).toBeInTheDocument();
+  });
+
+  it('renders correct className', () => {
+    const { container } = render(<SimpleItemLayout {...props} />);
+    expect(container.firstElementChild).toHaveClass(props.className);
+  });
+});
