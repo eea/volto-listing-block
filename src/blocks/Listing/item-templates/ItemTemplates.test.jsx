@@ -50,7 +50,7 @@ describe('ItemTemplates', () => {
     expect(image).toHaveAttribute('alt', 'Default listing title');
     expect(image).toHaveClass('ui image');
 
-    expect(screen.getByText('ConditionalLink')).toBeInTheDocument();
+    expect(screen.getAllByText('ConditionalLink')).toHaveLength(2);
 
     expect(screen.getByText('05 Oct 2023')).toHaveClass('listing-date');
 

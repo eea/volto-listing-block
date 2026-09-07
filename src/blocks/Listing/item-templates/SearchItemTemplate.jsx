@@ -1,10 +1,15 @@
 import cx from 'classnames';
+import CardActionLink from '@eeacms/volto-listing-block/components/UniversalCard/fragments/CardActionLink';
 import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
 
-const BodyText = ({ item, hasDescription }) => {
+const BodyText = ({ item, hasDescription, isEditMode }) => {
   return (
     <div className="listing-body">
-      <h3 className={'listing-header'}>{item.title ? item.title : item.id}</h3>
+      <CardActionLink item={item} isEditMode={isEditMode}>
+        <h3 className={'listing-header'}>
+          {item.title ? item.title : item.id}
+        </h3>
+      </CardActionLink>
       {hasDescription && (
         <p className={'listing-description'}>{item.description}</p>
       )}
@@ -27,7 +32,7 @@ const getStyles = (props) => {
 };
 
 const BasicItem = (props) => {
-  const { item, styles, className, itemModel = {} } = props;
+  const { item, styles, className, itemModel = {}, isEditMode } = props;
   const { hasImage, hasDate, hasDescription, imageOnRightSide } = itemModel;
 
   return (
@@ -51,26 +56,34 @@ const BasicItem = (props) => {
                   item={item}
                   hasDescription={hasDescription}
                   hasDate={hasDate}
+                  isEditMode={isEditMode}
                 />
                 <div className="image-wrapper">
-                  <PreviewImage
-                    item={item}
-                    preview_image_url={item.preview_image_url}
-                  />
+                  <CardActionLink item={item} isEditMode={isEditMode}>
+                    <PreviewImage
+                      item={item}
+                      preview_image_url={item.preview_image_url}
+                      alt={item.title || item.id}
+                    />
+                  </CardActionLink>
                 </div>
               </>
             ) : (
               <>
                 <div className="image-wrapper">
-                  <PreviewImage
-                    item={item}
-                    preview_image_url={item.preview_image_url}
-                  />
+                  <CardActionLink item={item} isEditMode={isEditMode}>
+                    <PreviewImage
+                      item={item}
+                      preview_image_url={item.preview_image_url}
+                      alt={item.title || item.id}
+                    />
+                  </CardActionLink>
                 </div>
                 <BodyText
                   item={item}
                   hasDescription={hasDescription}
                   hasDate={hasDate}
+                  isEditMode={isEditMode}
                 />
               </>
             )
@@ -79,6 +92,7 @@ const BasicItem = (props) => {
               item={item}
               hasDescription={hasDescription}
               hasDate={hasDate}
+              isEditMode={isEditMode}
             />
           )}
         </div>

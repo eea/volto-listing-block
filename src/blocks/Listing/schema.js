@@ -174,7 +174,9 @@ export const setVisualizationCardModelSchema = (args) => {
   const itemModelSchema = schema.properties.itemModel.schema;
   itemModelSchema.fieldsets[0].fields = [
     ...itemModelSchema.fieldsets[0].fields,
+    'hasContentType',
     'maxTitle',
+    'hasDate',
     'hasDescription',
     'maxDescription',
     'callToAction',
@@ -182,6 +184,16 @@ export const setVisualizationCardModelSchema = (args) => {
   ];
   itemModelSchema.properties = {
     ...itemModelSchema.properties,
+    hasContentType: {
+      title: 'Display content type',
+      type: 'boolean',
+      default: false,
+    },
+    hasDate: {
+      title: 'Display publishing date',
+      type: 'boolean',
+      default: true,
+    },
     hasDescription: {
       title: 'Description',
       type: 'boolean',
@@ -214,7 +226,7 @@ export const setVisualizationCardModelSchema = (args) => {
       title: 'Enable CTA content popup',
       description: 'Will enable the CTA content popup only from 1280px and up',
       type: 'boolean',
-      default: true,
+      default: false,
     },
   };
   return schema;

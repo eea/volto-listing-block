@@ -1,5 +1,5 @@
 import cx from 'classnames';
-import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
+import CardActionLink from '@eeacms/volto-listing-block/components/UniversalCard/fragments/CardActionLink';
 import { Icon } from 'semantic-ui-react';
 
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
@@ -41,15 +41,11 @@ const BodyText = ({ item, isEditMode, itemModel }) => {
         condition={hasIcon && icon}
         wrapper={(children) => <div className="listing-wrap">{children}</div>}
       >
-        <ConditionalLink
-          to={item['@id']}
-          item={item}
-          condition={!!(!isEditMode && item['@id'])}
-        >
+        <CardActionLink item={item} isEditMode={isEditMode}>
           <h3 className={'listing-header'}>
             {item.title ? item.title : item.id}
           </h3>
-        </ConditionalLink>
+        </CardActionLink>
         <div className="listing-body-dates">
           {showDate && (
             <p className={'listing-date'}>
@@ -105,7 +101,9 @@ const BasicItem = (props) => {
             <>
               {imageOnRightSide ? bodyText : null}
               <div className="image-wrapper">
-                <PreviewImage item={item} />
+                <CardActionLink item={item} isEditMode={isEditMode}>
+                  <PreviewImage item={item} alt={item.title || item.id} />
+                </CardActionLink>
               </div>
               {!imageOnRightSide ? bodyText : null}
             </>

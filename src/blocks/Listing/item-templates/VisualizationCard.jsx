@@ -1,6 +1,8 @@
 import cx from 'classnames';
 import React from 'react';
 import PropTypes from 'prop-types';
+import config from '@plone/volto/registry';
+import { formatDate } from '@plone/volto/helpers/Utils/Date';
 
 import { connect } from 'react-redux';
 
@@ -49,7 +51,12 @@ CardEEABenchmarkLevel.propTypes = {
 };
 
 const VisualizationCard = (props) => {
-  const { className, item, benchmark_level_items } = props;
+  const { className, item, itemModel = {}, benchmark_level_items } = props;
+  const contentType = item.type_title || item['@type'];
+  const showDate =
+    itemModel.hasDate !== false &&
+    item.EffectiveDate &&
+    item.EffectiveDate !== 'None';
   const imagePosition = props.imagePosition;
   const preview_image_url =
     props.preview_image_url ??
@@ -59,14 +66,32 @@ const VisualizationCard = (props) => {
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
       <UiCard.Content>
+        {itemModel.hasContentType && contentType && (
+          <UiCard.Meta className="content-type">{contentType}</UiCard.Meta>
+        )}
         <CardTitle {...props} />
+        {showDate && (
+          <UiCard.Meta className="publishing-date">
+            <time dateTime={item.EffectiveDate}>
+              {formatDate({
+                date: item.EffectiveDate,
+                format: {
+                  year: 'numeric',
+                  month: 'short',
+                  day: '2-digit',
+                },
+                locale: config.settings.dateLocale || 'en-gb',
+              })}
+            </time>
+          </UiCard.Meta>
+        )}
         <CardEEABenchmarkLevel
           item={item}
           benchmark_level_items={benchmark_level_items}
         />
         <CardDescription {...props} />
         <CardImage {...props} preview_image_url={preview_image_url} />
-        <CardMeta {...props} />
+        <CardMeta {...props} itemModel={{ ...itemModel, hasDate: false }} />
       </UiCard.Content>
       {imagePosition && imagePosition === 'right' && <CardImage {...props} />}
 
@@ -78,6 +103,9 @@ const VisualizationCard = (props) => {
 VisualizationCard.propTypes = {
   item: PropTypes.shape({
     '@id': PropTypes.string.isRequired,
+    '@type': PropTypes.string,
+    type_title: PropTypes.string,
+    EffectiveDate: PropTypes.string,
     title: PropTypes.string,
     description: PropTypes.string,
     preview_image_url: PropTypes.string,
@@ -87,6 +115,7 @@ VisualizationCard.propTypes = {
     benchmark_level: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
   className: PropTypes.string,
+  itemModel: PropTypes.object,
   imagePosition: PropTypes.string,
   preview_image_url: PropTypes.string,
   benchmark_level_items: PropTypes.arrayOf(PropTypes.object),

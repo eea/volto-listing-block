@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import CardActionContext from './CardActionContext';
 import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
 import { Card } from 'semantic-ui-react';
 
@@ -28,11 +29,27 @@ const CardTitleOnImage = (props) => {
 };
 
 const CardImage = (props) => {
+  const action = useContext(CardActionContext);
   const { item, isEditMode, preview_image, preview_image_url, itemModel } =
     props;
   const label = getLabel(props);
   const showLink =
     !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage && item['@id'];
+
+  if (action && !action.disabled) {
+    return (
+      <a className="image" href={action.url} onClick={action.onClick}>
+        <PreviewImage
+          item={item}
+          preview_image={preview_image}
+          preview_image_url={preview_image_url}
+          alt={item.title || item.Title || 'Read more'}
+          label={label}
+        />
+        <CardTitleOnImage {...props} />
+      </a>
+    );
+  }
 
   return (
     <ConditionalLink

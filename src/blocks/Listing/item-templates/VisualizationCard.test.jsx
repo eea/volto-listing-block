@@ -7,6 +7,11 @@ import VisualizationCardComponent from './VisualizationCard';
 
 const mockStore = configureStore([]);
 
+jest.mock(
+  '@eeacms/volto-listing-block/components/UniversalCard/fragments/RenderBlocksWrapper',
+  () => () => <div data-testid="popup-content" />,
+);
+
 // Mock the UniversalCard components
 jest.mock('@eeacms/volto-listing-block/components/UniversalCard', () => ({
   CardDescription: jest.fn(() => (
