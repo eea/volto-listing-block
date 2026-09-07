@@ -4,6 +4,7 @@ import { Item } from './model';
 import cx from 'classnames';
 import { buildStyleClassNamesFromData } from '@plone/volto/helpers/Blocks/Blocks';
 import schemaEnhancer from './schema';
+import { CardActionProvider } from './fragments/CardExtra';
 
 function UniversalCard(props) {
   const { itemModel = {}, item, ...rest } = props;
@@ -29,12 +30,18 @@ function UniversalCard(props) {
   const CardTemplate = extension.template;
 
   return (
-    <CardTemplate
-      item={new Item(item)}
+    <CardActionProvider
+      item={item}
       itemModel={itemModel}
-      {...rest}
-      className={cx([rest.className, ...hyphenClasses])}
-    />
+      isEditMode={rest.isEditMode}
+    >
+      <CardTemplate
+        item={new Item(item)}
+        itemModel={itemModel}
+        {...rest}
+        className={cx([rest.className, ...hyphenClasses])}
+      />
+    </CardActionProvider>
   );
 }
 

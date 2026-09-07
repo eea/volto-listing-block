@@ -1,6 +1,5 @@
 import cx from 'classnames';
-import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
-import { getBaseUrl } from '@plone/volto/helpers/Url/Url';
+import CardActionLink from '@eeacms/volto-listing-block/components/UniversalCard/fragments/CardActionLink';
 import { getVoltoStyles } from '@eeacms/volto-listing-block/schema-utils';
 
 const getStyles = (props) => {
@@ -30,13 +29,13 @@ const BasicItem = (props) => {
     >
       <div className="wrapper">
         <div className="slot-top">
-          <ConditionalLink to={getBaseUrl(item['@id'])} condition={!isEditMode}>
+          <CardActionLink item={item} isEditMode={isEditMode}>
             <div className="listing-body">
               <p className={'listing-header'}>
                 {item.title ? item.title : item.id}
               </p>
             </div>
-          </ConditionalLink>
+          </CardActionLink>
         </div>
         <div className="simple-item-meta">
           {hasMetaType && (

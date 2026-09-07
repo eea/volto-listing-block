@@ -8,6 +8,12 @@ import {
 } from './CardTemplates';
 import '@testing-library/jest-dom';
 
+// Card template tests do not need the popup's full block-rendering tree.
+jest.mock('@plone/volto/components/theme/View/RenderBlocks', () => ({
+  __esModule: true,
+  default: () => null,
+}));
+
 jest.mock(
   '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
   () => ({

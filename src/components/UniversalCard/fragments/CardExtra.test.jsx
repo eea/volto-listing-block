@@ -3,7 +3,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
-import CardExtra from './CardExtra';
+import CardExtra, { CardActionProvider } from './CardExtra';
+import CardTitle from './CardTitle';
+import CardImage from './CardImage';
+
+jest.mock('@eeacms/volto-listing-block/PreviewImage', () => ({ alt }) => (
+  <img src="/preview.png" alt={alt} />
+));
 
 // Mock the dependencies
 jest.mock('@plone/volto/registry', () => ({
@@ -26,9 +32,20 @@ jest.mock('@plone/volto/registry', () => ({
   },
 }));
 
-jest.mock('@plone/volto/helpers', () => ({
-  flattenToAppURL: jest.fn((url) => url),
-}));
+// Volto 17's ConditionalLink imports the full components barrel. Keep these
+// card action tests independent of that application-level dependency tree.
+jest.mock(
+  '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
+  () =>
+    ({ children, condition, to, className }) =>
+      condition ? (
+        <a href={to} className={className}>
+          {children}
+        </a>
+      ) : (
+        <>{children}</>
+      ),
+);
 
 // Mock RenderBlocksWrapper component
 jest.mock('./RenderBlocksWrapper', () =>
@@ -36,6 +53,83 @@ jest.mock('./RenderBlocksWrapper', () =>
 );
 
 const mockStore = configureStore([]);
+
+describe('Visualization card actions', () => {
+  const renderCardActions = ({
+    popup = false,
+    width = 1920,
+    edit = false,
+  } = {}) => {
+    const props = {
+      item: { '@id': '/test-item', title: 'Test visualization' },
+      itemModel: {
+        '@type': 'visualizationCard',
+        enableCTAPopup: popup,
+        callToAction: {
+          enable: true,
+          label: 'Read more',
+          urlTemplate: '$URL/details',
+        },
+      },
+      isEditMode: edit,
+    };
+    return render(
+      <Provider store={mockStore({ screen: { width } })}>
+        <CardActionProvider {...props}>
+          <CardTitle {...props} />
+          <CardImage {...props} />
+          <CardExtra {...props} />
+        </CardActionProvider>
+      </Provider>,
+    );
+  };
+
+  it.each([
+    [false, 1920],
+    [true, 1024],
+  ])('uses the CTA URL for all links (popup %s, width %s)', (popup, width) => {
+    renderCardActions({ popup, width });
+    const links = screen.getAllByRole('link');
+    expect(links).toHaveLength(3);
+    links.forEach((link) =>
+      expect(link).toHaveAttribute('href', '/test-item/details'),
+    );
+    expect(
+      screen.queryByTestId('render-blocks-wrapper'),
+    ).not.toBeInTheDocument();
+  });
+
+  it.each(['title', 'image', 'CTA'])(
+    'opens the popup from the %s',
+    (trigger) => {
+      renderCardActions({ popup: true });
+      const target =
+        trigger === 'image'
+          ? screen.getByRole('img').closest('a')
+          : screen.getByText(
+              trigger === 'title' ? 'Test visualization' : 'Read more',
+            );
+      fireEvent.click(target);
+      expect(screen.getByTestId('render-blocks-wrapper')).toBeInTheDocument();
+      expect(screen.getAllByTestId('render-blocks-wrapper')).toHaveLength(1);
+      expect(require('./RenderBlocksWrapper')).toHaveBeenCalledWith(
+        expect.objectContaining({
+          location: { pathname: '/test-item/details' },
+        }),
+        expect.anything(),
+      );
+    },
+  );
+
+  it('does not activate card links in edit mode', () => {
+    renderCardActions({ popup: true, edit: true });
+    expect(screen.queryByRole('link')).not.toBeInTheDocument();
+    fireEvent.click(screen.getByText('Read more'));
+    expect(
+      screen.queryByTestId('render-blocks-wrapper'),
+    ).not.toBeInTheDocument();
+  });
+});
 
 describe('CardExtra Component', () => {
   let store;

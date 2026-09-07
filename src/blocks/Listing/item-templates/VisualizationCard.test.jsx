@@ -7,6 +7,11 @@ import VisualizationCardComponent from './VisualizationCard';
 
 const mockStore = configureStore([]);
 
+jest.mock(
+  '@eeacms/volto-listing-block/components/UniversalCard/fragments/RenderBlocksWrapper',
+  () => () => <div data-testid="popup-content" />,
+);
+
 // Mock the UniversalCard components
 jest.mock('@eeacms/volto-listing-block/components/UniversalCard', () => ({
   CardDescription: jest.fn(() => (
@@ -37,6 +42,7 @@ describe('VisualizationCard', () => {
   let store;
 
   beforeEach(() => {
+    jest.clearAllMocks();
     store = mockStore({
       vocabularies: {
         'collective.taxonomy.benchmark_level': {
@@ -120,6 +126,52 @@ describe('VisualizationCard', () => {
       expect.objectContaining({
         preview_image_url: '/test-item/@@plotly_preview.svg/soer_miniature',
       }),
+      expect.anything(),
+    );
+  });
+
+  it('uses the resolved child visualization preview for an indicator', () => {
+    const preview_image_url =
+      '/test-indicator/figure-1/@@images/preview_image-400.svg';
+
+    render(
+      <Provider store={store}>
+        <VisualizationCardComponent
+          {...mockProps}
+          item={{
+            ...mockItem,
+            '@type': 'ims_indicator',
+          }}
+          preview_image_url={preview_image_url}
+        />
+      </Provider>,
+    );
+
+    expect(
+      require('@eeacms/volto-listing-block/components/UniversalCard').CardImage,
+    ).toHaveBeenCalledWith(
+      expect.objectContaining({ preview_image_url }),
+      expect.anything(),
+    );
+  });
+
+  it('does not request the SOER preview endpoint for an indicator', () => {
+    render(
+      <Provider store={store}>
+        <VisualizationCardComponent
+          {...mockProps}
+          item={{
+            ...mockItem,
+            '@type': 'ims_indicator',
+          }}
+        />
+      </Provider>,
+    );
+
+    expect(
+      require('@eeacms/volto-listing-block/components/UniversalCard').CardImage,
+    ).toHaveBeenCalledWith(
+      expect.objectContaining({ preview_image_url: undefined }),
       expect.anything(),
     );
   });
