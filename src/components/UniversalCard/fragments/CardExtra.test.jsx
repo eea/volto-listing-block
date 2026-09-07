@@ -32,9 +32,20 @@ jest.mock('@plone/volto/registry', () => ({
   },
 }));
 
-jest.mock('@plone/volto/helpers', () => ({
-  flattenToAppURL: jest.fn((url) => url),
-}));
+// Volto 17's ConditionalLink imports the full components barrel. Keep these
+// card action tests independent of that application-level dependency tree.
+jest.mock(
+  '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
+  () =>
+    ({ children, condition, to, className }) =>
+      condition ? (
+        <a href={to} className={className}>
+          {children}
+        </a>
+      ) : (
+        <>{children}</>
+      ),
+);
 
 // Mock RenderBlocksWrapper component
 jest.mock('./RenderBlocksWrapper', () =>
