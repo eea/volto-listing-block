@@ -65,9 +65,15 @@
   --text-color: #3d5265;
 }
 
+.ui.dimmer.visualization-card-dimmer {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
 .visualization-card-modal {
   max-width: var(--visualization-modal-max-width, 1120px);
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
 
   &.enlarge-modal.ui.modal .close.icon {
     top: 1.5rem;
