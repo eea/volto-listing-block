@@ -47,11 +47,17 @@ export const ImageOnBottomCardLayout = (props) => {
   const { className } = props;
 
   return (
-    <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
+    <UiCard
+      fluid={true}
+      className={cx(
+        'u-card',
+        'image-on-bottom-card',
+        getStyles(props),
+        className,
+      )}
+    >
       <UiCard.Content>
-        <CardMeta {...props} />
         <CardTitle {...props} />
-        <CardDescription {...props} />
       </UiCard.Content>
       <CardImage {...props} />
       <CardExtra {...props} />
