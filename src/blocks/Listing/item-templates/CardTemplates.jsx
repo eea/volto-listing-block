@@ -23,19 +23,20 @@ const getStyles = (props) => {
 };
 
 const BasicCard = (props) => {
-  const { className } = props;
+  const { className, item } = props;
   const imagePosition = props.imagePosition;
+  // with an external link the title goes on top and the linked image below it
+  const imageFirst =
+    !item?.external_link && (!imagePosition || imagePosition === 'left');
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
-      {(!imagePosition || (imagePosition && imagePosition === 'left')) && (
-        <CardImage {...props} />
-      )}
+      {imageFirst && <CardImage {...props} />}
       <UiCard.Content>
         <CardMeta {...props} />
         <CardTitle {...props} />
         <CardDescription {...props} />
       </UiCard.Content>
-      {imagePosition && imagePosition === 'right' && <CardImage {...props} />}
+      {!imageFirst && <CardImage {...props} />}
       <CardExtra {...props} />
     </UiCard>
   );

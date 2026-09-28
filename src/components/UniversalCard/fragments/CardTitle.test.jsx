@@ -40,6 +40,24 @@ describe('CardTitle', () => {
     );
   });
 
+  it('leaves the title unlinked when external_link is set', () => {
+    render(
+      <CardTitle
+        item={{
+          '@id': '/test-item',
+          title: 'Test Item',
+          external_link: 'https://example.org/agency',
+        }}
+        itemModel={itemModel}
+      />,
+    );
+
+    expect(screen.getByTestId('conditional-link')).toHaveAttribute(
+      'data-condition',
+      'false',
+    );
+  });
+
   it('falls back to the item @id when external_link is not set', () => {
     render(
       <CardTitle

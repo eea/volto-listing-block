@@ -71,6 +71,20 @@ describe('CardImage', () => {
     );
   });
 
+  it('links the image to external_link even when the title is not on it', () => {
+    render(
+      <CardImage
+        {...mockProps}
+        item={{ ...mockItem, external_link: 'https://example.org/agency' }}
+        itemModel={{ ...mockProps.itemModel, titleOnImage: false }}
+      />,
+    );
+
+    const link = screen.getByTestId('conditional-link');
+    expect(link.getAttribute('data-condition')).toBe('true');
+    expect(link).toHaveAttribute('data-to', 'https://example.org/agency');
+  });
+
   it('falls back to the item @id when external_link is not set', () => {
     render(<CardImage {...mockProps} />);
 

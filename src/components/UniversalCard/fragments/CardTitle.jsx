@@ -19,6 +19,7 @@ const CardTitle = (props) => {
             !isEditMode &&
             itemModel?.hasLink &&
             itemModel?.['@type'] !== 'visualizationCard' &&
+            !item.external_link &&
             to
           )
         }
