@@ -17,6 +17,7 @@ import {
 import {
   DefaultCardLayout,
   ImageCardLayout,
+  ImageOnBottomCardLayout,
   LeftImageCardLayout,
   RightImageCardLayout,
 } from './item-templates/CardTemplates';
@@ -145,6 +146,14 @@ const applyConfig = (config) => {
         isDefault: false,
         title: 'Image on right',
         template: RightImageCardLayout,
+        schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
+        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
+      },
+      {
+        id: 'imageOnBottom',
+        isDefault: false,
+        title: 'Image on bottom',
+        template: ImageOnBottomCardLayout,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
         excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
       },

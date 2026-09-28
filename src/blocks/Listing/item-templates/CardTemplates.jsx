@@ -23,26 +23,41 @@ const getStyles = (props) => {
 };
 
 const BasicCard = (props) => {
-  const { className, item } = props;
+  const { className } = props;
   const imagePosition = props.imagePosition;
-  // with an external link the title goes on top and the linked image below it
-  const imageFirst =
-    !item?.external_link && (!imagePosition || imagePosition === 'left');
   return (
     <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
-      {imageFirst && <CardImage {...props} />}
+      {(!imagePosition || (imagePosition && imagePosition === 'left')) && (
+        <CardImage {...props} />
+      )}
       <UiCard.Content>
         <CardMeta {...props} />
         <CardTitle {...props} />
         <CardDescription {...props} />
       </UiCard.Content>
-      {!imageFirst && <CardImage {...props} />}
+      {imagePosition && imagePosition === 'right' && <CardImage {...props} />}
       <CardExtra {...props} />
     </UiCard>
   );
 };
 
 export const DefaultCardLayout = BasicCard;
+
+export const ImageOnBottomCardLayout = (props) => {
+  const { className } = props;
+
+  return (
+    <UiCard fluid={true} className={cx('u-card', getStyles(props), className)}>
+      <UiCard.Content>
+        <CardMeta {...props} />
+        <CardTitle {...props} />
+        <CardDescription {...props} />
+      </UiCard.Content>
+      <CardImage {...props} />
+      <CardExtra {...props} />
+    </UiCard>
+  );
+};
 
 export const LeftImageCardLayout = (props) => (
   <BasicCard
