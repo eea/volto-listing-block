@@ -8,8 +8,12 @@ jest.mock(
   '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
   () => ({
     __esModule: true,
-    default: ({ children, condition }) => (
-      <div data-testid="conditional-link" data-condition={condition}>
+    default: ({ children, condition, to }) => (
+      <div
+        data-testid="conditional-link"
+        data-condition={condition}
+        data-to={to}
+      >
         {children}
       </div>
     ),
@@ -49,6 +53,32 @@ describe('CardImage', () => {
       hasLabel: true,
     },
   };
+
+  it('links to item.external_url when set', () => {
+    const propsWithExternalUrl = {
+      ...mockProps,
+      item: {
+        ...mockItem,
+        external_url: 'https://example.org/agency',
+      },
+    };
+
+    render(<CardImage {...propsWithExternalUrl} />);
+
+    expect(screen.getByTestId('conditional-link')).toHaveAttribute(
+      'data-to',
+      'https://example.org/agency',
+    );
+  });
+
+  it('falls back to the item @id when external_url is not set', () => {
+    render(<CardImage {...mockProps} />);
+
+    expect(screen.getByTestId('conditional-link')).toHaveAttribute(
+      'data-to',
+      '/test-item',
+    );
+  });
 
   it('renders with showLink=true when not in edit mode and itemModel has hasLink and titleOnImage', () => {
     const { container } = render(<CardImage {...mockProps} />);

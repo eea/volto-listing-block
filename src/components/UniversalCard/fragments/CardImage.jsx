@@ -31,12 +31,13 @@ const CardImage = (props) => {
   const { item, isEditMode, preview_image, preview_image_url, itemModel } =
     props;
   const label = getLabel(props);
+  const to = item.external_url || item['@id'];
   const showLink =
-    !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage && item['@id'];
+    !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage && to;
 
   return (
     <ConditionalLink
-      to={item['@id']}
+      to={to}
       className="image"
       item={item}
       condition={!!showLink}
