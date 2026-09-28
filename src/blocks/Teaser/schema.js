@@ -1,20 +1,20 @@
-export const EXTERNAL_URL_FIELD = 'external_url';
+export const EXTERNAL_LINK_FIELD = 'external_link';
 
-const addExternalUrlField = (schema) => {
+const addExternalLinkField = (schema) => {
   const fieldset =
     schema.fieldsets?.find(({ id }) => id === 'default') ||
     schema.fieldsets?.[0];
 
-  if (fieldset?.fields && !fieldset.fields.includes(EXTERNAL_URL_FIELD)) {
+  if (fieldset?.fields && !fieldset.fields.includes(EXTERNAL_LINK_FIELD)) {
     const hrefIndex = fieldset.fields.indexOf('href');
     fieldset.fields.splice(
       hrefIndex === -1 ? fieldset.fields.length : hrefIndex + 1,
       0,
-      EXTERNAL_URL_FIELD,
+      EXTERNAL_LINK_FIELD,
     );
   }
 
-  schema.properties[EXTERNAL_URL_FIELD] = {
+  schema.properties[EXTERNAL_LINK_FIELD] = {
     title: 'External link',
     description:
       'When set, the card links here instead of the linked content item.',
@@ -45,7 +45,7 @@ export const adjustTeaserSchema = ({ schema }) => {
   schema.properties.href.selectedItemAttrs.push('ExpirationDate');
   schema.properties.href.selectedItemAttrs.push('start');
 
-  addExternalUrlField(schema);
+  addExternalLinkField(schema);
 
   return schema;
 };

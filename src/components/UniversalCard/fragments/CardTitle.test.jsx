@@ -22,13 +22,13 @@ jest.mock(
 const itemModel = { hasLink: true, '@type': 'card' };
 
 describe('CardTitle', () => {
-  it('links to item.external_url when set', () => {
+  it('links to item.external_link when set', () => {
     render(
       <CardTitle
         item={{
           '@id': '/test-item',
           title: 'Test Item',
-          external_url: 'https://example.org/agency',
+          external_link: 'https://example.org/agency',
         }}
         itemModel={itemModel}
       />,
@@ -40,7 +40,7 @@ describe('CardTitle', () => {
     );
   });
 
-  it('falls back to the item @id when external_url is not set', () => {
+  it('falls back to the item @id when external_link is not set', () => {
     render(
       <CardTitle
         item={{ '@id': '/test-item', title: 'Test Item' }}

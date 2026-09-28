@@ -29,7 +29,7 @@ const getCallToAction = (item, options) => {
     ? urlTemplate
         .replace('$PORTAL_URL', config.settings.publicURL)
         .replace('$URL', flattenToAppURL(item['@id']))
-    : options.href?.[0]?.['@id'] || item.external_url || item['@id'];
+    : options.href?.[0]?.['@id'] || item.external_link || item['@id'];
 };
 
 const getButtonClassName = (styles) => {

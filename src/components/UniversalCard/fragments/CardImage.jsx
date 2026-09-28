@@ -31,7 +31,7 @@ const CardImage = (props) => {
   const { item, isEditMode, preview_image, preview_image_url, itemModel } =
     props;
   const label = getLabel(props);
-  const to = item.external_url || item['@id'];
+  const to = item.external_link || item['@id'];
   const showLink =
     !isEditMode && itemModel?.hasLink && itemModel?.titleOnImage && to;
 

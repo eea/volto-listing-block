@@ -6,7 +6,7 @@ const CardTitle = (props) => {
   const { item, isEditMode, itemModel } = props;
   const { title, Title } = item;
   const t = title || Title;
-  const to = item.external_url || item['@id'];
+  const to = item.external_link || item['@id'];
 
   return t && !itemModel?.titleOnImage ? (
     <UiCard.Header>

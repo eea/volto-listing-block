@@ -1,4 +1,4 @@
-import { adjustTeaserSchema, EXTERNAL_URL_FIELD } from './schema';
+import { adjustTeaserSchema, EXTERNAL_LINK_FIELD } from './schema';
 
 const makeSchema = () => ({
   fieldsets: [{ id: 'default', fields: ['href', 'overwrite'] }],
@@ -7,15 +7,15 @@ const makeSchema = () => ({
 });
 
 describe('adjustTeaserSchema', () => {
-  it('adds the external_url field right after href', () => {
+  it('adds the external_link field right after href', () => {
     const schema = adjustTeaserSchema({ schema: makeSchema() });
 
     expect(schema.fieldsets[0].fields).toEqual([
       'href',
-      EXTERNAL_URL_FIELD,
+      EXTERNAL_LINK_FIELD,
       'overwrite',
     ]);
-    expect(schema.properties[EXTERNAL_URL_FIELD]).toEqual(
+    expect(schema.properties[EXTERNAL_LINK_FIELD]).toEqual(
       expect.objectContaining({ widget: 'url' }),
     );
   });
@@ -26,7 +26,7 @@ describe('adjustTeaserSchema', () => {
     adjustTeaserSchema({ schema });
 
     expect(
-      schema.fieldsets[0].fields.filter((f) => f === EXTERNAL_URL_FIELD),
+      schema.fieldsets[0].fields.filter((f) => f === EXTERNAL_LINK_FIELD),
     ).toHaveLength(1);
   });
 });

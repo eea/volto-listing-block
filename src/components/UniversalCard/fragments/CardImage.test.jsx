@@ -54,16 +54,16 @@ describe('CardImage', () => {
     },
   };
 
-  it('links to item.external_url when set', () => {
-    const propsWithExternalUrl = {
+  it('links to item.external_link when set', () => {
+    const propsWithExternalLink = {
       ...mockProps,
       item: {
         ...mockItem,
-        external_url: 'https://example.org/agency',
+        external_link: 'https://example.org/agency',
       },
     };
 
-    render(<CardImage {...propsWithExternalUrl} />);
+    render(<CardImage {...propsWithExternalLink} />);
 
     expect(screen.getByTestId('conditional-link')).toHaveAttribute(
       'data-to',
@@ -71,7 +71,7 @@ describe('CardImage', () => {
     );
   });
 
-  it('falls back to the item @id when external_url is not set', () => {
+  it('falls back to the item @id when external_link is not set', () => {
     render(<CardImage {...mockProps} />);
 
     expect(screen.getByTestId('conditional-link')).toHaveAttribute(
