@@ -3,32 +3,24 @@ import { composeSchema } from '@eeacms/volto-listing-block/schema-utils';
 
 import Carousel from './layout-templates/Carousel';
 import Gallery from './layout-templates/Gallery';
-import VisualizationCards from './layout-templates/VisualizationCards';
 import Listing from './layout-templates/Listing';
 import {
   setCardModelSchema,
   setCardStylingSchema,
   setItemModelSchema,
-  setSimpleItemModelSchema,
-  setSimpleItemStylingSchema,
-  setVisualizationCardModelSchema,
 } from './schema';
 
-import {
-  DefaultCardLayout,
-  ImageCardLayout,
-  LeftImageCardLayout,
-  RightImageCardLayout,
-} from './item-templates/CardTemplates';
+import CardTemplate from './item-templates/CardTemplate';
+import ItemTemplate from './item-templates/ItemTemplate';
 
-import VisualizationCardLayout from './item-templates/VisualizationCard';
-
-import { DefaultItemLayout } from './item-templates/ItemTemplates';
-import { SearchItemLayout } from './item-templates/SearchItemTemplate';
-import { SimpleItemLayout } from './item-templates/SimpleItemTemplates';
-
+import withItemModelMigration from '@eeacms/volto-listing-block/components/UniversalCard/withItemModelMigration';
 import messages from '@eeacms/volto-listing-block/messages';
 import Accordion from './layout-templates/Accordion';
+import {
+  hideHiddenVariations,
+  migrateListingData,
+  withUnknownVariationFallback,
+} from './variations';
 
 const applyConfig = (config) => {
   // moment date locale. See https://momentjs.com/ - Multiple Locale Support
@@ -49,17 +41,29 @@ const applyConfig = (config) => {
   // With our own variations being based on the UniversalCard, we have another
   // level of control on how each item is displayed.
 
+  // Layouts offered to editors: List, Grid, Carousel and Accordion. How each
+  // item looks (image position, overlay, top accent, compact...) is set with
+  // the card controls, not with extra variations.
   listing.variations = [
-    ...listing.variations.filter(({ id }) => blacklist.indexOf(id) === -1),
+    ...listing.variations
+      .filter(({ id }) => blacklist.indexOf(id) === -1)
+      // Volto's own templates stay available for existing blocks only
+      .map((variation) => ({ ...variation, isDefault: false })),
     {
       id: 'summary',
-      isDefault: false,
-      title: 'Listing',
+      isDefault: true,
+      title: 'List',
       template: Listing,
+      schemaEnhancer: composeSchema(UniversalCard.schemaEnhancer),
+    },
+    {
+      id: 'cardsGallery',
+      isDefault: false,
+      title: 'Grid',
+      template: Gallery,
       schemaEnhancer: composeSchema(
-        // addStyling,
-        // setBasicStylingSchema,
         UniversalCard.schemaEnhancer,
+        Gallery.schemaEnhancer,
       ),
     },
     {
@@ -68,34 +72,8 @@ const applyConfig = (config) => {
       title: 'Carousel',
       template: Carousel,
       schemaEnhancer: composeSchema(
-        // addStyling,
-        // setBasicStylingSchema,
         UniversalCard.schemaEnhancer,
         Carousel.schemaEnhancer,
-      ),
-    },
-    {
-      id: 'cardsGallery', //  'customCardsGalleryVariationId'
-      isDefault: false,
-      title: 'Gallery',
-      template: Gallery,
-      schemaEnhancer: composeSchema(
-        // addStyling,
-        // setBasicStylingSchema,
-        UniversalCard.schemaEnhancer,
-        Gallery.schemaEnhancer,
-      ),
-    },
-    {
-      id: 'cardsVisualization', //  'customCardsGalleryVariationId'
-      isDefault: false,
-      title: 'Visualization Cards',
-      template: VisualizationCards,
-      schemaEnhancer: composeSchema(
-        // addStyling,
-        // setBasicStylingSchema,
-        UniversalCard.schemaEnhancer,
-        VisualizationCards.schemaEnhancer,
       ),
     },
     {
@@ -104,75 +82,47 @@ const applyConfig = (config) => {
       title: 'Accordion',
       template: Accordion,
     },
-  ];
+    {
+      // legacy: a Grid with the top accent card style, migrated on edit
+      id: 'cardsVisualization',
+      isDefault: false,
+      title: 'Visualization Cards',
+      template: Gallery,
+      schemaEnhancer: composeSchema(
+        UniversalCard.schemaEnhancer,
+        Gallery.schemaEnhancer,
+      ),
+    },
+  ].map((variation) => ({
+    ...variation,
+    schemaEnhancer: composeSchema(
+      variation.schemaEnhancer,
+      hideHiddenVariations,
+    ),
+  }));
+  listing.edit = withItemModelMigration(listing.edit, migrateListingData);
+  listing.view = withUnknownVariationFallback(listing.view);
+
   listing.extensions = {
     ...listing.extensions,
+    // Only two base templates, all other card flavours (image position,
+    // overlay, visualization preview, compact/search list items) are
+    // controls of these. Legacy template ids are migrated, see
+    // components/UniversalCard/migrate.js
     cardTemplates: [
       {
         id: 'card',
         isDefault: true,
-        title: 'Card (default)',
-        template: DefaultCardLayout,
+        title: messages.cardTemplate,
+        template: CardTemplate,
         schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
-      },
-      {
-        id: 'visualizationCard',
-        isDefault: false,
-        title: 'Visualization Card',
-        template: VisualizationCardLayout,
-        schemaEnhancer: composeSchema(
-          setVisualizationCardModelSchema,
-          setCardStylingSchema,
-        ),
-      },
-      {
-        id: 'imageCard',
-        isDefault: false,
-        title: 'Image Card',
-        template: ImageCardLayout,
-        schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
-      },
-      {
-        id: 'imageOnLeft',
-        isDefault: false,
-        title: 'Image on left',
-        template: LeftImageCardLayout,
-        schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
-        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
-      },
-      {
-        id: 'imageOnRight',
-        isDefault: false,
-        title: 'Image on right',
-        template: RightImageCardLayout,
-        schemaEnhancer: composeSchema(setCardModelSchema, setCardStylingSchema),
-        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
       },
       {
         id: 'item',
         isDefault: false,
-        title: 'Listing Item',
-        template: DefaultItemLayout,
+        title: messages.itemTemplate,
+        template: ItemTemplate,
         schemaEnhancer: composeSchema(setItemModelSchema, setCardStylingSchema),
-        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
-      },
-      {
-        id: 'searchItem',
-        isDefault: false,
-        title: 'Search Item',
-        template: SearchItemLayout,
-        schemaEnhancer: composeSchema(setItemModelSchema, setCardStylingSchema),
-        excludedFromVariations: ['cardsCarousel', 'cardsGallery'],
-      },
-      {
-        id: 'simpleItem',
-        isDefault: false,
-        title: 'Simple Item',
-        template: SimpleItemLayout,
-        schemaEnhancer: composeSchema(
-          setSimpleItemModelSchema,
-          setSimpleItemStylingSchema,
-        ),
       },
     ],
   };

@@ -1,16 +1,18 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
 import CardExtra from './CardExtra';
 
-// Mock the dependencies
 jest.mock('@plone/volto/registry', () => ({
   __esModule: true,
   default: {
     settings: {
       publicURL: 'https://example.com',
+      apiPath: 'https://example.com',
+      hashLinkSmoothScroll: false,
     },
     blocks: {
       blocksConfig: {
@@ -26,273 +28,112 @@ jest.mock('@plone/volto/registry', () => ({
   },
 }));
 
-jest.mock('@plone/volto/helpers', () => ({
-  flattenToAppURL: jest.fn((url) => url),
-}));
-
-// Mock RenderBlocksWrapper component
 jest.mock('./RenderBlocksWrapper', () =>
   jest.fn(() => <div data-testid="render-blocks-wrapper" />),
 );
 
 const mockStore = configureStore([]);
 
-describe('CardExtra Component', () => {
-  let store;
+const item = { '@id': '/test-item', Subject: ['Tag1', 'Tag2'] };
 
-  beforeEach(() => {
-    store = mockStore({
-      screen: {
-        width: 1920, // Default to desktop width
-      },
-    });
+const renderExtra = (props) =>
+  render(
+    <Provider
+      store={mockStore({
+        screen: { width: 1024 },
+        userSession: { token: null },
+      })}
+    >
+      <MemoryRouter>
+        <CardExtra item={item} {...props} />
+      </MemoryRouter>
+    </Provider>,
+  );
+
+const cta = (options = {}, itemModel = {}) => ({
+  ...itemModel,
+  callToAction: { enable: true, ...options },
+});
+
+describe('CardExtra', () => {
+  it('renders nothing without tags and call to action', () => {
+    const { container } = renderExtra({ itemModel: {} });
+    expect(container.firstChild).toBeNull();
   });
 
-  // Test CardExtra component
-  describe('CardExtra', () => {
-    it('renders null when no showCallToAction and no showTags', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = { callToAction: {}, hasTags: false };
+  it('renders the tags', () => {
+    renderExtra({ itemModel: { hasTags: true } });
+    expect(screen.getByText('Tag1')).toBeInTheDocument();
+    expect(screen.getByText('Tag2')).toBeInTheDocument();
+  });
 
-      const { container } = render(
-        <CardExtra item={item} itemModel={itemModel} />,
-      );
-      expect(container.firstChild).toBeNull();
+  it('does not render tags when the item has none', () => {
+    const { container } = renderExtra({
+      item: { '@id': '/x' },
+      itemModel: { hasTags: true },
     });
+    expect(container.querySelector('.tags.labels')).toBeNull();
+  });
 
-    it('renders tags when showTags is true and item has Subject', () => {
-      const item = {
-        '@id': '/test-item',
-        Subject: ['Tag1', 'Tag2'],
-      };
-      const itemModel = { hasTags: true, callToAction: {} };
+  it('renders the call to action with its label', () => {
+    renderExtra({ itemModel: cta({ label: 'Click Me' }) });
+    expect(screen.getByText('Click Me').tagName).toBe('A');
+  });
 
-      render(<CardExtra item={item} itemModel={itemModel} />);
+  it('uses "Read more" as default label', () => {
+    renderExtra({ itemModel: cta() });
+    expect(screen.getByText('Read more')).toBeInTheDocument();
+  });
 
-      expect(screen.getByText('Tag1')).toBeInTheDocument();
-      expect(screen.getByText('Tag2')).toBeInTheDocument();
+  it('uses the url template', () => {
+    renderExtra({ itemModel: cta({ urlTemplate: '$URL/details' }) });
+    expect(screen.getByText('Read more')).toHaveAttribute(
+      'href',
+      '/test-item/details',
+    );
+  });
+
+  it('uses the action link when there is no url template', () => {
+    renderExtra({ itemModel: cta({ href: [{ '@id': '/custom-link' }] }) });
+    expect(screen.getByText('Read more')).toHaveAttribute(
+      'href',
+      '/custom-link',
+    );
+  });
+
+  it('falls back to the item url', () => {
+    renderExtra({ itemModel: cta() });
+    expect(screen.getByText('Read more')).toHaveAttribute('href', '/test-item');
+  });
+
+  it('renders a button without link in edit mode', () => {
+    renderExtra({ itemModel: cta(), isEditMode: true });
+    const button = screen.getByText('Read more');
+    expect(button.tagName).toBe('BUTTON');
+    expect(button).not.toHaveAttribute('href');
+  });
+
+  it('applies the theme classes', () => {
+    renderExtra({
+      itemModel: cta({}, { styles: { 'theme:noprefix': 'primary' } }),
     });
+    expect(screen.getByText('Read more').className).toContain('primary');
+  });
 
-    it('does not render tags when showTags is true but item has no Subject', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = { hasTags: true, callToAction: {} };
-
-      const { container } = render(
-        <CardExtra item={item} itemModel={itemModel} />,
-      );
-
-      expect(container.querySelector('.tags.labels')).not.toBeInTheDocument();
+  it('applies the inverted theme classes', () => {
+    renderExtra({
+      itemModel: cta(
+        {},
+        { styles: { 'theme:noprefix': 'primary', 'inverted:bool': true } },
+      ),
     });
+    expect(screen.getByText('Read more').className).toContain(
+      'primary inverted',
+    );
+  });
 
-    it('renders call to action button when showCallToAction is true', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          label: 'Click Me',
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      expect(screen.getByText('Click Me')).toBeInTheDocument();
-    });
-
-    it('uses default "Read more" label when no label is provided', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      expect(screen.getByText('Read more')).toBeInTheDocument();
-    });
-
-    it('renders LinkCTAButton when enableCTAPopup is false', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          label: 'Click Me',
-        },
-        enableCTAPopup: false,
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Click Me');
-      expect(button.tagName).toBe('A'); // LinkCTAButton renders an anchor tag
-    });
-
-    it('renders PopupCTAButton when enableCTAPopup is true', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          label: 'Click Me',
-        },
-        enableCTAPopup: true,
-      };
-
-      render(
-        <Provider store={store}>
-          <CardExtra item={item} itemModel={itemModel} />
-        </Provider>,
-      );
-
-      const button = screen.getByText('Click Me');
-      expect(button.tagName).toBe('BUTTON'); // PopupCTAButton renders a button tag
-    });
-
-    it('opens modal when PopupCTAButton is clicked', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          label: 'Click Me',
-        },
-        enableCTAPopup: true,
-      };
-
-      render(
-        <Provider store={store}>
-          <CardExtra item={item} itemModel={itemModel} />
-        </Provider>,
-      );
-
-      const button = screen.getByText('Click Me');
-      fireEvent.click(button);
-
-      // Modal should be open
-      expect(screen.getByTestId('render-blocks-wrapper')).toBeInTheDocument();
-    });
-
-    it('falls back to LinkCTAButton on mobile screens', () => {
-      // Set screen width to mobile size
-      store = mockStore({
-        screen: {
-          width: 768, // Mobile width
-        },
-      });
-
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          label: 'Click Me',
-        },
-        enableCTAPopup: true,
-      };
-
-      render(
-        <Provider store={store}>
-          <CardExtra item={item} itemModel={itemModel} />
-        </Provider>,
-      );
-
-      const button = screen.getByText('Click Me');
-      expect(button.tagName).toBe('A'); // Should fall back to LinkCTAButton (anchor tag)
-    });
-
-    it('uses urlTemplate when provided', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          urlTemplate: '$PORTAL_URL/custom/$URL',
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Read more');
-      expect(button.getAttribute('href')).toBe(
-        'https://example.com/custom//test-item',
-      );
-    });
-
-    it('uses href when provided and no urlTemplate', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-          href: [{ '@id': '/custom-link' }],
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Read more');
-      expect(button.getAttribute('href')).toBe('/custom-link');
-    });
-
-    it('falls back to item @id when no urlTemplate or href', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Read more');
-      expect(button.getAttribute('href')).toBe('/test-item');
-    });
-
-    it('applies theme class to button when provided', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-        },
-        styles: {
-          'theme:noprefix': 'primary',
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Read more');
-      expect(button.className).toContain('primary');
-    });
-
-    it('applies inverted class to button when inverted is true', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-        },
-        styles: {
-          'theme:noprefix': 'primary',
-          'inverted:bool': true,
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Read more');
-      expect(button.className).toContain('primary inverted');
-    });
-
-    it('applies basic black class when inverted is true but no theme', () => {
-      const item = { '@id': '/test-item' };
-      const itemModel = {
-        callToAction: {
-          enable: true,
-        },
-        styles: {
-          'inverted:bool': true,
-        },
-      };
-
-      render(<CardExtra item={item} itemModel={itemModel} />);
-
-      const button = screen.getByText('Read more');
-      expect(button.className).toContain('basic black');
-    });
+  it('uses basic black when inverted without theme', () => {
+    renderExtra({ itemModel: cta({}, { styles: { 'inverted:bool': true } }) });
+    expect(screen.getByText('Read more').className).toContain('basic black');
   });
 });

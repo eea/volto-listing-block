@@ -65,9 +65,15 @@
   --text-color: #3d5265;
 }
 
+.ui.dimmer.visualization-card-dimmer {
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+}
+
 .visualization-card-modal {
   max-width: var(--visualization-modal-max-width, 1120px);
   overflow-x: hidden;
+  overscroll-behavior-y: contain;
 
   &.enlarge-modal.ui.modal .close.icon {
     top: 1.5rem;
@@ -133,51 +139,57 @@
   margin-bottom: 0;
 }
 
-.cardsVisualization {
-  .ui.cards {
-    row-gap: 2rem;
+// Top accent card style (card styling > "Top accent border"). The legacy
+// Visualization Cards layout (.cardsVisualization) gets the same look.
+.cardsVisualization .ui.cards,
+.ui.cards:has(> .ui.card.u-card.top-accent) {
+  row-gap: 2rem;
+}
+
+.topAccentCard() {
+  min-width: 200px !important;
+  min-height: 326px !important;
+  border: 1px solid #f9f9f9;
+  border-top: none;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+
+  &::before {
+    display: block;
+    width: calc(100% + 2px);
+    height: 12px;
+    margin-left: -1px;
+    background-color: @tertiaryColor;
+    content: '';
   }
 
-  .ui.cards .ui.card {
-    min-width: 200px !important;
-    min-height: 326px !important;
-    border: 1px solid #f9f9f9;
-    border-top: none;
-    box-shadow:
-      rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-      rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
-    &::before {
-      display: block;
-      width: calc(100% + 2px);
-      height: 12px;
-      margin-left: -1px;
-      background-color: @tertiaryColor;
-      content: '';
+    .button {
+      width: fit-content;
     }
 
-    .content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      .button {
-        width: fit-content;
-      }
-
-      .benchmark_level_wrapper + .image {
-        margin-top: initial;
-      }
-    }
-
-    .content.extra {
-      align-items: end;
-    }
-
-    .description {
-      font-size: 0.85rem;
+    .benchmark_level_wrapper + .image {
+      margin-top: initial;
     }
   }
+
+  .content.extra {
+    align-items: end;
+  }
+
+  .description {
+    font-size: 0.85rem;
+  }
+}
+
+.cardsVisualization .ui.cards .ui.card,
+.ui.card.u-card.top-accent {
+  .topAccentCard();
 }
 
 .modal .eea.banner {

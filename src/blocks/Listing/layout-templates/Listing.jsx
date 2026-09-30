@@ -6,10 +6,18 @@ import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/
 import { isInternalURL } from '@plone/volto/helpers/Url/Url';
 import config from '@plone/volto/registry';
 import messages from '@eeacms/volto-listing-block/messages';
+import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
+import {
+  getCardVariant,
+  migrateItemModel,
+} from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
 
 const Listing = (props) => {
   const { block, items, linkTitle, linkHref, isEditMode, intl } = props;
   let href = linkHref?.[0]?.['@id'] || '';
+  const getIndicatorPreview = useIndicatorPreviews(items, block);
+  // keeps the per-flavour grid classes, e.g. .imageOnLeft-items
+  const cardVariant = getCardVariant(migrateItemModel(props.itemModel || {}));
 
   moment.locale(config.settings.dateLocale);
   const link = isInternalURL(href) ? (
@@ -22,13 +30,14 @@ const Listing = (props) => {
 
   return (
     <>
-      <div className={`items ${props?.itemModel?.['@type']}-items`}>
+      <div className={`items ${cardVariant}-items`}>
         {items && items.length > 0 ? (
           items.map((item, index) => (
             <UniversalCard
               {...props}
               key={`item-${block}-${index}`}
               item={item}
+              preview_image_url={getIndicatorPreview(item)}
             />
           ))
         ) : (

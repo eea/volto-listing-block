@@ -186,14 +186,6 @@ const messages = defineMessages({
     id: 'displayTitle',
     defaultMessage: 'Display title on image',
   },
-  enableLink: {
-    id: 'enableLink',
-    defaultMessage: 'Enable link',
-  },
-  enableLinkDescription: {
-    id: 'enableLinkDescription',
-    defaultMessage: 'Link to source content.',
-  },
   publicationDate: {
     id: 'publicationDate',
     defaultMessage: 'Publication date',
@@ -328,6 +320,27 @@ const messages = defineMessages({
     id: 'four',
     defaultMessage: 'Four',
   },
+  five: {
+    id: 'five',
+    defaultMessage: 'Five',
+  },
+  six: {
+    id: 'six',
+    defaultMessage: 'Six',
+  },
+  gridTitle: {
+    id: 'gridTitle',
+    defaultMessage: 'Grid',
+  },
+  topAccent: {
+    id: 'topAccent',
+    defaultMessage: 'Top accent border',
+  },
+  topAccentHelp: {
+    id: 'topAccentHelp',
+    defaultMessage:
+      'Adds a thick colored border on top of the card, with a light shadow.',
+  },
   noItemsToShow: {
     id: 'noItemsToShow',
     defaultMessage: 'There are no items to show in this view.',
@@ -348,6 +361,71 @@ const messages = defineMessages({
   navigate: {
     id: 'Browse the site',
     defaultMessage: 'Browse the site',
+  },
+  cardTemplate: {
+    id: 'cardTemplate',
+    defaultMessage: 'Card',
+  },
+  itemTemplate: {
+    id: 'itemTemplate',
+    defaultMessage: 'List item',
+  },
+  imagePosition: {
+    id: 'imagePosition',
+    defaultMessage: 'Image position',
+  },
+  imagePositionBottom: {
+    id: 'imagePositionBottom',
+    defaultMessage: 'Bottom (after description)',
+  },
+  imagePositionNone: {
+    id: 'imagePositionNone',
+    defaultMessage: 'No image',
+  },
+  contentMode: {
+    id: 'contentMode',
+    defaultMessage: 'Content mode',
+  },
+  contentModeDefault: {
+    id: 'contentModeDefault',
+    defaultMessage: 'Image and content',
+  },
+  contentModeOverlay: {
+    id: 'contentModeOverlay',
+    defaultMessage: 'Image only (title on image)',
+  },
+  showBenchmarkLevel: {
+    id: 'showBenchmarkLevel',
+    defaultMessage: 'Show benchmark level',
+  },
+  size: {
+    id: 'size',
+    defaultMessage: 'Size',
+  },
+  sizeDefault: {
+    id: 'sizeDefault',
+    defaultMessage: 'Default',
+  },
+  sizeCompact: {
+    id: 'sizeCompact',
+    defaultMessage: 'Compact (title only)',
+  },
+  showHeadMeta: {
+    id: 'showHeadMeta',
+    defaultMessage: 'Show head metadata',
+  },
+  showHeadMetaDescription: {
+    id: 'showHeadMetaDescription',
+    defaultMessage:
+      'Displays the item metadata slot above the title (used by search results).',
+  },
+  enableCTAPopup: {
+    id: 'enableCTAPopup',
+    defaultMessage: 'Enable CTA content popup',
+  },
+  enableCTAPopupDescription: {
+    id: 'enableCTAPopupDescription',
+    defaultMessage: 'Will enable the CTA content popup only from 1280px and up',
   },
 });
 

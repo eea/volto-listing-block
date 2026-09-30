@@ -8,6 +8,7 @@ import 'slick-carousel/slick/slick-theme.css';
 
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import messages from '@eeacms/volto-listing-block/messages';
+import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
 
 const Slider = loadable(() => import('react-slick'));
 
@@ -63,6 +64,7 @@ const NextArrow = (props) => {
 
 const CardsCarousel = ({ block, items, ...rest }) => {
   const slider = React.useRef(null);
+  const getIndicatorPreview = useIndicatorPreviews(items, block);
   const dots_parent = React.useRef(null);
   const slidesToShow = getSlidesToShow(items, rest.slidesToShow || 4);
   const itemsLength = items.length;
@@ -143,6 +145,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
                 {...rest}
                 block={block}
                 item={item}
+                preview_image_url={getIndicatorPreview(item)}
               />
             ))}
           </Slider>
