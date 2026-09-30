@@ -18,7 +18,7 @@ describe('Blocks Tests', () => {
     addBlock('listing');
     openListingBlock();
     cy.get('#field-headline').click({ force: true }).type('Test Headline');
-    selectListingVariation('Listing');
+    selectListingVariation('List');
     savePage();
 
     createChildDocuments(['Page 1']);

@@ -4,6 +4,7 @@ import React from 'react';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import config from '@plone/volto/registry';
 import messages from '@eeacms/volto-listing-block/messages';
+import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
 
 const Gallery = ({
   block,
@@ -15,12 +16,19 @@ const Gallery = ({
   ...rest
 }) => {
   moment.locale(config.settings.dateLocale);
+  const getIndicatorPreview = useIndicatorPreviews(items, block);
   return (
     <>
       {items && items.length > 0 && (
         <div className={`ui fluid ${gridSize || ''} cards`}>
           {items.map((item, i) => (
-            <UniversalCard key={i} {...rest} block={block} item={item} />
+            <UniversalCard
+              key={i}
+              {...rest}
+              block={block}
+              item={item}
+              preview_image_url={getIndicatorPreview(item)}
+            />
           ))}
         </div>
       )}
@@ -31,7 +39,7 @@ const Gallery = ({
 Gallery.schemaEnhancer = ({ schema, intl }) => {
   schema.fieldsets.splice(1, 0, {
     id: 'cardsGallery',
-    title: intl.formatMessage(messages.galleryTitle),
+    title: intl.formatMessage(messages.gridTitle),
     fields: ['gridSize'],
   });
 
@@ -42,6 +50,8 @@ Gallery.schemaEnhancer = ({ schema, intl }) => {
       choices: [
         ['three', intl.formatMessage(messages.three)],
         ['four', intl.formatMessage(messages.four)],
+        ['five', intl.formatMessage(messages.five)],
+        ['six', intl.formatMessage(messages.six)],
       ],
       default: 'three',
       factory: 'Choice',

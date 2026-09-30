@@ -161,6 +161,11 @@ msgstr "Kartenmodell"
 msgid "cardStyling"
 msgstr "Gestaltung der Karte"
 
+#. Default: "Card"
+#: messages
+msgid "cardTemplate"
+msgstr ""
+
 #. Default: "Carousel"
 #: messages
 msgid "carouselTitle"
@@ -174,6 +179,21 @@ msgstr "Mitte"
 #. Default: "contain"
 #: messages
 msgid "contain"
+msgstr ""
+
+#. Default: "Content mode"
+#: messages
+msgid "contentMode"
+msgstr ""
+
+#. Default: "Image and content"
+#: messages
+msgid "contentModeDefault"
+msgstr ""
+
+#. Default: "Image only (title on image)"
+#: messages
+msgid "contentModeOverlay"
 msgstr ""
 
 #. Default: "cover"
@@ -196,15 +216,15 @@ msgstr "Beschreibung"
 msgid "displayTitle"
 msgstr "Titel auf dem Bild anzeigen"
 
-#. Default: "Enable link"
+#. Default: "Enable CTA content popup"
 #: messages
-msgid "enableLink"
-msgstr "Link aktivieren"
+msgid "enableCTAPopup"
+msgstr ""
 
-#. Default: "Link to source content."
+#. Default: "Will enable the CTA content popup only from 1280px and up"
 #: messages
-msgid "enableLinkDescription"
-msgstr "Link zum Quellinhalt."
+msgid "enableCTAPopupDescription"
+msgstr ""
 
 #. Default: "Event date"
 #: messages
@@ -215,6 +235,11 @@ msgstr "Event datum"
 #: messages
 msgid "fill"
 msgstr "Füllen"
+
+#. Default: "Five"
+#: messages
+msgid "five"
+msgstr ""
 
 #. Default: "Four"
 #: messages
@@ -230,6 +255,11 @@ msgstr "Galerie"
 #: messages
 msgid "gridSize"
 msgstr "Rastergröße"
+
+#. Default: "Grid"
+#: messages
+msgid "gridTitle"
+msgstr ""
 
 #. Default: "Icon name"
 #: messages
@@ -266,6 +296,21 @@ msgstr "Bild"
 msgid "imageLeft"
 msgstr "Bild auf der linken Seite"
 
+#. Default: "Image position"
+#: messages
+msgid "imagePosition"
+msgstr ""
+
+#. Default: "Bottom (after description)"
+#: messages
+msgid "imagePositionBottom"
+msgstr ""
+
+#. Default: "No image"
+#: messages
+msgid "imagePositionNone"
+msgstr ""
+
 #. Default: "Image on Right (Default is Left)"
 #: messages
 msgid "imageRight"
@@ -280,6 +325,11 @@ msgstr "Bildgröße"
 #: messages
 msgid "imageSizeHelp"
 msgstr "Größe des anzuzeigenden Bildes."
+
+#. Default: "List item"
+#: messages
+msgid "itemTemplate"
+msgstr ""
 
 #. Default: "Item theme"
 #: messages
@@ -371,6 +421,21 @@ msgstr "Einstellungen"
 msgid "showAction"
 msgstr "Aktion anzeigen"
 
+#. Default: "Show benchmark level"
+#: messages
+msgid "showBenchmarkLevel"
+msgstr ""
+
+#. Default: "Show head metadata"
+#: messages
+msgid "showHeadMeta"
+msgstr ""
+
+#. Default: "Displays the item metadata slot above the title (used by search results)."
+#: messages
+msgid "showHeadMetaDescription"
+msgstr ""
+
 #. Default: "Show new/archived label"
 #: messages
 msgid "showNewArchivedLabel"
@@ -385,6 +450,26 @@ msgstr "Portaltyp anzeigen"
 #: messages
 msgid "showTags"
 msgstr "Tags anzeigen"
+
+#. Default: "Six"
+#: messages
+msgid "six"
+msgstr ""
+
+#. Default: "Size"
+#: messages
+msgid "size"
+msgstr ""
+
+#. Default: "Compact (title only)"
+#: messages
+msgid "sizeCompact"
+msgstr ""
+
+#. Default: "Default"
+#: messages
+msgid "sizeDefault"
+msgstr ""
 
 #. Default: "Large"
 #: messages
@@ -430,6 +515,16 @@ msgstr "Drei"
 #: messages
 msgid "top"
 msgstr "Oben"
+
+#. Default: "Top accent border"
+#: messages
+msgid "topAccent"
+msgstr ""
+
+#. Default: "Adds a thick colored border on top of the card, with a light shadow."
+#: messages
+msgid "topAccentHelp"
+msgstr ""
 
 #. Default: "Enter a path. Available placeholders: $URL, $PORTAL_URL. If empty, the result URL will be used."
 #: messages
