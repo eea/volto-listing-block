@@ -9,6 +9,14 @@ import {
 import '@testing-library/jest-dom';
 
 jest.mock(
+  'uuid',
+  () => ({
+    v4: () => 'test-uuid',
+  }),
+  { virtual: true },
+);
+
+jest.mock(
   '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
   () => ({
     __esModule: true,

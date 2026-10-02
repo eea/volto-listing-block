@@ -8,8 +8,12 @@ jest.mock(
   '@plone/volto/components/manage/ConditionalLink/ConditionalLink',
   () => ({
     __esModule: true,
-    default: ({ children, condition }) => (
-      <div data-testid="conditional-link" data-condition={condition}>
+    default: ({ children, condition, to }) => (
+      <div
+        data-testid="conditional-link"
+        data-condition={condition}
+        data-to={to}
+      >
         {children}
       </div>
     ),
@@ -49,6 +53,46 @@ describe('CardImage', () => {
       hasLabel: true,
     },
   };
+
+  it('links to item.external_link when set', () => {
+    const propsWithExternalLink = {
+      ...mockProps,
+      item: {
+        ...mockItem,
+        external_link: 'https://example.org/agency',
+      },
+    };
+
+    render(<CardImage {...propsWithExternalLink} />);
+
+    expect(screen.getByTestId('conditional-link')).toHaveAttribute(
+      'data-to',
+      'https://example.org/agency',
+    );
+  });
+
+  it('links the image to external_link even when the title is not on it', () => {
+    render(
+      <CardImage
+        {...mockProps}
+        item={{ ...mockItem, external_link: 'https://example.org/agency' }}
+        itemModel={{ ...mockProps.itemModel, titleOnImage: false }}
+      />,
+    );
+
+    const link = screen.getByTestId('conditional-link');
+    expect(link.getAttribute('data-condition')).toBe('true');
+    expect(link).toHaveAttribute('data-to', 'https://example.org/agency');
+  });
+
+  it('falls back to the item @id when external_link is not set', () => {
+    render(<CardImage {...mockProps} />);
+
+    expect(screen.getByTestId('conditional-link')).toHaveAttribute(
+      'data-to',
+      '/test-item',
+    );
+  });
 
   it('renders with showLink=true when not in edit mode and itemModel has hasLink and titleOnImage', () => {
     const { container } = render(<CardImage {...mockProps} />);
