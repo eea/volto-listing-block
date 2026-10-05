@@ -40,7 +40,8 @@ export default function universalCardSchemaEnhancer(args) {
       ...schema.properties,
       itemModel: {
         title: 'Card model',
-        widget: 'object',
+        // ObjectWidget that lets the card elements widget edit sibling fields
+        widget: 'card_model',
         schema: itemModelSchema,
       },
     },

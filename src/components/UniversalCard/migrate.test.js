@@ -27,9 +27,58 @@ describe('migrateItemModel', () => {
         '@type': 'card',
         imagePosition: 'top',
         contentMode: 'default',
-        hasDate: true,
+        // the former card schema defaulted the date to off
+        hasDate: false,
         hasDescription: true,
         maxTitle: 3,
+      }),
+    );
+  });
+
+  it('applies the former schema defaults to missing fields', () => {
+    // Volto filled missing fields with these defaults when rendering
+    expect(migrateItemModel({ '@type': 'card' })).toEqual(
+      expect.objectContaining({
+        hasDate: false,
+        hasLink: true,
+        maxTitle: 2,
+        maxDescription: 2,
+        callToAction: { label: 'Read more' },
+      }),
+    );
+    expect(migrateItemModel({ '@type': 'visualizationCard' })).toEqual(
+      expect.objectContaining({
+        hasDate: true,
+        hasDescription: false,
+        maxTitle: 4,
+        enableCTAPopup: true,
+        callToAction: { enable: true, label: 'More info', urlTemplate: '$URL' },
+      }),
+    );
+    expect(migrateItemModel({ '@type': 'item' })).toEqual(
+      expect.objectContaining({
+        imagePosition: 'left',
+        hasDescription: true,
+        hasDate: true,
+      }),
+    );
+  });
+
+  it('keeps saved values over the former defaults', () => {
+    expect(
+      migrateItemModel({
+        '@type': 'visualizationCard',
+        enableCTAPopup: false,
+        callToAction: { enable: false },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        enableCTAPopup: false,
+        callToAction: {
+          enable: false,
+          label: 'More info',
+          urlTemplate: '$URL',
+        },
       }),
     );
   });
@@ -67,7 +116,17 @@ describe('migrateItemModel', () => {
     ).toEqual(
       expect.objectContaining({
         '@type': 'card',
-        imagePosition: 'bottom',
+        imagePosition: 'top',
+        elementsOrder: [
+          'contentType',
+          'title',
+          'date',
+          'benchmark',
+          'description',
+          'image',
+          'tags',
+          'cta',
+        ],
         hasBenchmarkLevel: true,
         hasDate: true,
         hasMetaType: true,
@@ -104,7 +163,9 @@ describe('migrateItemModel', () => {
   });
 
   it('migrates a legacy list item without image', () => {
-    expect(migrateItemModel({ '@type': 'item' }).imagePosition).toBe('none');
+    expect(
+      migrateItemModel({ '@type': 'item', hasImage: false }).imagePosition,
+    ).toBe('none');
   });
 
   it('migrates the search item', () => {
@@ -180,13 +241,16 @@ describe('getCardVariant', () => {
       'imageOnLeft',
       'imageOnRight',
       'imageCard',
-      'visualizationCard',
       'item',
       'searchItem',
       'simpleItem',
     ].forEach((type) => {
       expect(getCardVariant(migrateItemModel({ '@type': type }))).toBe(type);
     });
+    // a vertical card with its own elements order
+    expect(
+      getCardVariant(migrateItemModel({ '@type': 'visualizationCard' })),
+    ).toBe('card');
   });
 
   it('defaults to card', () => {

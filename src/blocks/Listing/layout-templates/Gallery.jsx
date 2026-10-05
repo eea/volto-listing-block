@@ -27,7 +27,8 @@ const Gallery = ({
               {...rest}
               block={block}
               item={item}
-              preview_image_url={getIndicatorPreview(item)}
+              isEditMode={isEditMode}
+              {...getIndicatorPreview(item)}
             />
           ))}
         </div>

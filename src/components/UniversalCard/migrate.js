@@ -1,6 +1,7 @@
 import omit from 'lodash/omit';
 import pick from 'lodash/pick';
 import pickBy from 'lodash/pickBy';
+import { VISUALIZATION_ELEMENTS } from './elements';
 
 // The card templates are reduced to two base templates. Everything that used
 // to be a separate template is now expressed through itemModel controls.
@@ -15,7 +16,68 @@ const LEGACY_FIELDS = ['hasImage', 'imageOnRightSide', 'hasContentType'];
 
 // Controls introduced by the consolidation. When already stored they are
 // kept, so partially migrated data is not reset.
-const NEW_FIELDS = ['contentMode', 'hasBenchmarkLevel', 'size', 'hasHeadMeta'];
+const NEW_FIELDS = [
+  'contentMode',
+  'hasBenchmarkLevel',
+  'size',
+  'hasHeadMeta',
+  'elementsOrder',
+];
+
+// Volto filled the fields missing from the saved data with the defaults of
+// the schema of the former template, when rendering. Apply them before the
+// conversion, so missing fields render as they did.
+const legacyCardDefaults = {
+  titleOnImage: false,
+  hasLink: true,
+  hasDate: false,
+  hasEventDate: false,
+  maxTitle: 2,
+  maxDescription: 2,
+  callToAction: { label: 'Read more' },
+};
+const legacyItemDefaults = {
+  hasEventDate: false,
+  hasDescription: true,
+  maxTitle: 2,
+  maxDescription: 2,
+  hasImage: true,
+  hasIcon: false,
+};
+const LEGACY_DEFAULTS = {
+  card: legacyCardDefaults,
+  imageCard: legacyCardDefaults,
+  imageOnLeft: legacyCardDefaults,
+  imageOnRight: legacyCardDefaults,
+  visualizationCard: {
+    hasDescription: false,
+    maxTitle: 4,
+    maxDescription: 4,
+    enableCTAPopup: true,
+    callToAction: { enable: true, label: 'More info', urlTemplate: '$URL' },
+  },
+  item: legacyItemDefaults,
+  searchItem: legacyItemDefaults,
+  simpleItem: { maxTitle: 2 },
+};
+
+const isSet = (value) => value !== undefined;
+
+const withLegacyDefaults = (itemModel) => {
+  const defaults = LEGACY_DEFAULTS[itemModel['@type']] || {};
+  return {
+    ...defaults,
+    ...pickBy(itemModel, isSet),
+    ...(defaults.callToAction
+      ? {
+          callToAction: {
+            ...defaults.callToAction,
+            ...pickBy(itemModel.callToAction || {}, isSet),
+          },
+        }
+      : {}),
+  };
+};
 
 const showDate = (m) => m.hasDate !== false;
 
@@ -66,7 +128,8 @@ const LEGACY_TEMPLATES = {
   }),
   visualizationCard: (m) => ({
     ...cardDefaults,
-    imagePosition: 'bottom',
+    // image at the bottom, content type above and date below the title
+    elementsOrder: VISUALIZATION_ELEMENTS,
     hasBenchmarkLevel: true,
     hasDate: showDate(m),
     // "Display content type" of the visualization card
@@ -117,11 +180,12 @@ export const needsItemModelMigration = (itemModel) => {
 export const migrateItemModel = (itemModel) => {
   if (!needsItemModelMigration(itemModel)) return itemModel;
 
-  const derived = LEGACY_TEMPLATES[itemModel['@type']](itemModel);
+  const legacy = withLegacyDefaults(itemModel);
+  const derived = LEGACY_TEMPLATES[itemModel['@type']](legacy);
   return {
-    ...omit(itemModel, LEGACY_FIELDS),
+    ...omit(legacy, LEGACY_FIELDS),
     ...derived,
-    ...pickBy(pick(itemModel, NEW_FIELDS), (value) => value !== undefined),
+    ...pickBy(pick(itemModel, NEW_FIELDS), isSet),
   };
 };
 
@@ -135,7 +199,6 @@ export const getCardVariant = (itemModel = {}) => {
     if (itemModel.contentMode === 'overlay') return 'imageCard';
     if (itemModel.imagePosition === 'left') return 'imageOnLeft';
     if (itemModel.imagePosition === 'right') return 'imageOnRight';
-    if (itemModel.imagePosition === 'bottom') return 'visualizationCard';
     return CARD;
   }
   if (type === ITEM) {

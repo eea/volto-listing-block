@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2026-09-30T11:46:59.266Z\n"
+"POT-Creation-Date: 2026-10-02T06:09:50.668Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -153,6 +153,31 @@ msgstr ""
 msgid "bottom"
 msgstr ""
 
+#. Default: "Drag {element}"
+#: components/Widgets/CardElementsWidget
+msgid "cardElementDrag"
+msgstr ""
+
+#. Default: "Move {element} down"
+#: components/Widgets/CardElementsWidget
+msgid "cardElementMoveDown"
+msgstr ""
+
+#. Default: "Move {element} up"
+#: components/Widgets/CardElementsWidget
+msgid "cardElementMoveUp"
+msgstr ""
+
+#. Default: "{element} settings"
+#: components/Widgets/CardElementsWidget
+msgid "cardElementSettings"
+msgstr ""
+
+#. Default: "Show {element}"
+#: components/Widgets/CardElementsWidget
+msgid "cardElementShow"
+msgstr ""
+
 #. Default: "Card model"
 #: messages
 msgid "cardModel"
@@ -216,6 +241,46 @@ msgstr ""
 #. Default: "Display title on image"
 #: messages
 msgid "displayTitle"
+msgstr ""
+
+#. Default: "Benchmark level"
+#: messages
+msgid "elementBenchmark"
+msgstr ""
+
+#. Default: "Call to action"
+#: messages
+msgid "elementCallToAction"
+msgstr ""
+
+#. Default: "Content type"
+#: messages
+msgid "elementContentType"
+msgstr ""
+
+#. Default: "Date"
+#: messages
+msgid "elementDate"
+msgstr ""
+
+#. Default: "Tags"
+#: messages
+msgid "elementTags"
+msgstr ""
+
+#. Default: "Title"
+#: messages
+msgid "elementTitle"
+msgstr ""
+
+#. Default: "Card elements"
+#: messages
+msgid "elementsOrder"
+msgstr ""
+
+#. Default: "Drag to reorder, switch elements on or off and expand them for their settings."
+#: messages
+msgid "elementsOrderHelp"
 msgstr ""
 
 #. Default: "Enable CTA content popup"
@@ -311,6 +376,11 @@ msgstr ""
 #. Default: "No image"
 #: messages
 msgid "imagePositionNone"
+msgstr ""
+
+#. Default: "In the card (see elements order)"
+#: messages
+msgid "imagePositionVertical"
 msgstr ""
 
 #. Default: "Image on Right (Default is Left)"

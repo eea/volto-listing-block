@@ -341,6 +341,43 @@ const messages = defineMessages({
     defaultMessage:
       'Adds a thick colored border on top of the card, with a light shadow.',
   },
+  elementsOrder: {
+    id: 'elementsOrder',
+    defaultMessage: 'Card elements',
+  },
+  elementsOrderHelp: {
+    id: 'elementsOrderHelp',
+    defaultMessage:
+      'Drag to reorder, switch elements on or off and expand them for their settings.',
+  },
+  elementContentType: {
+    id: 'elementContentType',
+    defaultMessage: 'Content type',
+  },
+  elementDate: {
+    id: 'elementDate',
+    defaultMessage: 'Date',
+  },
+  elementTags: {
+    id: 'elementTags',
+    defaultMessage: 'Tags',
+  },
+  elementCallToAction: {
+    id: 'elementCallToAction',
+    defaultMessage: 'Call to action',
+  },
+  elementTitle: {
+    id: 'elementTitle',
+    defaultMessage: 'Title',
+  },
+  elementBenchmark: {
+    id: 'elementBenchmark',
+    defaultMessage: 'Benchmark level',
+  },
+  imagePositionVertical: {
+    id: 'imagePositionVertical',
+    defaultMessage: 'In the card (see elements order)',
+  },
   noItemsToShow: {
     id: 'noItemsToShow',
     defaultMessage: 'There are no items to show in this view.',

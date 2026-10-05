@@ -5,6 +5,7 @@ import {
   ITEM,
   NO_HORIZONTAL_IMAGE_VARIATIONS,
 } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
+import { getElementsOrder } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 
 import alignLeftSVG from '@plone/volto/icons/align-left.svg';
 import alignCenterSVG from '@plone/volto/icons/align-center.svg';
@@ -62,12 +63,16 @@ const modelHasImage = (itemModel = {}) =>
     ? itemModel.contentMode === 'overlay' || itemModel.imagePosition !== 'none'
     : !!itemModel.imagePosition && itemModel.imagePosition !== 'none';
 
-const getImagePositionChoices = ({ template, variation, intl }) => {
+const getImagePositionChoices = ({ template, variation, intl, current }) => {
   const choices = [
     ...(template === CARD
       ? [
-          ['top', intl.formatMessage(messages.top)],
-          ['bottom', intl.formatMessage(messages.imagePositionBottom)],
+          // above or below the text, placed with the elements order
+          ['top', intl.formatMessage(messages.imagePositionVertical)],
+          // superseded by the elements order, kept for existing data
+          ...(current === 'bottom'
+            ? [['bottom', intl.formatMessage(messages.imagePositionBottom)]]
+            : []),
         ]
       : []),
     ['left', intl.formatMessage(messages.left)],
@@ -75,10 +80,114 @@ const getImagePositionChoices = ({ template, variation, intl }) => {
     ['none', intl.formatMessage(messages.imagePositionNone)],
   ];
 
-  // horizontal cards don't fit in carousels and galleries
-  return NO_HORIZONTAL_IMAGE_VARIATIONS.includes(variation)
+  // horizontal cards don't fit in carousels and grids; for list items the
+  // side image is part of the row, so they keep it everywhere
+  return template === CARD && NO_HORIZONTAL_IMAGE_VARIATIONS.includes(variation)
     ? choices.filter(([value]) => value !== 'left' && value !== 'right')
     : choices;
+};
+
+const getElementLabels = (intl) => ({
+  image: intl.formatMessage(messages.image),
+  contentType: intl.formatMessage(messages.elementContentType),
+  date: intl.formatMessage(messages.elementDate),
+  title: intl.formatMessage(messages.elementTitle),
+  benchmark: intl.formatMessage(messages.elementBenchmark),
+  description: intl.formatMessage(messages.description),
+  tags: intl.formatMessage(messages.elementTags),
+  cta: intl.formatMessage(messages.elementCallToAction),
+});
+
+const booleanToggle = (field, defaultVisible) => ({
+  field,
+  on: true,
+  off: false,
+  defaultVisible,
+});
+
+/**
+ * What each element row of the card elements widget offers: a visibility
+ * toggle and the settings shown when the row is expanded.
+ */
+const getElementSettings = (itemModel, template, blockType) => ({
+  image: {
+    toggle: { field: 'imagePosition', on: 'top', off: 'none' },
+    fields: ['titleOnImage', 'hasLabel'],
+  },
+  contentType: { toggle: booleanToggle('hasMetaType', false) },
+  date: {
+    toggle: booleanToggle('hasDate', true),
+    fields: ['hasEventDate'],
+  },
+  title: {
+    fields: ['maxTitle', 'hasIcon', ...(itemModel.hasIcon ? ['icon'] : [])],
+  },
+  benchmark: { toggle: booleanToggle('hasBenchmarkLevel', false) },
+  description: {
+    toggle: booleanToggle('hasDescription', template === ITEM),
+    fields: ['maxDescription'],
+  },
+  tags: { toggle: booleanToggle('hasTags', false) },
+  cta: {
+    // the settings of the call to action are nested in `callToAction`
+    toggle: {
+      field: 'callToAction',
+      key: 'enable',
+      on: true,
+      off: false,
+      defaultVisible: false,
+    },
+    fields: [
+      { field: 'callToAction', key: 'label' },
+      {
+        field: 'callToAction',
+        key: blockType === 'listing' ? 'urlTemplate' : 'href',
+      },
+      'enableCTAPopup',
+    ],
+  },
+});
+
+const getFieldKey = (spec) =>
+  typeof spec === 'string' ? spec : `${spec.field}.${spec.key}`;
+
+const getFieldSchema = (properties, spec) =>
+  typeof spec === 'string'
+    ? properties[spec]
+    : properties[spec.field]?.schema?.properties?.[spec.key];
+
+// Built last, from the final properties, so the rows reuse their schemas
+const addElementsProperty = ({
+  properties,
+  itemModel,
+  template,
+  blockType,
+  intl,
+}) => {
+  const labels = getElementLabels(intl);
+  const model = { ...itemModel, '@type': template };
+  const order = getElementsOrder(model);
+  const elementSettings = getElementSettings(model, template, blockType);
+  const fieldSchemas = Object.fromEntries(
+    Object.values(elementSettings)
+      .flatMap(({ fields = [] }) => fields)
+      .map((spec) => [getFieldKey(spec), getFieldSchema(properties, spec)]),
+  );
+
+  return {
+    ...properties,
+    elementsOrder: {
+      title: intl.formatMessage(messages.elementsOrder),
+      description: intl.formatMessage(messages.elementsOrderHelp),
+      widget: 'card_elements',
+      elements: order.map((id) => [id, labels[id]]),
+      elementSettings: Object.fromEntries(
+        order.map((id) => [id, elementSettings[id]]),
+      ),
+      fieldSchemas,
+      default: itemModel.elementsOrder ?? order,
+    },
+  };
 };
 
 // Use the current (possibly migrated) value as default, so the form stores
@@ -105,7 +214,8 @@ const commonModelProperties = ({ formData, intl }) => ({
   hasDate: {
     title: intl.formatMessage(messages.publicationDate),
     type: 'boolean',
-    default: false,
+    // shown by default (Taskman #307509)
+    default: true,
   },
   hasEventDate: {
     title: intl.formatMessage(messages.eventDate),
@@ -157,30 +267,15 @@ const commonModelProperties = ({ formData, intl }) => ({
   },
 });
 
-const contentFields = (itemModel, hasImage) => [
-  'maxTitle',
-  'hasDate',
-  'hasEventDate',
-  'hasDescription',
-  ...(itemModel.hasDescription ? ['maxDescription'] : []),
-  'hasMetaType',
-  ...(hasImage ? ['hasLabel'] : []),
-  'hasTags',
-];
-
-const iconAndActionFields = (itemModel) => [
-  'hasIcon',
-  ...(itemModel.hasIcon ? ['icon'] : []),
-  'callToAction',
-  ...(itemModel.callToAction?.enable ? ['enableCTAPopup'] : []),
-];
-
 export const setCardModelSchema = (args) => {
   const { formData, schema, intl } = args;
   const itemModel = formData?.itemModel || {};
   const variation = formData?.variation || 'summary';
   const isOverlay = itemModel.contentMode === 'overlay';
   const hasImage = modelHasImage({ ...itemModel, '@type': CARD });
+  // side images are not part of the elements list, keep their settings here
+  const hasSideImage =
+    itemModel.imagePosition === 'left' || itemModel.imagePosition === 'right';
 
   const itemModelSchema = schema.properties.itemModel.schema;
   itemModelSchema.fieldsets[0].fields = [
@@ -190,13 +285,11 @@ export const setCardModelSchema = (args) => {
       ? ['titleOnImage', 'hasLabel']
       : [
           'imagePosition',
-          ...(hasImage ? ['titleOnImage'] : []),
-          ...contentFields(itemModel, hasImage),
-          'hasBenchmarkLevel',
-          ...iconAndActionFields(itemModel),
+          'elementsOrder',
+          ...(hasSideImage && hasImage ? ['titleOnImage', 'hasLabel'] : []),
         ]),
   ];
-  itemModelSchema.properties = applyModelDefaults(
+  const properties = applyModelDefaults(
     {
       ...itemModelSchema.properties,
       ...commonModelProperties({ formData, intl }),
@@ -210,7 +303,12 @@ export const setCardModelSchema = (args) => {
       },
       imagePosition: {
         title: intl.formatMessage(messages.imagePosition),
-        choices: getImagePositionChoices({ template: CARD, variation, intl }),
+        choices: getImagePositionChoices({
+          template: CARD,
+          variation,
+          intl,
+          current: itemModel.imagePosition,
+        }),
         default: 'top',
       },
       titleOnImage: {
@@ -226,8 +324,37 @@ export const setCardModelSchema = (args) => {
     },
     itemModel,
   );
+  itemModelSchema.properties = addElementsProperty({
+    properties,
+    itemModel,
+    template: CARD,
+    blockType: formData?.['@type'],
+    intl,
+  });
   return schema;
 };
+
+// List items have a fixed order of their elements, so they get plain
+// options instead of the card elements widget. The compact size (the former
+// simple item) shows only the title and the content type.
+const getItemFields = (itemModel, hasImage) =>
+  itemModel.size === 'compact'
+    ? ['maxTitle', 'hasMetaType']
+    : [
+        'imagePosition',
+        'maxTitle',
+        'hasIcon',
+        ...(itemModel.hasIcon ? ['icon'] : []),
+        'hasDate',
+        'hasEventDate',
+        'hasDescription',
+        ...(itemModel.hasDescription ? ['maxDescription'] : []),
+        'hasMetaType',
+        ...(hasImage ? ['hasLabel'] : []),
+        'hasTags',
+        'callToAction',
+        ...(itemModel.callToAction?.enable ? ['enableCTAPopup'] : []),
+      ];
 
 export const setItemModelSchema = (args) => {
   const { formData, schema, intl } = args;
@@ -238,10 +365,8 @@ export const setItemModelSchema = (args) => {
   const itemModelSchema = schema.properties.itemModel.schema;
   itemModelSchema.fieldsets[0].fields = [
     ...itemModelSchema.fieldsets[0].fields,
-    'imagePosition',
     'size',
-    ...contentFields(itemModel, hasImage),
-    ...iconAndActionFields(itemModel),
+    ...getItemFields(itemModel, hasImage),
   ];
   const common = commonModelProperties({ formData, intl });
   itemModelSchema.properties = applyModelDefaults(
@@ -261,7 +386,6 @@ export const setItemModelSchema = (args) => {
         ],
         default: 'default',
       },
-      hasDate: { ...common.hasDate, default: true },
       hasDescription: { ...common.hasDescription, default: true },
     },
     itemModel,
@@ -274,18 +398,20 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
   const itemModelSchema = schema.properties.itemModel;
   const styleSchema = itemModelSchema.schema.properties.styles.schema;
   const fieldset = styleSchema.fieldsets.find(({ id }) => id === 'default');
+  const itemModel = formData?.itemModel || {};
+  const isCard = (itemModel['@type'] ?? CARD) === CARD;
+  // the compact item has no image
+  const hasImage =
+    !(!isCard && itemModel.size === 'compact') && modelHasImage(itemModel);
   fieldset.fields.push(
     'theme:noprefix',
     'inverted:bool',
-    'rounded:bool',
     'bordered:bool',
-    ...((formData?.itemModel?.['@type'] ?? CARD) === CARD
-      ? ['topAccent:bool']
-      : []),
+    ...(isCard ? ['topAccent:bool'] : []),
+    // image options only when there is an image
+    ...(hasImage ? ['rounded:bool'] : []),
     'text',
-    ...(modelHasImage(formData?.itemModel)
-      ? ['objectFit', 'objectPosition']
-      : []),
+    ...(hasImage ? ['objectFit', 'objectPosition'] : []),
   );
   styleSchema.properties = {
     ...styleSchema.properties,

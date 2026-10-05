@@ -15,7 +15,13 @@ const CardTitleOnImage = (props) => {
 };
 
 const CardImage = (props) => {
-  const { item, preview_image, preview_image_url, itemModel } = props;
+  const {
+    item,
+    preview_image,
+    preview_image_url,
+    preview_image_fallbacks,
+    itemModel,
+  } = props;
   const label = getItemLabel(item, itemModel);
   const title = typeof item.title === 'string' ? item.title : item.Title;
 
@@ -26,6 +32,7 @@ const CardImage = (props) => {
         item={item}
         preview_image={preview_image}
         preview_image_url={preview_image_url}
+        fallbacks={preview_image_fallbacks}
         alt={itemModel?.titleOnImage ? '' : title || ''}
         label={label}
       />

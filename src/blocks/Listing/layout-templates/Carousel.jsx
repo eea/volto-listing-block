@@ -145,7 +145,7 @@ const CardsCarousel = ({ block, items, ...rest }) => {
                 {...rest}
                 block={block}
                 item={item}
-                preview_image_url={getIndicatorPreview(item)}
+                {...getIndicatorPreview(item)}
               />
             ))}
           </Slider>

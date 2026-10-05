@@ -2,8 +2,10 @@ import config from '@plone/volto/registry';
 import installListing from '@eeacms/volto-listing-block/blocks/Listing';
 import {
   hideHiddenVariations,
+  keepSearchLayoutOnDefault,
   keepUnknownVariationOnDefault,
   migrateListingData,
+  migrateSearchData,
 } from './variations';
 
 jest.mock('uuid', () => ({ v4: () => 'uuid' }), { virtual: true });
@@ -141,7 +143,17 @@ describe('migrateListingData', () => {
       gridSize: 'six',
       itemModel: expect.objectContaining({
         '@type': 'card',
-        imagePosition: 'bottom',
+        imagePosition: 'top',
+        elementsOrder: [
+          'contentType',
+          'title',
+          'date',
+          'benchmark',
+          'description',
+          'image',
+          'tags',
+          'cta',
+        ],
         styles: { 'theme:noprefix': 'primary', 'topAccent:bool': true },
       }),
     });
@@ -163,5 +175,93 @@ describe('migrateListingData', () => {
       variation: 'summary',
       itemModel: expect.objectContaining({ '@type': 'item', size: 'compact' }),
     });
+  });
+});
+
+describe('search block', () => {
+  const searchSchema = () => ({
+    fieldsets: [{ id: 'default', fields: ['listingBodyTemplate'] }],
+    properties: {
+      listingBodyTemplate: {
+        choices: [
+          ['default', 'Default'],
+          ['summary', 'List'],
+          ['cardsGallery', 'Grid'],
+          ['cardsVisualization', 'Visualization Cards'],
+        ],
+      },
+      availableViews: {
+        choices: [
+          ['default', 'Default'],
+          ['summary', 'List'],
+          ['cardsGallery', 'Grid'],
+          ['cardsVisualization', 'Visualization Cards'],
+        ],
+      },
+    },
+  });
+  const ids = (field) => field.choices.map(([id]) => id);
+
+  it('hides Visualization Cards from the results layout', () => {
+    const schema = hideHiddenVariations({
+      schema: searchSchema(),
+      data: { listingBodyTemplate: 'cardsGallery' },
+    });
+    expect(ids(schema.properties.listingBodyTemplate)).toEqual([
+      'summary',
+      'cardsGallery',
+    ]);
+    expect(ids(schema.properties.availableViews)).toEqual([
+      'summary',
+      'cardsGallery',
+    ]);
+  });
+
+  it('keeps the layouts in use', () => {
+    const schema = hideHiddenVariations({
+      schema: searchSchema(),
+      data: {
+        listingBodyTemplate: 'cardsVisualization',
+        availableViews: ['default'],
+      },
+    });
+    expect(ids(schema.properties.listingBodyTemplate)).toContain(
+      'cardsVisualization',
+    );
+    expect(ids(schema.properties.availableViews)).toContain('default');
+  });
+
+  it('keeps search blocks without layout on the former default list', () => {
+    expect(keepSearchLayoutOnDefault({})).toEqual({
+      listingBodyTemplate: 'default',
+    });
+    const grid = { listingBodyTemplate: 'cardsGallery' };
+    expect(keepSearchLayoutOnDefault(grid)).toBe(grid);
+  });
+
+  it('turns Visualization Cards results into a Grid with top accent cards', () => {
+    expect(
+      migrateSearchData({
+        listingBodyTemplate: 'cardsVisualization',
+        itemModel: { '@type': 'visualizationCard' },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        listingBodyTemplate: 'cardsGallery',
+        gridSize: 'five',
+        itemModel: expect.objectContaining({
+          '@type': 'card',
+          styles: { 'topAccent:bool': true },
+        }),
+      }),
+    );
+  });
+
+  it('returns current search data unchanged', () => {
+    const data = {
+      listingBodyTemplate: 'cardsGallery',
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    };
+    expect(migrateSearchData(data)).toBe(data);
   });
 });

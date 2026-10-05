@@ -133,6 +133,59 @@ describe('ItemTemplate', () => {
     expect(container.querySelector('i.ri-home-line')).not.toBeNull();
   });
 
+  it('keeps the fixed order of list items, also with a stored order', () => {
+    const { container } = renderItem({
+      imagePosition: 'none',
+      hasDate: true,
+      hasDescription: true,
+      hasMetaType: true,
+      elementsOrder: ['description', 'contentType', 'title', 'date'],
+    });
+    const body = container.querySelector('.listing-body');
+    expect(Array.from(body.children).map((el) => el.className)).toEqual([
+      '',
+      'listing-body-dates',
+      'listing-description',
+    ]);
+    expect(container.querySelector('.slot-top + .item-meta')).not.toBeNull();
+  });
+
+  it('keeps a trailing content type below the item', () => {
+    const { container } = renderItem({
+      imagePosition: 'none',
+      hasMetaType: true,
+    });
+    expect(container.querySelector('.listing-body .item-meta')).toBeNull();
+    expect(container.querySelector('.slot-top + .item-meta')).toHaveTextContent(
+      'Page',
+    );
+  });
+
+  it('keeps the empty dates container of the former list item', () => {
+    const { container } = renderItem({ imagePosition: 'none', hasDate: false });
+    // it gives the spacing below the title, as before
+    expect(
+      container.querySelector('.listing-body-dates'),
+    ).toBeEmptyDOMElement();
+  });
+
+  it('renders the compact item as the former simple item', () => {
+    const { container } = renderItem({
+      imagePosition: 'none',
+      size: 'compact',
+    });
+    const wrapper = container.querySelector('.wrapper');
+    expect(wrapper.className).toBe('wrapper');
+    // the whole body is the link
+    expect(
+      container.querySelector('.slot-top > a > .listing-body'),
+    ).not.toBeNull();
+    expect(container.querySelector('.listing-body-dates')).toBeNull();
+    expect(
+      container.querySelector('.slot-top + .simple-item-meta'),
+    ).toBeEmptyDOMElement();
+  });
+
   it('does not link in edit mode', () => {
     const { container } = renderItem(
       { imagePosition: 'left' },

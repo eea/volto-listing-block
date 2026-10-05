@@ -15,6 +15,19 @@ import {
 } from '@eeacms/volto-listing-block/components/UniversalCard';
 import { getMaxLinesClasses } from '@eeacms/volto-listing-block/components/UniversalCard/utils';
 import useBenchmarkLevels from '@eeacms/volto-listing-block/components/UniversalCard/useBenchmarkLevels';
+import {
+  BENCHMARK,
+  CONTENT_TYPE,
+  CTA,
+  DATE,
+  DESCRIPTION,
+  IMAGE,
+  TAGS,
+  TITLE,
+  getElementsOrder,
+  getHiddenElements,
+  splitFooter,
+} from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 
 import '@eeacms/volto-listing-block/less/visualization-cards.less';
 
@@ -41,11 +54,9 @@ CardBenchmarkLevel.propTypes = {
   }),
 };
 
-// With the image at the bottom (visualization cards) the content type goes
-// above the title and the publishing date below it.
-const CardContentType = ({ item, itemModel }) => {
-  const contentType = item.type_title || item['@type'];
-  return itemModel.hasMetaType && contentType ? (
+const CardContentType = ({ item, itemModel, head_title }) => {
+  const contentType = head_title || item.type_title || item['@type'];
+  return (head_title || itemModel.hasMetaType) && contentType ? (
     <UiCard.Meta className="content-type">{contentType}</UiCard.Meta>
   ) : null;
 };
@@ -71,19 +82,78 @@ const CardPublishingDate = ({ item, itemModel }) => {
   ) : null;
 };
 
+const isMeta = (id) => id === CONTENT_TYPE || id === DATE;
+
 /**
- * The single card template. Image position, overlay mode and the displayed
- * metadata are all driven by the itemModel controls.
+ * Renders the card elements in the given order. The content type and the
+ * date share one metadata row when they are next to each other, as in the
+ * default card.
+ */
+const renderElements = (order, props, image) => {
+  const { item, itemModel } = props;
+  const { hasBenchmarkLevel, hasIcon, icon } = itemModel;
+  const rendered = [];
+
+  for (let index = 0; index < order.length; index++) {
+    const id = order[index];
+
+    if (isMeta(id) && isMeta(order[index + 1])) {
+      rendered.push(<CardMeta key="meta" {...props} />);
+      index++;
+      continue;
+    }
+
+    switch (id) {
+      case IMAGE:
+        if (itemModel.imagePosition !== 'none') {
+          rendered.push(<React.Fragment key={id}>{image}</React.Fragment>);
+        }
+        break;
+      case CONTENT_TYPE:
+        rendered.push(<CardContentType key={id} {...props} />);
+        break;
+      case DATE:
+        rendered.push(
+          <CardPublishingDate key={id} item={item} itemModel={itemModel} />,
+        );
+        break;
+      case TITLE:
+        rendered.push(
+          <React.Fragment key={id}>
+            {hasIcon && icon && <Icon className={icon} size="large" />}
+            <CardTitle {...props} />
+          </React.Fragment>,
+        );
+        break;
+      case BENCHMARK:
+        if (hasBenchmarkLevel) {
+          rendered.push(<CardBenchmarkLevel key={id} item={item} />);
+        }
+        break;
+      case DESCRIPTION:
+        rendered.push(<CardDescription key={id} {...props} />);
+        break;
+      case TAGS:
+      case CTA:
+        // moved between the other elements, not in the footer
+        rendered.push(<CardExtra key={id} {...props} parts={[id]} inline />);
+        break;
+      default:
+        break;
+    }
+  }
+
+  return rendered;
+};
+
+/**
+ * The single card template. Image position, overlay mode, the displayed
+ * metadata and the order of the elements are driven by the itemModel
+ * controls.
  */
 const CardTemplate = (props) => {
-  const { className, item, itemModel = {} } = props;
-  const {
-    imagePosition = 'top',
-    contentMode,
-    hasBenchmarkLevel,
-    hasIcon,
-    icon,
-  } = itemModel;
+  const { className, itemModel = {} } = props;
+  const { imagePosition = 'top', contentMode } = itemModel;
 
   // the preview image is picked by content type in UniversalCard
   const image = <CardImage {...props} />;
@@ -98,7 +168,15 @@ const CardTemplate = (props) => {
   }
 
   const isHorizontal = imagePosition === 'left' || imagePosition === 'right';
-  const isBottom = imagePosition === 'bottom';
+  const { body: order, footer } = splitFooter(
+    getElementsOrder({ ...itemModel, '@type': 'card' }),
+  );
+  // an image shown first stays outside the content, as in the default card
+  const hidden = getHiddenElements(itemModel);
+  const leadingImage = order.find((id) => !hidden.includes(id)) === IMAGE;
+  const contentOrder = leadingImage
+    ? order.filter((id) => id !== IMAGE)
+    : order;
 
   return (
     <UiCard
@@ -109,22 +187,12 @@ const CardTemplate = (props) => {
         'right-image-card': imagePosition === 'right',
       })}
     >
-      {(imagePosition === 'top' || imagePosition === 'left') && image}
+      {(leadingImage || imagePosition === 'left') && image}
       <UiCard.Content>
-        {isBottom ? (
-          <CardContentType item={item} itemModel={itemModel} />
-        ) : (
-          <CardMeta {...props} />
-        )}
-        {hasIcon && icon && <Icon className={icon} size="large" />}
-        <CardTitle {...props} />
-        {isBottom && <CardPublishingDate item={item} itemModel={itemModel} />}
-        {hasBenchmarkLevel && <CardBenchmarkLevel item={item} />}
-        <CardDescription {...props} />
-        {isBottom && image}
+        {renderElements(contentOrder, props, image)}
       </UiCard.Content>
       {imagePosition === 'right' && image}
-      <CardExtra {...props} />
+      <CardExtra {...props} parts={footer} />
     </UiCard>
   );
 };
@@ -135,6 +203,7 @@ CardTemplate.propTypes = {
     imagePosition: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'none']),
     contentMode: PropTypes.oneOf(['default', 'overlay']),
     hasBenchmarkLevel: PropTypes.bool,
+    elementsOrder: PropTypes.arrayOf(PropTypes.string),
   }),
   className: PropTypes.string,
   preview_image_url: PropTypes.string,

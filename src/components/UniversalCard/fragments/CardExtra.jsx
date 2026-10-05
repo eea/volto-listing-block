@@ -41,24 +41,42 @@ export const Tag = ({ item }) => {
     : null;
 };
 
-const CardExtra = ({ item, itemModel = {}, isEditMode }) => {
-  const showCallToAction = itemModel?.callToAction?.enable;
-  const showTags = itemModel.hasTags;
-  const show = showCallToAction || showTags;
-
+/**
+ * Tags and call to action. `parts` picks which of them to render, in order;
+ * by default both, in the card footer. With `inline` they are rendered
+ * without the footer wrapper, to be placed between the other card elements.
+ */
+const CardExtra = ({
+  item,
+  itemModel = {},
+  isEditMode,
+  parts = ['tags', 'cta'],
+  inline = false,
+}) => {
   const action = useCardAction();
 
-  if (!show) return null;
+  const rendered = parts
+    .map((part) => {
+      if (part === 'tags' && itemModel.hasTags && item?.Subject?.length > 0) {
+        return (
+          <div key={part} className={'tags labels'}>
+            <Tag item={item} />
+          </div>
+        );
+      }
+      if (part === 'cta' && itemModel.callToAction?.enable) {
+        return <CallToAction key={part} item={item} itemModel={itemModel} />;
+      }
+      return null;
+    })
+    .filter(Boolean);
 
-  const content = (
-    <UiCard.Content extra>
-      {showTags && item?.Subject?.length > 0 && (
-        <div className={'tags labels'}>
-          <Tag item={item} />
-        </div>
-      )}
-      {showCallToAction && <CallToAction item={item} itemModel={itemModel} />}
-    </UiCard.Content>
+  if (!rendered.length) return null;
+
+  const content = inline ? (
+    <div className="card-inline-extra">{rendered}</div>
+  ) : (
+    <UiCard.Content extra>{rendered}</UiCard.Content>
   );
 
   // used outside UniversalCard, provide the card action here

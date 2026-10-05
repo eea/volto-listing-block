@@ -150,10 +150,12 @@ const getEmbeddedContentPreviewUrl = (content) => {
 };
 
 /**
- * Indicator preview: its own lead image, otherwise the preview of the first
- * embedded figure that has one.
+ * Indicator preview candidates, best first: its own lead image, then the
+ * previews of the embedded figures in block order. Some embedded figures
+ * point to images that do not exist anymore, so the card falls back to the
+ * next candidate when an image fails to load.
  */
-export const getIndicatorPreviewUrl = (
+export const getIndicatorPreviewUrls = (
   indicator,
   indicatorContents = [],
   embeddedContents = [],
@@ -163,10 +165,10 @@ export const getIndicatorPreviewUrl = (
     indicatorContents.find((item) => getItemPath(item) === indicatorPath) ||
     indicator;
 
-  const leadImagePreviewUrl =
+  const urls = [
     getLeadImagePreviewUrl(indicatorContent) ||
-    getLeadImagePreviewUrl(indicator);
-  if (leadImagePreviewUrl) return leadImagePreviewUrl;
+      getLeadImagePreviewUrl(indicator),
+  ];
 
   const embeddedContentByUID = new Map(
     embeddedContents.map((content) => [content.UID, content]),
@@ -180,11 +182,20 @@ export const getIndicatorPreviewUrl = (
     path,
     previewUrl: directPreviewUrl,
   } of getEmbedContentReferences(indicatorContent)) {
-    if (directPreviewUrl) return directPreviewUrl;
-
-    const previewUrl = getEmbeddedContentPreviewUrl(
-      uid ? embeddedContentByUID.get(uid) : embeddedContentByPath.get(path),
+    urls.push(
+      directPreviewUrl ||
+        getEmbeddedContentPreviewUrl(
+          uid ? embeddedContentByUID.get(uid) : embeddedContentByPath.get(path),
+        ),
     );
-    if (previewUrl) return previewUrl;
   }
+
+  return [...new Set(urls.filter(Boolean))];
 };
+
+/**
+ * Indicator preview: its own lead image, otherwise the preview of the first
+ * embedded figure that has one.
+ */
+export const getIndicatorPreviewUrl = (...args) =>
+  getIndicatorPreviewUrls(...args)[0];

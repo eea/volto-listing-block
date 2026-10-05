@@ -37,7 +37,7 @@ const Listing = (props) => {
               {...props}
               key={`item-${block}-${index}`}
               item={item}
-              preview_image_url={getIndicatorPreview(item)}
+              {...getIndicatorPreview(item)}
             />
           ))
         ) : (

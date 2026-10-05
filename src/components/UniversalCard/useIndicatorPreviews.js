@@ -6,10 +6,12 @@ import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 import {
   INDICATOR_TYPE,
   getEmbedContentReferences,
-  getIndicatorPreviewUrl,
+  getIndicatorPreviewUrls,
 } from './preview';
 
 const INDICATOR_PREVIEW_METADATA_FIELDS = [
+  'UID',
+  'getPath',
   'blocks',
   'blocks_layout',
   'image',
@@ -58,33 +60,88 @@ const useCatalogSubrequest = (kind, block, values, buildQuery) => {
 };
 
 const EMPTY = [];
+const NO_PREVIEW = {};
 
 const unique = (values) => [...new Set(values)];
+
+const withSitePath = (sitePath, paths) =>
+  sitePath ? paths.map((path) => `${sitePath}${path}`) : paths;
+
+/**
+ * Catalog paths are physical paths, which differ from the app paths when the
+ * site is not virtual hosted at its root (e.g. /www/en/... locally, /en/...
+ * in production). Derive the prefix from a found content.
+ */
+export const getSitePath = (contents) => {
+  for (const content of contents) {
+    const physicalPath = content?.getPath;
+    const appPath = flattenToAppURL(content?.['@id'] || '');
+    if (physicalPath && appPath && physicalPath.endsWith(appPath)) {
+      return physicalPath.slice(0, physicalPath.length - appPath.length);
+    }
+  }
+  return '';
+};
 
 /**
  * Resolves the preview image of the indicators (ims_indicator) among
  * `items`: their lead image, or the preview of the first embedded figure.
  * Requests are batched for all the items of a listing.
  *
- * Returns a function `item => previewUrl | undefined`.
+ * Returns a function `item => props` with the card preview props:
+ * `preview_image_url` and the `preview_image_fallbacks` to try when it fails
+ * to load. Empty for other content types.
  */
 export default function useIndicatorPreviews(items, block) {
-  const indicatorPaths = React.useMemo(
+  const indicators = React.useMemo(
     () =>
-      (items || [])
-        .filter((item) => item?.['@type'] === INDICATOR_TYPE && item['@id'])
-        .map((item) => flattenToAppURL(item['@id'])),
+      (items || []).filter(
+        (item) => item?.['@type'] === INDICATOR_TYPE && item['@id'],
+      ),
     [items],
   );
+  // listing results have an UID, which works the same in every environment
+  const indicatorUIDs = React.useMemo(
+    () => unique(indicators.filter(({ UID }) => UID).map(({ UID }) => UID)),
+    [indicators],
+  );
+  // e.g. teasers saved without UID
+  const indicatorPaths = React.useMemo(
+    () =>
+      unique(
+        indicators
+          .filter(({ UID }) => !UID)
+          .map((item) => flattenToAppURL(item['@id'])),
+      ),
+    [indicators],
+  );
 
-  const indicatorContents =
-    useCatalogSubrequest('indicators', block, indicatorPaths, (paths) => ({
+  const indicatorsByUID =
+    useCatalogSubrequest('indicators', block, indicatorUIDs, (uids) => ({
+      portal_type: INDICATOR_TYPE,
+      UID: uids,
+      b_size: getBatchSize(uids),
+      metadata_fields: INDICATOR_PREVIEW_METADATA_FIELDS,
+    })) ?? EMPTY;
+  const indicatorsByPath =
+    useCatalogSubrequest('indicator-paths', block, indicatorPaths, (paths) => ({
       portal_type: INDICATOR_TYPE,
       path: paths,
       'path.depth': 0,
       b_size: getBatchSize(paths),
       metadata_fields: INDICATOR_PREVIEW_METADATA_FIELDS,
     })) ?? EMPTY;
+  const indicatorContents = React.useMemo(
+    () =>
+      indicatorsByPath.length
+        ? [...indicatorsByUID, ...indicatorsByPath]
+        : indicatorsByUID,
+    [indicatorsByUID, indicatorsByPath],
+  );
+  const sitePath = React.useMemo(
+    () => getSitePath(indicatorContents),
+    [indicatorContents],
+  );
 
   const references = React.useMemo(
     () =>
@@ -104,12 +161,15 @@ export default function useIndicatorPreviews(items, block) {
   );
   const embeddedPaths = React.useMemo(
     () =>
-      unique(
-        references
-          .filter(({ uid, path, previewUrl }) => !uid && path && !previewUrl)
-          .map(({ path }) => path),
+      withSitePath(
+        sitePath,
+        unique(
+          references
+            .filter(({ uid, path, previewUrl }) => !uid && path && !previewUrl)
+            .map(({ path }) => path),
+        ),
       ),
-    [references],
+    [references, sitePath],
   );
 
   const embeddedByUID =
@@ -127,13 +187,17 @@ export default function useIndicatorPreviews(items, block) {
     })) ?? EMPTY;
 
   return React.useCallback(
-    (item) =>
-      item?.['@type'] === INDICATOR_TYPE
-        ? getIndicatorPreviewUrl(item, indicatorContents, [
-            ...embeddedByUID,
-            ...embeddedByPath,
-          ])
-        : undefined,
+    (item) => {
+      if (item?.['@type'] !== INDICATOR_TYPE) return NO_PREVIEW;
+      const [url, ...fallbacks] = getIndicatorPreviewUrls(
+        item,
+        indicatorContents,
+        [...embeddedByUID, ...embeddedByPath],
+      );
+      return url
+        ? { preview_image_url: url, preview_image_fallbacks: fallbacks }
+        : NO_PREVIEW;
+    },
     [indicatorContents, embeddedByUID, embeddedByPath],
   );
 }

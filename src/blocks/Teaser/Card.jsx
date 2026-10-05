@@ -18,8 +18,9 @@ const TeaserCardTemplate = (props) => {
   const item = data.href?.[0];
   const items = React.useMemo(() => (item ? [item] : []), [item]);
   const getIndicatorPreview = useIndicatorPreviews(items, block);
+  // a chosen preview image wins over the indicator preview
   const indicatorPreview = data.preview_image?.[0]
-    ? undefined
+    ? {}
     : getIndicatorPreview(item);
 
   return item || data.preview_image ? (
@@ -31,7 +32,7 @@ const TeaserCardTemplate = (props) => {
       }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
       itemModel={data.itemModel || {}}
-      preview_image_url={indicatorPreview}
+      {...indicatorPreview}
     />
   ) : isEditMode ? (
     <Message>

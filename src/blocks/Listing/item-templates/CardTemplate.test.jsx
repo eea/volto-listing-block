@@ -172,6 +172,91 @@ describe('CardTemplate', () => {
     ]);
   });
 
+  it('renders the elements in the chosen order', () => {
+    const { container } = renderCard({
+      hasDescription: true,
+      hasMetaType: true,
+      hasBenchmarkLevel: true,
+      elementsOrder: [
+        'title',
+        'description',
+        'image',
+        'benchmark',
+        'date',
+        'contentType',
+      ],
+    });
+    const card = container.querySelector('.u-card');
+    // the image is not first, so it goes inside the content
+    expect(card.firstChild).toHaveClass('content');
+    expect(
+      Array.from(card.querySelector('.content').children).map(
+        (el) => el.className,
+      ),
+    ).toEqual([
+      'header',
+      'description',
+      'image',
+      'benchmark_level_wrapper',
+      'meta',
+    ]);
+  });
+
+  it('keeps an image placed first outside the content', () => {
+    const { container } = renderCard({
+      elementsOrder: ['image', 'title', 'contentType', 'date'],
+      hasMetaType: true,
+    });
+    const card = container.querySelector('.u-card');
+    expect(card.firstChild).toHaveClass('image');
+    const content = card.querySelector('.content');
+    expect(content.firstChild).toHaveClass('header');
+    // content type and date next to each other share one meta row
+    expect(content.querySelectorAll('.meta')).toHaveLength(1);
+    expect(content.querySelector('.meta .date')).toHaveTextContent(
+      '05 Oct 2023',
+    );
+  });
+
+  it('treats the image as first when the elements before it are hidden', () => {
+    const { container } = renderCard({
+      hasDescription: false,
+      elementsOrder: ['description', 'image', 'title'],
+    });
+    expect(container.querySelector('.u-card').firstChild).toHaveClass('image');
+  });
+
+  it('renders tags and call to action in the footer by default', () => {
+    const { container } = renderCard({
+      hasTags: true,
+      callToAction: { enable: true, label: 'Read more' },
+    });
+    const card = container.querySelector('.u-card');
+    expect(card.lastChild).toHaveClass('extra');
+    expect(card.lastChild).toHaveTextContent('Read more');
+  });
+
+  it('renders a call to action moved between the elements inline', () => {
+    const { container } = renderCard({
+      callToAction: { enable: true, label: 'Read more' },
+      elementsOrder: ['image', 'cta', 'title'],
+    });
+    const content = container.querySelector('.u-card > .content');
+    expect(content.firstChild).toHaveClass('card-inline-extra');
+    expect(content.firstChild).toHaveTextContent('Read more');
+    expect(container.querySelector('.content.extra')).toBeNull();
+  });
+
+  it('ignores the image in the order for side images', () => {
+    const { container } = renderCard({
+      imagePosition: 'right',
+      elementsOrder: ['image', 'title'],
+    });
+    const card = container.querySelector('.u-card');
+    expect(card.querySelector('.content .image')).toBeNull();
+    expect(card.querySelector(':scope > .image')).not.toBeNull();
+  });
+
   it('does not link in edit mode', () => {
     const { container } = renderCard({}, { isEditMode: true });
     expect(container.querySelector('a')).toBeNull();

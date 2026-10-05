@@ -11,15 +11,34 @@ export const HIDDEN_VARIATIONS = [
   'cardsVisualization',
 ];
 
+// The fields offering the listing variations: the listing block variation
+// and the results layout of the search block
+const VARIATION_FIELDS = ['variation', 'listingBodyTemplate'];
+
 /**
  * Schema enhancer that removes the hidden variations from the variation
- * select, except the one currently in use.
+ * selects of the listing and search blocks, except the ones in use.
  */
-export const hideHiddenVariations = ({ schema, formData }) => {
-  const field = schema.properties?.variation;
-  if (field?.choices) {
-    field.choices = field.choices.filter(
-      ([id]) => !HIDDEN_VARIATIONS.includes(id) || id === formData?.variation,
+export const hideHiddenVariations = (args) => {
+  const { schema } = args;
+  // the search block passes its data as `data`
+  const data = args.formData || args.data || {};
+  const isOffered = (id, inUse) => !HIDDEN_VARIATIONS.includes(id) || inUse;
+
+  VARIATION_FIELDS.forEach((name) => {
+    const field = schema.properties?.[name];
+    if (field?.choices) {
+      field.choices = field.choices.filter(([id]) =>
+        isOffered(id, id === data[name]),
+      );
+    }
+  });
+
+  // the views a search block lets its visitors switch to
+  const views = schema.properties?.availableViews;
+  if (views?.choices) {
+    views.choices = views.choices.filter(([id]) =>
+      isOffered(id, (data.availableViews || []).includes(id)),
     );
   }
   return schema;
@@ -54,12 +73,28 @@ export const withUnknownVariationFallback = (View) => {
 };
 
 /**
- * Migrates the listing block data to the consolidated layouts and card
- * model. Returns the same object when nothing needs to change.
+ * Search blocks without a results layout used Volto's default list, the
+ * default listing variation before List.
  */
-export const migrateListingData = (data) => {
-  if (!data) return data;
-  let result = keepUnknownVariationOnDefault(data);
+export const keepSearchLayoutOnDefault = (data) =>
+  data && !data.listingBodyTemplate
+    ? { ...data, listingBodyTemplate: LEGACY_DEFAULT_VARIATION }
+    : data;
+
+export const withSearchLayoutFallback = (View) => {
+  if (!View) return View;
+  const WithSearchLayoutFallback = (props) =>
+    React.createElement(View, {
+      ...props,
+      data: keepSearchLayoutOnDefault(props.data),
+    });
+  return WithSearchLayoutFallback;
+};
+
+// The card model and the former Visualization Cards layout, for the field
+// holding the layout (`variation` or `listingBodyTemplate`)
+const migrateLayoutData = (data, field) => {
+  let result = data;
 
   const itemModel = migrateItemModel(result.itemModel);
   if (itemModel !== result.itemModel) {
@@ -67,11 +102,11 @@ export const migrateListingData = (data) => {
   }
 
   // Visualization Cards was a grid with a top accent border on the cards
-  if (data.variation === 'cardsVisualization') {
+  if (result[field] === 'cardsVisualization') {
     result = {
       ...result,
-      variation: 'cardsGallery',
-      gridSize: data.gridSize || 'five',
+      [field]: 'cardsGallery',
+      gridSize: result.gridSize || 'five',
       itemModel: {
         ...(result.itemModel || {}),
         styles: {
@@ -84,3 +119,17 @@ export const migrateListingData = (data) => {
 
   return result;
 };
+
+/**
+ * Migrates the listing block data to the consolidated layouts and card
+ * model. Returns the same object when nothing needs to change.
+ */
+export const migrateListingData = (data) =>
+  data && migrateLayoutData(keepUnknownVariationOnDefault(data), 'variation');
+
+/**
+ * Migrates the search block data: its results use the listing layouts.
+ */
+export const migrateSearchData = (data) =>
+  data &&
+  migrateLayoutData(keepSearchLayoutOnDefault(data), 'listingBodyTemplate');

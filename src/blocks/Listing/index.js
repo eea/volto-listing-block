@@ -19,6 +19,8 @@ import Accordion from './layout-templates/Accordion';
 import {
   hideHiddenVariations,
   migrateListingData,
+  migrateSearchData,
+  withSearchLayoutFallback,
   withUnknownVariationFallback,
 } from './variations';
 
@@ -102,6 +104,13 @@ const applyConfig = (config) => {
   }));
   listing.edit = withItemModelMigration(listing.edit, migrateListingData);
   listing.view = withUnknownVariationFallback(listing.view);
+
+  // the search block renders its results with the listing layouts
+  const { search } = config.blocks.blocksConfig;
+  if (search) {
+    search.edit = withItemModelMigration(search.edit, migrateSearchData);
+    search.view = withSearchLayoutFallback(search.view);
+  }
 
   listing.extensions = {
     ...listing.extensions,
