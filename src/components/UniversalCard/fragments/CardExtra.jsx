@@ -1,36 +1,8 @@
+import React from 'react';
 import { Button, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
-import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import RenderBlocksWrapper from './RenderBlocksWrapper';
-import { Modal } from 'semantic-ui-react';
-import { useSelector } from 'react-redux';
-
-const RenderModal = React.memo(({ children, open, onClose }) => {
-  return (
-    <Modal
-      open={open}
-      onClose={onClose}
-      className={'enlarge-modal visualization-card-modal'}
-      closeIcon={
-        <button className="ui button close icon">
-          <i className="ri-close-fill" />
-        </button>
-      }
-    >
-      <Modal.Content>{children}</Modal.Content>
-    </Modal>
-  );
-});
-
-const getCallToAction = (item, options) => {
-  const { urlTemplate } = options;
-  return urlTemplate
-    ? urlTemplate
-        .replace('$PORTAL_URL', config.settings.publicURL)
-        .replace('$URL', flattenToAppURL(item['@id']))
-    : options.href?.[0]?.['@id'] || item.external_link || item['@id'];
-};
+import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
+import { CardActionProvider, useCardAction } from './CardAction';
 
 const getButtonClassName = (styles) => {
   const theme = styles?.['theme:noprefix'] || '';
@@ -42,87 +14,83 @@ const getButtonClassName = (styles) => {
     : theme;
 };
 
-const LinkCTAButton = React.memo(({ url, className, label }) => {
-  return (
-    <Button as="a" href={url} className={className} role={''}>
+export const CallToAction = ({ itemModel }) => {
+  const action = useCardAction();
+  const className = getButtonClassName(itemModel.styles);
+  const label = itemModel.callToAction?.label || 'Read more';
+
+  return action && !action.disabled ? (
+    <Button
+      as={UniversalLink}
+      href={action.url}
+      onClick={action.onClick}
+      openLinkInNewTab={false}
+      className={className}
+    >
       {label}
     </Button>
-  );
-});
-
-const PopupCTAButton = React.memo(({ url, className, label }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isPopupEnabled, setIsPopupEnabled] = useState(true);
-  const screenWidth = useSelector((state) => state.screen.width);
-
-  const handleOpenModal = useCallback(() => setIsModalOpen(true), []);
-  const handleCloseModal = useCallback(() => setIsModalOpen(false), []);
-
-  useEffect(() => {
-    setIsPopupEnabled(screenWidth >= 1280);
-  }, [screenWidth]);
-
-  const result = { location: { pathname: url } };
-
-  if (!isPopupEnabled) {
-    return <LinkCTAButton url={url} className={className} label={label} />;
-  }
-
-  return (
-    <>
-      <Button onClick={handleOpenModal} className={className}>
-        {label}
-      </Button>
-      <RenderModal open={isModalOpen} onClose={handleCloseModal}>
-        <RenderBlocksWrapper {...result} />
-      </RenderModal>
-    </>
-  );
-});
-
-const CallToAction = React.memo(({ item, itemModel }) => {
-  const url = useMemo(
-    () => getCallToAction(item, itemModel.callToAction),
-    [item, itemModel.callToAction],
-  );
-
-  const buttonClassName = useMemo(
-    () => getButtonClassName(itemModel.styles),
-    [itemModel.styles],
-  );
-
-  const buttonLabel = itemModel.callToAction.label || 'Read more';
-  const shouldShowPopup = itemModel.enableCTAPopup;
-
-  return shouldShowPopup ? (
-    <PopupCTAButton url={url} className={buttonClassName} label={buttonLabel} />
   ) : (
-    <LinkCTAButton url={url} className={buttonClassName} label={buttonLabel} />
+    <Button className={className}>{label}</Button>
   );
-});
+};
 
-const Tag = ({ item }) => {
+export const Tag = ({ item }) => {
   const renderTag = config.blocks.blocksConfig.teaser.renderTag;
   return !!item?.Subject
     ? item.Subject.map((tag, i) => renderTag(tag, i))
     : null;
 };
 
-const CardExtra = ({ item, itemModel = {} }) => {
-  const showCallToAction = itemModel?.callToAction?.enable;
-  const showTags = itemModel.hasTags;
-  const show = showCallToAction || showTags;
+/**
+ * Tags and call to action. `parts` picks which of them to render, in order;
+ * by default both, in the card footer. With `inline` they are rendered
+ * without the footer wrapper, to be placed between the other card elements.
+ */
+const CardExtra = ({
+  item,
+  itemModel = {},
+  isEditMode,
+  parts = ['tags', 'cta'],
+  inline = false,
+}) => {
+  const action = useCardAction();
 
-  return show ? (
-    <UiCard.Content extra>
-      {showTags && item?.Subject?.length > 0 && (
-        <div className={'tags labels'}>
-          <Tag item={item} />
-        </div>
-      )}
-      {showCallToAction && <CallToAction item={item} itemModel={itemModel} />}
-    </UiCard.Content>
-  ) : null;
+  const rendered = parts
+    .map((part) => {
+      if (part === 'tags' && itemModel.hasTags && item?.Subject?.length > 0) {
+        return (
+          <div key={part} className={'tags labels'}>
+            <Tag item={item} />
+          </div>
+        );
+      }
+      if (part === 'cta' && itemModel.callToAction?.enable) {
+        return <CallToAction key={part} item={item} itemModel={itemModel} />;
+      }
+      return null;
+    })
+    .filter(Boolean);
+
+  if (!rendered.length) return null;
+
+  const content = inline ? (
+    <div className="card-inline-extra">{rendered}</div>
+  ) : (
+    <UiCard.Content extra>{rendered}</UiCard.Content>
+  );
+
+  // used outside UniversalCard, provide the card action here
+  return action ? (
+    content
+  ) : (
+    <CardActionProvider
+      item={item}
+      itemModel={itemModel}
+      isEditMode={isEditMode}
+    >
+      {content}
+    </CardActionProvider>
+  );
 };
 
 export default CardExtra;

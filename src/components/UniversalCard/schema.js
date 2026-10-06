@@ -3,12 +3,17 @@ import {
   schemaEnhancerFactory,
   addTypeSelect,
 } from '@eeacms/volto-listing-block/schema-utils';
+import { migrateItemModel } from './migrate';
 
 export default function universalCardSchemaEnhancer(args) {
   const props = { ...args };
   const { schema, intl } = props;
 
-  props.formData = props.formData || props.data;
+  const formData = props.formData || props.data;
+  // build the schema for the consolidated model, also for legacy data
+  props.formData = formData?.itemModel
+    ? { ...formData, itemModel: migrateItemModel(formData.itemModel) }
+    : formData;
   const extensionName = 'cardTemplates';
   const enhancer = schemaEnhancerFactory({
     extensionName,
@@ -23,7 +28,7 @@ export default function universalCardSchemaEnhancer(args) {
   });
 
   const itemModelSchema = addTypeSelect({
-    ...args,
+    ...props,
     schema: DefaultCardModelSchema(intl),
     extensionName,
   });
@@ -35,7 +40,8 @@ export default function universalCardSchemaEnhancer(args) {
       ...schema.properties,
       itemModel: {
         title: 'Card model',
-        widget: 'object',
+        // ObjectWidget that lets the card elements widget edit sibling fields
+        widget: 'card_model',
         schema: itemModelSchema,
       },
     },

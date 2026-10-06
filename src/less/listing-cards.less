@@ -415,3 +415,64 @@ each(range(5), {
     display: none !important;
   }
 }
+
+// tags / call to action placed between the other card elements
+.card-inline-extra {
+  margin: 0.5rem 0;
+}
+
+// list items placed in a grid of cards (Grid layout) are grid cells, with
+// the spacing of the cards (see card.variables of the EEA theme); without it
+// they overflow the negative margins of the grid
+.ui.cards > .u-item.listing-item {
+  margin-right: 1em;
+  margin-left: 1em;
+}
+
+.ui.two.cards > .u-item.listing-item {
+  width: calc(50% - 2em);
+}
+
+.ui.three.cards > .u-item.listing-item {
+  width: calc(33.33333333% - 2em);
+}
+
+.ui.four.cards > .u-item.listing-item,
+.ui.five.cards > .u-item.listing-item,
+.ui.six.cards > .u-item.listing-item {
+  margin-right: 0.75em;
+  margin-left: 0.75em;
+}
+
+.ui.four.cards > .u-item.listing-item {
+  width: calc(25% - 1.5em);
+}
+
+.ui.five.cards > .u-item.listing-item {
+  width: calc(20% - 1.5em);
+}
+
+.ui.six.cards > .u-item.listing-item {
+  width: calc(16.66666667% - 1.5em);
+}
+
+// cards inside blocks have no vertical margin (`.block .ui.card`), so the
+// negative vertical margin of the grid would pull the next element (e.g. the
+// pagination) over the last row of cards. The search block renders its
+// results with the same listing layouts.
+.block.listing .ui.cards,
+.block.search .ui.cards {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+// some space between a grid of cards and its pagination
+.block.listing:has(.ui.cards) .pagination-wrapper,
+.block.search:has(.ui.cards) .pagination-wrapper {
+  margin-top: 2rem;
+}
+
+// the head title (e.g. the source of a search result) below the card content
+.ui.card.u-card .meta.card-source {
+  font-size: small;
+}
