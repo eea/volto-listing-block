@@ -49,6 +49,11 @@ const CARD_TYPES = {
     },
     1,
   ],
+  'card, title and logo': [
+    { '@type': 'card', imagePosition: 'top', contentMode: 'logo' },
+    3,
+  ],
+  'legacy image on bottom card': [{ '@type': 'imageOnBottom' }, 3],
   'list item': [{ '@type': 'item', imagePosition: 'left' }, 3],
   'list item, compact': [
     { '@type': 'item', imagePosition: 'none', size: 'compact' },

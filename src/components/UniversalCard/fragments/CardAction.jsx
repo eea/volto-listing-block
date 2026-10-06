@@ -11,8 +11,9 @@ import RenderBlocksWrapper from './RenderBlocksWrapper';
 export const POPUP_MIN_WIDTH = 1280;
 
 /**
- * The single destination of a card: the call to action URL (template or
- * link) when configured, otherwise the item URL.
+ * The single destination of a card, shared by the title, the image and the
+ * call to action: the CTA URL template, the CTA link, the external link of
+ * the item (e.g. the "External link" of a teaser), then the item URL.
  */
 export const getCardActionUrl = (item, options = {}) => {
   const { urlTemplate } = options;
@@ -20,7 +21,7 @@ export const getCardActionUrl = (item, options = {}) => {
     ? urlTemplate
         .replace('$PORTAL_URL', config.settings.publicURL)
         .replace('$URL', flattenToAppURL(item['@id'] || ''))
-    : options.href?.[0]?.['@id'] || item['@id'];
+    : options.href?.[0]?.['@id'] || item.external_link || item['@id'];
 };
 
 export const CardActionContext = createContext(null);

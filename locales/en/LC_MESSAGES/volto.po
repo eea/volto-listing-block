@@ -216,6 +216,11 @@ msgstr ""
 msgid "contentModeDefault"
 msgstr ""
 
+#. Default: "Title and logo"
+#: messages
+msgid "contentModeLogo"
+msgstr ""
+
 #. Default: "Image only (title on image)"
 #: messages
 msgid "contentModeOverlay"

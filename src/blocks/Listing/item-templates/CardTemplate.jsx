@@ -30,6 +30,7 @@ import {
 } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 
 import '@eeacms/volto-listing-block/less/visualization-cards.less';
+import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
 export const CardBenchmarkLevel = ({ item }) => {
   const benchmarkLevelItems = useBenchmarkLevels();
@@ -181,6 +182,20 @@ const CardTemplate = (props) => {
     );
   }
 
+  // Title on top and the logo centred below it (teaser-cards.less), the
+  // former "Image on bottom" card
+  if (contentMode === 'logo') {
+    return (
+      <UiCard fluid={true} className={cx(classes, 'image-on-bottom-card')}>
+        <UiCard.Content>
+          <CardTitle {...props} />
+        </UiCard.Content>
+        {image}
+        <CardExtra {...props} />
+      </UiCard>
+    );
+  }
+
   const isHorizontal = imagePosition === 'left' || imagePosition === 'right';
   const { body: order, footer } = splitFooter(
     getElementsOrder({ ...itemModel, '@type': 'card' }),
@@ -215,7 +230,7 @@ CardTemplate.propTypes = {
   item: PropTypes.object.isRequired,
   itemModel: PropTypes.shape({
     imagePosition: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'none']),
-    contentMode: PropTypes.oneOf(['default', 'overlay']),
+    contentMode: PropTypes.oneOf(['default', 'overlay', 'logo']),
     hasBenchmarkLevel: PropTypes.bool,
     elementsOrder: PropTypes.arrayOf(PropTypes.string),
   }),

@@ -127,6 +127,72 @@ describe('card action', () => {
     expect(screen.getByText('Read more').tagName).toBe('BUTTON');
   });
 
+  describe('external link', () => {
+    const external = 'https://example.org/report';
+    const renderExternal = (itemModel, extra = {}) => {
+      const props = {
+        item: { ...item, external_link: external, ...extra },
+        itemModel: {
+          callToAction: { enable: true, label: 'Read more' },
+          ...itemModel,
+        },
+      };
+      return render(
+        <Provider
+          store={mockStore({ screen: { width: 1024 }, userSession: {} })}
+        >
+          <MemoryRouter>
+            <CardActionProvider {...props}>
+              <CardImage {...props} />
+              <CardTitle {...props} />
+              <CardExtra {...props} />
+            </CardActionProvider>
+          </MemoryRouter>
+        </Provider>,
+      ).container;
+    };
+
+    it('links title, image and CTA to the external link', () => {
+      expect(getLinks(renderExternal())).toEqual([
+        external,
+        external,
+        external,
+      ]);
+    });
+
+    it('works without a linked content item', () => {
+      expect(getLinks(renderExternal({}, { '@id': undefined }))).toEqual([
+        external,
+        external,
+        external,
+      ]);
+    });
+
+    it('gives the CTA link precedence', () => {
+      const container = renderExternal({
+        callToAction: {
+          enable: true,
+          label: 'Read more',
+          href: [{ '@id': '/en/cta-page' }],
+        },
+      });
+      expect(new Set(getLinks(container))).toEqual(new Set(['/en/cta-page']));
+    });
+
+    it('gives the CTA URL template precedence', () => {
+      const container = renderExternal({
+        callToAction: {
+          enable: true,
+          label: 'Read more',
+          urlTemplate: '$URL/details',
+        },
+      });
+      expect(new Set(getLinks(container))).toEqual(
+        new Set(['/my-chart/details']),
+      );
+    });
+  });
+
   it('does not wrap titles that already are links', () => {
     const props = {
       item: { '@id': '/x', title: <a href="/search-result">Result</a> },

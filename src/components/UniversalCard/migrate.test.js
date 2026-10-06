@@ -106,6 +106,20 @@ describe('migrateItemModel', () => {
     );
   });
 
+  it('migrates the image on bottom card to the title and logo mode', () => {
+    expect(migrateItemModel({ '@type': 'imageOnBottom' })).toEqual(
+      expect.objectContaining({
+        '@type': 'card',
+        imagePosition: 'top',
+        contentMode: 'logo',
+        hasLink: true,
+      }),
+    );
+    expect(getCardVariant(migrateItemModel({ '@type': 'imageOnBottom' }))).toBe(
+      'imageOnBottom',
+    );
+  });
+
   it('migrates the visualization card', () => {
     expect(
       migrateItemModel({

@@ -191,6 +191,37 @@ describe('UniversalCard schemaEnhancer', () => {
     });
   });
 
+  it('offers the title and logo mode in teasers only', () => {
+    const modes = (formData) =>
+      getItemModelSchema(formData).properties.contentMode.choices.map(
+        ([value]) => value,
+      );
+    expect(
+      modes({ '@type': 'teaser', itemModel: { '@type': 'card' } }),
+    ).toContain('logo');
+    expect(
+      modes({ '@type': 'listing', itemModel: { '@type': 'card' } }),
+    ).not.toContain('logo');
+    // kept where it is already used, e.g. a former "Image on bottom" listing
+    expect(
+      modes({ '@type': 'listing', itemModel: { '@type': 'imageOnBottom' } }),
+    ).toContain('logo');
+  });
+
+  it('reduces the card controls in title and logo mode', () => {
+    const schema = getItemModelSchema({
+      '@type': 'teaser',
+      itemModel: { '@type': 'card', contentMode: 'logo' },
+    });
+    expect(fields(schema)).toEqual([
+      '@type',
+      'contentMode',
+      'maxTitle',
+      'hasTags',
+      'callToAction',
+    ]);
+  });
+
   it('reduces the card controls in overlay mode', () => {
     const schema = getItemModelSchema({
       itemModel: { '@type': 'card', contentMode: 'overlay' },
