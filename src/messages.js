@@ -431,6 +431,10 @@ const messages = defineMessages({
     id: 'contentModeOverlay',
     defaultMessage: 'Image only (title on image)',
   },
+  contentModeLogo: {
+    id: 'contentModeLogo',
+    defaultMessage: 'Title and logo',
+  },
   showBenchmarkLevel: {
     id: 'showBenchmarkLevel',
     defaultMessage: 'Show benchmark level',

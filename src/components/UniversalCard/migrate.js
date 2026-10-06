@@ -49,6 +49,7 @@ const LEGACY_DEFAULTS = {
   imageCard: legacyCardDefaults,
   imageOnLeft: legacyCardDefaults,
   imageOnRight: legacyCardDefaults,
+  imageOnBottom: legacyCardDefaults,
   visualizationCard: {
     hasDescription: false,
     maxTitle: 4,
@@ -126,6 +127,12 @@ const LEGACY_TEMPLATES = {
     contentMode: 'overlay',
     hasDate: showDate(m),
   }),
+  // "Image on bottom" (10.1.0): the title on top and the logo below it
+  imageOnBottom: (m) => ({
+    ...cardDefaults,
+    contentMode: 'logo',
+    hasDate: showDate(m),
+  }),
   visualizationCard: (m) => ({
     ...cardDefaults,
     // image at the bottom, content type above and date below the title
@@ -197,6 +204,7 @@ export const getCardVariant = (itemModel = {}) => {
   const type = itemModel['@type'] ?? CARD;
   if (type === CARD) {
     if (itemModel.contentMode === 'overlay') return 'imageCard';
+    if (itemModel.contentMode === 'logo') return 'imageOnBottom';
     if (itemModel.imagePosition === 'left') return 'imageOnLeft';
     if (itemModel.imagePosition === 'right') return 'imageOnRight';
     return CARD;

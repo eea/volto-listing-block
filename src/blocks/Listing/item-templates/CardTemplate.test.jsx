@@ -94,6 +94,28 @@ describe('CardTemplate', () => {
     );
   });
 
+  it('renders the title and logo card as the former image on bottom card', () => {
+    const { container } = renderCard({
+      contentMode: 'logo',
+      hasDate: true,
+      hasDescription: true,
+      callToAction: { enable: true, label: 'Read more' },
+    });
+    const card = container.querySelector('.u-card');
+    expect(card).toHaveClass('image-on-bottom-card');
+    // the styles target the direct children: content, image, footer
+    expect(Array.from(card.children).map((el) => el.className)).toEqual([
+      'content',
+      'image',
+      'extra content',
+    ]);
+    const content = card.querySelector(':scope > .content');
+    expect(Array.from(content.children).map((el) => el.className)).toEqual([
+      'header',
+    ]);
+    expect(card.querySelector('img')).toHaveAttribute('alt', 'Card title');
+  });
+
   it('renders the visualization flavour through controls', () => {
     const { container, store } = renderCard(
       {

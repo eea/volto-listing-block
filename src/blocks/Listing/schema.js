@@ -60,7 +60,9 @@ const CallToActionSchema = ({ formData, intl }) => {
 
 const modelHasImage = (itemModel = {}) =>
   (itemModel['@type'] ?? CARD) === CARD
-    ? itemModel.contentMode === 'overlay' || itemModel.imagePosition !== 'none'
+    ? itemModel.contentMode === 'overlay' ||
+      itemModel.contentMode === 'logo' ||
+      itemModel.imagePosition !== 'none'
     : !!itemModel.imagePosition && itemModel.imagePosition !== 'none';
 
 const getImagePositionChoices = ({ template, variation, intl, current }) => {
@@ -272,6 +274,9 @@ export const setCardModelSchema = (args) => {
   const itemModel = formData?.itemModel || {};
   const variation = formData?.variation || 'summary';
   const isOverlay = itemModel.contentMode === 'overlay';
+  const isLogo = itemModel.contentMode === 'logo';
+  // the title and logo card is made for teasers; kept where already used
+  const offersLogo = formData?.['@type'] === 'teaser' || isLogo;
   const hasImage = modelHasImage({ ...itemModel, '@type': CARD });
   // side images are not part of the elements list, keep their settings here
   const hasSideImage =
@@ -283,11 +288,18 @@ export const setCardModelSchema = (args) => {
     'contentMode',
     ...(isOverlay
       ? ['titleOnImage', 'hasLabel']
-      : [
-          'imagePosition',
-          'elementsOrder',
-          ...(hasSideImage && hasImage ? ['titleOnImage', 'hasLabel'] : []),
-        ]),
+      : isLogo
+        ? [
+            'maxTitle',
+            'hasTags',
+            'callToAction',
+            ...(itemModel.callToAction?.enable ? ['enableCTAPopup'] : []),
+          ]
+        : [
+            'imagePosition',
+            'elementsOrder',
+            ...(hasSideImage && hasImage ? ['titleOnImage', 'hasLabel'] : []),
+          ]),
   ];
   const properties = applyModelDefaults(
     {
@@ -298,6 +310,9 @@ export const setCardModelSchema = (args) => {
         choices: [
           ['default', intl.formatMessage(messages.contentModeDefault)],
           ['overlay', intl.formatMessage(messages.contentModeOverlay)],
+          ...(offersLogo
+            ? [['logo', intl.formatMessage(messages.contentModeLogo)]]
+            : []),
         ],
         default: 'default',
       },
