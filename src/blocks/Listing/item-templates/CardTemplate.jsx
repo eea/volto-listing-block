@@ -54,12 +54,20 @@ CardBenchmarkLevel.propTypes = {
   }),
 };
 
-const CardContentType = ({ item, itemModel, head_title }) => {
-  const contentType = head_title || item.type_title || item['@type'];
-  return (head_title || itemModel.hasMetaType) && contentType ? (
+const CardContentType = ({ item, itemModel }) => {
+  const contentType = item.type_title || item['@type'];
+  return itemModel.hasMetaType && contentType ? (
     <UiCard.Meta className="content-type">{contentType}</UiCard.Meta>
   ) : null;
 };
+
+// The head title (e.g. the source of a search result, or the head title of a
+// teaser), shown below the card content when content type and date are not
+// in one metadata row (where it replaces the content type).
+const CardSource = ({ head_title }) =>
+  head_title ? (
+    <UiCard.Meta className="card-source">{head_title}</UiCard.Meta>
+  ) : null;
 
 const CardPublishingDate = ({ item, itemModel }) => {
   const { EffectiveDate } = item;
@@ -93,12 +101,14 @@ const renderElements = (order, props, image) => {
   const { item, itemModel } = props;
   const { hasBenchmarkLevel, hasIcon, icon } = itemModel;
   const rendered = [];
+  let hasMetaRow = false;
 
   for (let index = 0; index < order.length; index++) {
     const id = order[index];
 
     if (isMeta(id) && isMeta(order[index + 1])) {
       rendered.push(<CardMeta key="meta" {...props} />);
+      hasMetaRow = true;
       index++;
       continue;
     }
@@ -141,6 +151,10 @@ const renderElements = (order, props, image) => {
       default:
         break;
     }
+  }
+
+  if (!hasMetaRow) {
+    rendered.push(<CardSource key="source" head_title={props.head_title} />);
   }
 
   return rendered;

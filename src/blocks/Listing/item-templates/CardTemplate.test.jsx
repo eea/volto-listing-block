@@ -257,6 +257,35 @@ describe('CardTemplate', () => {
     expect(card.querySelector(':scope > .image')).not.toBeNull();
   });
 
+  it('shows the content type and the head title (source) separately', () => {
+    const { container } = renderCard(
+      {
+        imagePosition: 'top',
+        hasMetaType: true,
+        hasDate: true,
+        elementsOrder: ['contentType', 'title', 'date', 'image'],
+      },
+      { head_title: 'Source: eea.europa.eu' },
+    );
+    const content = container.querySelector('.content');
+    expect(content.querySelector('.content-type')).toHaveTextContent(
+      'Chart (interactive)',
+    );
+    expect(content.lastChild).toHaveClass('card-source');
+    expect(content.lastChild).toHaveTextContent('Source: eea.europa.eu');
+  });
+
+  it('keeps the head title in the metadata row of the default card', () => {
+    const { container } = renderCard(
+      { imagePosition: 'top', hasMetaType: true, hasDate: true },
+      { head_title: 'Head title' },
+    );
+    expect(container.querySelector('.meta .text-left')).toHaveTextContent(
+      'Head title',
+    );
+    expect(container.querySelector('.card-source')).toBeNull();
+  });
+
   it('does not link in edit mode', () => {
     const { container } = renderCard({}, { isEditMode: true });
     expect(container.querySelector('a')).toBeNull();
