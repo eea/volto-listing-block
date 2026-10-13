@@ -26,6 +26,15 @@ const renderGallery = (props) =>
   );
 
 describe('Gallery', () => {
+  it('renders cards even when the saved model is a list item', () => {
+    renderGallery({ itemModel: { '@type': 'item', imagePosition: 'left' } });
+    expect(UniversalCard).toHaveBeenCalledWith(
+      expect.objectContaining({
+        itemModel: { '@type': 'card', imagePosition: 'top' },
+      }),
+      expect.anything(),
+    );
+  });
   beforeEach(() => UniversalCard.mockClear());
 
   it('renders the grid size', () => {

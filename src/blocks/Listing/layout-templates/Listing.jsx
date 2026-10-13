@@ -9,7 +9,7 @@ import messages from '@eeacms/volto-listing-block/messages';
 import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
 import {
   getCardVariant,
-  migrateItemModel,
+  getLayoutItemModel,
 } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
 
 const Listing = (props) => {
@@ -17,7 +17,8 @@ const Listing = (props) => {
   let href = linkHref?.[0]?.['@id'] || '';
   const getIndicatorPreview = useIndicatorPreviews(items, block);
   // keeps the per-flavour grid classes, e.g. .imageOnLeft-items
-  const cardVariant = getCardVariant(migrateItemModel(props.itemModel || {}));
+  const itemModel = getLayoutItemModel(props.itemModel, 'summary');
+  const cardVariant = getCardVariant(itemModel);
 
   moment.locale(config.settings.dateLocale);
   const link = isInternalURL(href) ? (
@@ -35,6 +36,7 @@ const Listing = (props) => {
           items.map((item, index) => (
             <UniversalCard
               {...props}
+              itemModel={itemModel}
               key={`item-${block}-${index}`}
               item={item}
               {...getIndicatorPreview(item)}

@@ -5,7 +5,15 @@ import {
   ITEM,
   NO_HORIZONTAL_IMAGE_VARIATIONS,
 } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
-import { getElementsOrder } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
+import {
+  BACK,
+  FRONT,
+  canFlip,
+  getElementSide,
+  getElementsOrder,
+  isFlipEnabled,
+} from '@eeacms/volto-listing-block/components/UniversalCard/elements';
+import { getBorder } from '@eeacms/volto-listing-block/components/UniversalCard/border';
 
 import alignLeftSVG from '@plone/volto/icons/align-left.svg';
 import alignCenterSVG from '@plone/volto/icons/align-center.svg';
@@ -100,6 +108,11 @@ const getElementLabels = (intl) => ({
   cta: intl.formatMessage(messages.elementCallToAction),
 });
 
+// a side image (card or list item): it is not part of the elements order
+const hasSideImageWithTitle = (itemModel, template) =>
+  (itemModel.imagePosition === 'left' || itemModel.imagePosition === 'right') &&
+  !(template === ITEM && itemModel.size === 'compact');
+
 const booleanToggle = (field, defaultVisible) => ({
   field,
   on: true,
@@ -122,7 +135,13 @@ const getElementSettings = (itemModel, template, blockType) => ({
     fields: ['hasEventDate'],
   },
   title: {
-    fields: ['maxTitle', 'hasIcon', ...(itemModel.hasIcon ? ['icon'] : [])],
+    fields: [
+      'maxTitle',
+      // side images have no row of their own, their title on image is here
+      ...(hasSideImageWithTitle(itemModel, template) ? ['titleOnImage'] : []),
+      'hasIcon',
+      ...(itemModel.hasIcon ? ['icon'] : []),
+    ],
   },
   benchmark: { toggle: booleanToggle('hasBenchmarkLevel', false) },
   description: {
@@ -158,6 +177,46 @@ const getFieldSchema = (properties, spec) =>
     ? properties[spec]
     : properties[spec.field]?.schema?.properties?.[spec.key];
 
+// Flip cards: every element row also chooses the side of the card
+const withFlipSides = (elementSettings, itemModel) =>
+  isFlipEnabled(itemModel)
+    ? Object.fromEntries(
+        Object.entries(elementSettings).map(([id, settings = {}]) => [
+          id,
+          {
+            ...settings,
+            fields: [
+              { field: 'flipSides', key: id },
+              ...(settings.fields || []),
+            ],
+          },
+        ]),
+      )
+    : elementSettings;
+
+const getFlipSidesProperty = (itemModel, intl) => ({
+  widget: 'object',
+  schema: {
+    title: intl.formatMessage(messages.flipSides),
+    fieldsets: [{ id: 'default', title: 'Default', fields: [] }],
+    properties: Object.fromEntries(
+      getElementsOrder({ ...itemModel, '@type': CARD }).map((id) => [
+        id,
+        {
+          title: intl.formatMessage(messages.flipSide),
+          choices: [
+            [FRONT, intl.formatMessage(messages.flipSideFront)],
+            [BACK, intl.formatMessage(messages.flipSideBack)],
+          ],
+          default: getElementSide({}, id),
+          noValueOption: false,
+        },
+      ]),
+    ),
+    required: [],
+  },
+});
+
 // Built last, from the final properties, so the rows reuse their schemas
 const addElementsProperty = ({
   properties,
@@ -169,7 +228,10 @@ const addElementsProperty = ({
   const labels = getElementLabels(intl);
   const model = { ...itemModel, '@type': template };
   const order = getElementsOrder(model);
-  const elementSettings = getElementSettings(model, template, blockType);
+  const elementSettings = withFlipSides(
+    getElementSettings(model, template, blockType),
+    model,
+  );
   const fieldSchemas = Object.fromEntries(
     Object.values(elementSettings)
       .flatMap(({ fields = [] }) => fields)
@@ -179,7 +241,9 @@ const addElementsProperty = ({
   return {
     ...properties,
     elementsOrder: {
-      title: intl.formatMessage(messages.elementsOrder),
+      title: intl.formatMessage(
+        template === ITEM ? messages.itemElementsOrder : messages.elementsOrder,
+      ),
       description: intl.formatMessage(messages.elementsOrderHelp),
       widget: 'card_elements',
       elements: order.map((id) => [id, labels[id]]),
@@ -204,6 +268,10 @@ const applyModelDefaults = (properties, itemModel = {}) =>
     return acc;
   }, {});
 
+// the highest title / description max lines (see `max-N-lines` in
+// listing-cards.less), 0 shows the whole text
+const MAX_LINES = 20;
+
 const commonModelProperties = ({ formData, intl }) => ({
   maxTitle: {
     title: intl.formatMessage(messages.maxTitle),
@@ -211,7 +279,7 @@ const commonModelProperties = ({ formData, intl }) => ({
     type: 'number',
     default: 2,
     minimum: 0,
-    maximum: 5,
+    maximum: MAX_LINES,
   },
   hasDate: {
     title: intl.formatMessage(messages.publicationDate),
@@ -234,11 +302,16 @@ const commonModelProperties = ({ formData, intl }) => ({
     type: 'number',
     default: 2,
     minimum: 0,
-    maximum: 5,
+    maximum: MAX_LINES,
   },
   hasMetaType: {
     title: intl.formatMessage(messages.showPortalType),
     type: 'boolean',
+  },
+  titleOnImage: {
+    title: intl.formatMessage(messages.displayTitle),
+    type: 'boolean',
+    default: false,
   },
   hasLabel: {
     title: intl.formatMessage(messages.showNewArchivedLabel),
@@ -297,8 +370,9 @@ export const setCardModelSchema = (args) => {
           ]
         : [
             'imagePosition',
+            ...(canFlip({ ...itemModel, '@type': CARD }) ? ['flip'] : []),
             'elementsOrder',
-            ...(hasSideImage && hasImage ? ['titleOnImage', 'hasLabel'] : []),
+            ...(hasSideImage && hasImage ? ['hasLabel'] : []),
           ]),
   ];
   const properties = applyModelDefaults(
@@ -326,11 +400,13 @@ export const setCardModelSchema = (args) => {
         }),
         default: 'top',
       },
-      titleOnImage: {
-        title: intl.formatMessage(messages.displayTitle),
+      flip: {
+        title: intl.formatMessage(messages.flip),
+        description: intl.formatMessage(messages.flipHelp),
         type: 'boolean',
         default: false,
       },
+      flipSides: getFlipSidesProperty(itemModel, intl),
       hasBenchmarkLevel: {
         title: intl.formatMessage(messages.showBenchmarkLevel),
         type: 'boolean',
@@ -349,27 +425,11 @@ export const setCardModelSchema = (args) => {
   return schema;
 };
 
-// List items have a fixed order of their elements, so they get plain
-// options instead of the card elements widget. The compact size (the former
-// simple item) shows only the title and the content type.
+// The side image stays outside the sortable text column.
 const getItemFields = (itemModel, hasImage) =>
   itemModel.size === 'compact'
-    ? ['maxTitle', 'hasMetaType']
-    : [
-        'imagePosition',
-        'maxTitle',
-        'hasIcon',
-        ...(itemModel.hasIcon ? ['icon'] : []),
-        'hasDate',
-        'hasEventDate',
-        'hasDescription',
-        ...(itemModel.hasDescription ? ['maxDescription'] : []),
-        'hasMetaType',
-        ...(hasImage ? ['hasLabel'] : []),
-        'hasTags',
-        'callToAction',
-        ...(itemModel.callToAction?.enable ? ['enableCTAPopup'] : []),
-      ];
+    ? ['elementsOrder']
+    : ['imagePosition', ...(hasImage ? ['hasLabel'] : []), 'elementsOrder'];
 
 export const setItemModelSchema = (args) => {
   const { formData, schema, intl } = args;
@@ -384,7 +444,7 @@ export const setItemModelSchema = (args) => {
     ...getItemFields(itemModel, hasImage),
   ];
   const common = commonModelProperties({ formData, intl });
-  itemModelSchema.properties = applyModelDefaults(
+  const properties = applyModelDefaults(
     {
       ...itemModelSchema.properties,
       ...common,
@@ -405,6 +465,13 @@ export const setItemModelSchema = (args) => {
     },
     itemModel,
   );
+  itemModelSchema.properties = addElementsProperty({
+    properties,
+    itemModel,
+    template: ITEM,
+    blockType: formData?.['@type'],
+    intl,
+  });
   return schema;
 };
 
@@ -421,8 +488,8 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
   fieldset.fields.push(
     'theme:noprefix',
     'inverted:bool',
-    'bordered:bool',
-    ...(isCard ? ['topAccent:bool'] : []),
+    'border:noprefix',
+    ...(isCard ? ['dropShadow:bool'] : []),
     // image options only when there is an image
     ...(hasImage ? ['rounded:bool'] : []),
     'text',
@@ -454,14 +521,22 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
       description: intl.formatMessage(messages.RoundedHelp),
       type: 'boolean',
     },
-    'bordered:bool': {
-      title: intl.formatMessage(messages.Bordered),
-      type: 'boolean',
+    'border:noprefix': {
+      title: intl.formatMessage(messages.Border),
+      choices: [
+        ['no-border', intl.formatMessage(messages.noBorder)],
+        ...(isCard
+          ? [['top-accent', intl.formatMessage(messages.topAccent)]]
+          : []),
+        ['bordered', intl.formatMessage(messages.Bordered)],
+      ],
+      default: getBorder(itemModel.styles),
+      noValueOption: false,
     },
-    'topAccent:bool': {
-      title: intl.formatMessage(messages.topAccent),
-      description: intl.formatMessage(messages.topAccentHelp),
+    'dropShadow:bool': {
+      title: intl.formatMessage(messages.dropShadow),
       type: 'boolean',
+      default: false,
     },
     text: {
       title: intl.formatMessage(messages.textAlign),

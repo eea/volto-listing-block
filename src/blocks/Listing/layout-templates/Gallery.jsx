@@ -5,6 +5,7 @@ import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/
 import config from '@plone/volto/registry';
 import messages from '@eeacms/volto-listing-block/messages';
 import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
+import { getLayoutItemModel } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
 
 const Gallery = ({
   block,
@@ -25,6 +26,7 @@ const Gallery = ({
             <UniversalCard
               key={i}
               {...rest}
+              itemModel={getLayoutItemModel(rest.itemModel, 'cardsGallery')}
               block={block}
               item={item}
               isEditMode={isEditMode}

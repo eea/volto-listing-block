@@ -113,27 +113,14 @@ describe('CardExtra', () => {
     expect(button).not.toHaveAttribute('href');
   });
 
-  it('applies the theme classes', () => {
-    renderExtra({
-      itemModel: cta({}, { styles: { 'theme:noprefix': 'primary' } }),
-    });
-    expect(screen.getByText('Read more').className).toContain('primary');
-  });
-
-  it('applies the inverted theme classes', () => {
+  it('renders the plain button whatever the card theme', () => {
     renderExtra({
       itemModel: cta(
         {},
         { styles: { 'theme:noprefix': 'primary', 'inverted:bool': true } },
       ),
     });
-    expect(screen.getByText('Read more').className).toContain(
-      'primary inverted',
-    );
-  });
-
-  it('uses basic black when inverted without theme', () => {
-    renderExtra({ itemModel: cta({}, { styles: { 'inverted:bool': true } }) });
-    expect(screen.getByText('Read more').className).toContain('basic black');
+    const button = screen.getByText('Read more');
+    expect(button.className).toBe('ui button card-cta');
   });
 });

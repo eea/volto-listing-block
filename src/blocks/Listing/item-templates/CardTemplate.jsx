@@ -7,6 +7,7 @@ import config from '@plone/volto/registry';
 import { formatDate } from '@plone/volto/helpers/Utils/Date';
 
 import {
+  CardActionLink,
   CardDescription,
   CardExtra,
   CardImage,
@@ -26,10 +27,12 @@ import {
   TITLE,
   getElementsOrder,
   getHiddenElements,
+  isFlipEnabled,
   splitFooter,
+  splitSides,
 } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 
-import '@eeacms/volto-listing-block/less/visualization-cards.less';
+import '@eeacms/volto-listing-block/less/benchmark-visualization.less';
 import '@eeacms/volto-listing-block/less/teaser-cards.less';
 
 export const CardBenchmarkLevel = ({ item }) => {
@@ -98,7 +101,7 @@ const isMeta = (id) => id === CONTENT_TYPE || id === DATE;
  * date share one metadata row when they are next to each other, as in the
  * default card.
  */
-const renderElements = (order, props, image) => {
+const renderElements = (order, props, image, withSource = true) => {
   const { item, itemModel } = props;
   const { hasBenchmarkLevel, hasIcon, icon } = itemModel;
   const rendered = [];
@@ -154,12 +157,50 @@ const renderElements = (order, props, image) => {
     }
   }
 
-  if (!hasMetaRow) {
+  if (!hasMetaRow && withSource) {
     rendered.push(<CardSource key="source" head_title={props.head_title} />);
   }
 
   return rendered;
 };
+
+/**
+ * The content of a card (or of one side of a flip card): an image shown
+ * first stays outside the content, as in the default card, and the trailing
+ * tags and call to action go to the footer.
+ */
+const CardFace = (props) => {
+  const { itemModel = {}, order: fullOrder, image, withSource = true } = props;
+  const { imagePosition = 'top' } = itemModel;
+  const { body: order, footer } = splitFooter(fullOrder);
+  const hidden = getHiddenElements(itemModel);
+  const leadingImage = order.find((id) => !hidden.includes(id)) === IMAGE;
+  const contentOrder = leadingImage
+    ? order.filter((id) => id !== IMAGE)
+    : order;
+
+  return (
+    <>
+      {(leadingImage || imagePosition === 'left') && image}
+      <UiCard.Content>
+        {renderElements(contentOrder, props, image, withSource)}
+      </UiCard.Content>
+      {imagePosition === 'right' && image}
+      <CardExtra {...props} parts={footer} />
+    </>
+  );
+};
+
+// The whole side of a flip card leads to the card destination, also when
+// the side has no title or image link (e.g. only the description). Out of
+// the tab order: the title link is the one for the keyboard.
+const FlipCardLink = ({ item }) => (
+  <CardActionLink
+    className="flip-card-link"
+    aria-label={typeof item.title === 'string' ? item.title : item.Title}
+    tabIndex={-1}
+  />
+);
 
 /**
  * The single card template. Image position, overlay mode, the displayed
@@ -197,15 +238,36 @@ const CardTemplate = (props) => {
   }
 
   const isHorizontal = imagePosition === 'left' || imagePosition === 'right';
-  const { body: order, footer } = splitFooter(
-    getElementsOrder({ ...itemModel, '@type': 'card' }),
-  );
-  // an image shown first stays outside the content, as in the default card
+  const order = getElementsOrder({ ...itemModel, '@type': 'card' });
   const hidden = getHiddenElements(itemModel);
-  const leadingImage = order.find((id) => !hidden.includes(id)) === IMAGE;
-  const contentOrder = leadingImage
-    ? order.filter((id) => id !== IMAGE)
-    : order;
+  const sides = isFlipEnabled(itemModel) ? splitSides(itemModel, order) : null;
+  const isVisible = (id) => !hidden.includes(id);
+
+  // a flip card needs something to show on its back
+  if (sides && sides.back.some(isVisible)) {
+    return (
+      // the outer card only holds the place in the grid, both sides are
+      // full cards with the styling of the card; focusable so that a tap
+      // turns it over on touch screens
+      <UiCard fluid={true} className="flip-card" tabIndex={-1}>
+        <div className="flip-card-inner">
+          <div className={cx('ui fluid card flip-card-front', classes)}>
+            <FlipCardLink item={props.item} />
+            <CardFace {...props} order={sides.front} image={image} />
+          </div>
+          <div className={cx('ui fluid card flip-card-back', classes)}>
+            <FlipCardLink item={props.item} />
+            <CardFace
+              {...props}
+              order={sides.back}
+              image={image}
+              withSource={false}
+            />
+          </div>
+        </div>
+      </UiCard>
+    );
+  }
 
   return (
     <UiCard
@@ -216,12 +278,7 @@ const CardTemplate = (props) => {
         'right-image-card': imagePosition === 'right',
       })}
     >
-      {(leadingImage || imagePosition === 'left') && image}
-      <UiCard.Content>
-        {renderElements(contentOrder, props, image)}
-      </UiCard.Content>
-      {imagePosition === 'right' && image}
-      <CardExtra {...props} parts={footer} />
+      <CardFace {...props} order={order} image={image} />
     </UiCard>
   );
 };
@@ -233,6 +290,8 @@ CardTemplate.propTypes = {
     contentMode: PropTypes.oneOf(['default', 'overlay', 'logo']),
     hasBenchmarkLevel: PropTypes.bool,
     elementsOrder: PropTypes.arrayOf(PropTypes.string),
+    flip: PropTypes.bool,
+    flipSides: PropTypes.objectOf(PropTypes.oneOf(['front', 'back'])),
   }),
   className: PropTypes.string,
   preview_image_url: PropTypes.string,

@@ -4,8 +4,11 @@ import {
   VISUALIZATION_ELEMENTS,
   getAvailableElements,
   getElementsOrder,
+  canFlip,
   getHiddenElements,
+  isFlipEnabled,
   splitFooter,
+  splitSides,
 } from './elements';
 
 describe('getElementsOrder', () => {
@@ -106,6 +109,28 @@ describe('splitFooter', () => {
     expect(splitFooter(['tags', 'image', 'title', 'cta'])).toEqual({
       body: ['tags', 'image', 'title'],
       footer: ['cta'],
+    });
+  });
+});
+
+describe('flip cards', () => {
+  it('can flip vertical cards with image and content', () => {
+    expect(canFlip({ '@type': 'card', imagePosition: 'top' })).toBe(true);
+    expect(canFlip({ '@type': 'card', imagePosition: 'none' })).toBe(true);
+    expect(canFlip({ '@type': 'card', imagePosition: 'left' })).toBe(false);
+    expect(canFlip({ '@type': 'card', contentMode: 'overlay' })).toBe(false);
+    expect(canFlip({ '@type': 'item', imagePosition: 'left' })).toBe(false);
+    expect(isFlipEnabled({ '@type': 'card', imagePosition: 'top' })).toBe(
+      false,
+    );
+  });
+
+  it('splits the order in the two sides', () => {
+    expect(
+      splitSides({ flipSides: { image: 'back', cta: 'back' } }, CARD_ELEMENTS),
+    ).toEqual({
+      front: ['contentType', 'date', 'title', 'benchmark', 'tags'],
+      back: ['image', 'description', 'cta'],
     });
   });
 });

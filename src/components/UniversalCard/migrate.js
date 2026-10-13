@@ -196,6 +196,28 @@ export const migrateItemModel = (itemModel) => {
   };
 };
 
+export const getLayoutItemType = (layout) =>
+  layout === 'summary' ? ITEM : layout === 'cardsGallery' ? CARD : undefined;
+
+// Layout determines the template, while shared content and styling survive
+// switching between a list and a grid.
+export const getLayoutItemModel = (storedModel, layout) => {
+  const model = migrateItemModel(storedModel);
+  const type = getLayoutItemType(layout);
+  if (!type) return model;
+  const imagePosition = model?.imagePosition;
+  const position =
+    type === ITEM
+      ? ['left', 'right', 'none'].includes(imagePosition)
+        ? imagePosition
+        : 'left'
+      : ['left', 'right'].includes(imagePosition) || !imagePosition
+        ? 'top'
+        : imagePosition;
+  if (model?.['@type'] === type && position === imagePosition) return model;
+  return { ...model, '@type': type, imagePosition: position };
+};
+
 /**
  * Returns the legacy template id matching a (migrated) itemModel. It keeps
  * the CSS hooks (`.<id>-items`) used by the listing layout and the theme.

@@ -50,6 +50,74 @@ const getLinks = (container) =>
   );
 
 describe('ItemTemplate', () => {
+  it.each(['left', 'right', 'none'])(
+    'keeps a trailing CTA in the text column with image position %s',
+    (imagePosition) => {
+      const { container } = renderItem({
+        imagePosition,
+        callToAction: { enable: true, label: 'Read more', urlTemplate: '$URL' },
+      });
+      const cta = screen.getByText('Read more');
+      expect(container.querySelector('.listing-body')).toContainElement(cta);
+      expect(cta.closest('.card-inline-extra')).toBe(
+        container.querySelector('.listing-body').lastChild,
+      );
+      expect(container.querySelector('.wrapper > .extra.content')).toBeNull();
+    },
+  );
+
+  it('places the CTA before the title when reordered', () => {
+    const { container } = renderItem({
+      imagePosition: 'left',
+      elementsOrder: [
+        'cta',
+        'title',
+        'date',
+        'description',
+        'contentType',
+        'tags',
+      ],
+      callToAction: { enable: true, label: 'Read more', urlTemplate: '$URL' },
+    });
+    expect(
+      container.querySelector('.listing-body').firstChild,
+    ).toContainElement(screen.getByText('Read more'));
+  });
+  it('moves metadata above the title while keeping the image on the side', () => {
+    const { container } = renderItem({
+      imagePosition: 'left',
+      hasMetaType: true,
+      hasDate: true,
+      elementsOrder: [
+        'contentType',
+        'date',
+        'title',
+        'description',
+        'tags',
+        'cta',
+      ],
+    });
+    expect(container.querySelector('.slot-top').firstChild).toHaveClass(
+      'image-wrapper',
+    );
+    const body = container.querySelector('.listing-body');
+    expect(body.firstChild).toHaveClass('item-meta');
+    expect(body.children[1]).toHaveClass('listing-body-dates');
+    expect(container.querySelectorAll('.item-meta')).toHaveLength(1);
+  });
+
+  it('reorders the metadata and title of compact items', () => {
+    const { container } = renderItem({
+      size: 'compact',
+      imagePosition: 'none',
+      hasMetaType: true,
+      elementsOrder: ['contentType', 'title'],
+    });
+    expect(container.querySelector('.listing-body').firstChild).toHaveClass(
+      'simple-item-meta',
+    );
+    expect(container.querySelectorAll('.simple-item-meta')).toHaveLength(1);
+  });
   it('renders a default list item with image on the left', () => {
     const { container } = renderItem({
       imagePosition: 'left',
@@ -78,6 +146,27 @@ describe('ItemTemplate', () => {
     const slotTop = container.querySelector('.wrapper.right-image .slot-top');
     expect(slotTop.firstChild).toHaveClass('listing-body');
     expect(slotTop.lastChild).toHaveClass('image-wrapper');
+  });
+
+  it('displays the title on the side image', () => {
+    const { container } = renderItem({
+      imagePosition: 'left',
+      titleOnImage: true,
+    });
+    const wrapper = container.querySelector('.image-wrapper.title-on-image');
+    expect(wrapper.querySelector('.gradient .header')).toHaveTextContent(
+      'Item title',
+    );
+    expect(container.querySelector('.listing-body .listing-header')).toBeNull();
+  });
+
+  it('keeps the title in the text without image', () => {
+    const { container } = renderItem({
+      imagePosition: 'none',
+      titleOnImage: true,
+    });
+    expect(container.querySelector('.gradient')).toBeNull();
+    expect(container.querySelector('.listing-header')).toBeInTheDocument();
   });
 
   it('renders without image', () => {
@@ -133,7 +222,7 @@ describe('ItemTemplate', () => {
     expect(container.querySelector('i.ri-home-line')).not.toBeNull();
   });
 
-  it('keeps the fixed order of list items, also with a stored order', () => {
+  it('renders list elements in the stored order', () => {
     const { container } = renderItem({
       imagePosition: 'none',
       hasDate: true,
@@ -143,23 +232,27 @@ describe('ItemTemplate', () => {
     });
     const body = container.querySelector('.listing-body');
     expect(Array.from(body.children).map((el) => el.className)).toEqual([
+      'listing-description',
+      'item-meta',
       '',
       'listing-body-dates',
-      'listing-description',
     ]);
-    expect(container.querySelector('.slot-top + .item-meta')).not.toBeNull();
+    expect(container.querySelector('.slot-top + .item-meta')).toBeNull();
   });
 
-  it('keeps a trailing content type below the item', () => {
-    const { container } = renderItem({
-      imagePosition: 'none',
-      hasMetaType: true,
-    });
-    expect(container.querySelector('.listing-body .item-meta')).toBeNull();
-    expect(container.querySelector('.slot-top + .item-meta')).toHaveTextContent(
-      'Page',
-    );
-  });
+  it.each(['left', 'right', 'none'])(
+    'keeps content type in the text column with image position %s',
+    (imagePosition) => {
+      const { container } = renderItem({
+        imagePosition,
+        hasMetaType: true,
+      });
+      expect(
+        container.querySelector('.listing-body .item-meta'),
+      ).toHaveTextContent('Page');
+      expect(container.querySelector('.slot-top + .item-meta')).toBeNull();
+    },
+  );
 
   it('keeps the empty dates container of the former list item', () => {
     const { container } = renderItem({ imagePosition: 'none', hasDate: false });

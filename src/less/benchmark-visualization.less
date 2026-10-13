@@ -139,59 +139,6 @@
   margin-bottom: 0;
 }
 
-// Top accent card style (card styling > "Top accent border"). The legacy
-// Visualization Cards layout (.cardsVisualization) gets the same look.
-.cardsVisualization .ui.cards,
-.ui.cards:has(> .ui.card.u-card.top-accent) {
-  row-gap: 2rem;
-}
-
-.topAccentCard() {
-  min-width: 200px !important;
-  min-height: 326px !important;
-  border: 1px solid #f9f9f9;
-  border-top: none;
-  box-shadow:
-    rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
-    rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
-
-  &::before {
-    display: block;
-    width: calc(100% + 2px);
-    height: 12px;
-    margin-left: -1px;
-    background-color: @tertiaryColor;
-    content: '';
-  }
-
-  .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    .button {
-      width: fit-content;
-    }
-
-    .benchmark_level_wrapper + .image {
-      margin-top: initial;
-    }
-  }
-
-  .content.extra {
-    align-items: end;
-  }
-
-  .description {
-    font-size: 0.85rem;
-  }
-}
-
-.cardsVisualization .ui.cards .ui.card,
-.ui.card.u-card.top-accent {
-  .topAccentCard();
-}
-
 .modal .eea.banner {
   position: relative;
   z-index: 1;
