@@ -4,19 +4,12 @@ import config from '@plone/volto/registry';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 import { CardActionProvider, useCardAction } from './CardAction';
 
-const getButtonClassName = (styles) => {
-  const theme = styles?.['theme:noprefix'] || '';
-
-  return styles?.['inverted:bool']
-    ? theme
-      ? `${theme} inverted`
-      : 'basic black'
-    : theme;
-};
+// The call to action is always the plain button on the right of the card
+// footer (as on the visualization cards), whatever the card theme.
+const className = 'card-cta';
 
 export const CallToAction = ({ itemModel }) => {
   const action = useCardAction();
-  const className = getButtonClassName(itemModel.styles);
   const label = itemModel.callToAction?.label || 'Read more';
 
   return action && !action.disabled ? (

@@ -120,6 +120,32 @@ describe('keepUnknownVariationOnDefault', () => {
 });
 
 describe('migrateListingData', () => {
+  it('switches list/grid templates while preserving shared settings', () => {
+    const data = {
+      variation: 'summary',
+      itemModel: {
+        '@type': 'card',
+        imagePosition: 'top',
+        hasDate: true,
+        styles: { 'border:noprefix': 'no-border' },
+      },
+    };
+    const list = migrateListingData(data);
+    expect(list.itemModel).toEqual({
+      ...data.itemModel,
+      '@type': 'item',
+      imagePosition: 'left',
+    });
+    const grid = migrateListingData({ ...list, variation: 'cardsGallery' });
+    expect(grid.itemModel).toEqual(data.itemModel);
+    expect(migrateListingData(grid)).toBe(grid);
+    expect(
+      migrateSearchData({
+        listingBodyTemplate: 'summary',
+        itemModel: data.itemModel,
+      }).itemModel['@type'],
+    ).toBe('item');
+  });
   it('returns current data unchanged', () => {
     const data = {
       variation: 'cardsGallery',

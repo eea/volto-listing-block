@@ -3,7 +3,8 @@ import {
   schemaEnhancerFactory,
   addTypeSelect,
 } from '@eeacms/volto-listing-block/schema-utils';
-import { migrateItemModel } from './migrate';
+import { getLayoutItemModel, getLayoutItemType } from './migrate';
+import messages from '@eeacms/volto-listing-block/messages';
 
 export default function universalCardSchemaEnhancer(args) {
   const props = { ...args };
@@ -11,9 +12,14 @@ export default function universalCardSchemaEnhancer(args) {
 
   const formData = props.formData || props.data;
   // build the schema for the consolidated model, also for legacy data
-  props.formData = formData?.itemModel
-    ? { ...formData, itemModel: migrateItemModel(formData.itemModel) }
-    : formData;
+  const layout =
+    formData?.listingBodyTemplate ||
+    formData?.variation ||
+    (formData?.['@type'] === 'listing' ? 'summary' : undefined);
+  props.formData = {
+    ...formData,
+    itemModel: getLayoutItemModel(formData?.itemModel, layout),
+  };
   const extensionName = 'cardTemplates';
   const enhancer = schemaEnhancerFactory({
     extensionName,
@@ -23,7 +29,11 @@ export default function universalCardSchemaEnhancer(args) {
 
   schema.fieldsets.push({
     id: 'cardDesigner',
-    title: 'Card',
+    title: intl.formatMessage(
+      props.formData.itemModel?.['@type'] === 'item'
+        ? messages.itemTemplate
+        : messages.cardTemplate,
+    ),
     fields: ['itemModel'],
   });
 
@@ -32,6 +42,11 @@ export default function universalCardSchemaEnhancer(args) {
     schema: DefaultCardModelSchema(intl),
     extensionName,
   });
+  if (getLayoutItemType(layout)) {
+    itemModelSchema.fieldsets[0].fields =
+      itemModelSchema.fieldsets[0].fields.filter((field) => field !== '@type');
+    itemModelSchema.properties['@type'].default = getLayoutItemType(layout);
+  }
 
   const baseSchema = {
     ...schema,

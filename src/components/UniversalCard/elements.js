@@ -61,14 +61,18 @@ const isVerticalImage = (imagePosition) =>
  * The elements that can be ordered for the given (migrated) itemModel.
  */
 export const getAvailableElements = (itemModel = {}) => {
-  if ((itemModel['@type'] ?? CARD) === ITEM) return ITEM_ELEMENTS;
+  if ((itemModel['@type'] ?? CARD) === ITEM) {
+    return itemModel.size === 'compact' ? [TITLE, CONTENT_TYPE] : ITEM_ELEMENTS;
+  }
   return isVerticalImage(itemModel.imagePosition)
     ? CARD_ELEMENTS
     : CARD_ELEMENTS.filter((id) => id !== IMAGE);
 };
 
 const getDefaultOrder = (itemModel = {}) => {
-  if ((itemModel['@type'] ?? CARD) === ITEM) return ITEM_ELEMENTS;
+  if ((itemModel['@type'] ?? CARD) === ITEM) {
+    return itemModel.size === 'compact' ? [TITLE, CONTENT_TYPE] : ITEM_ELEMENTS;
+  }
   return itemModel.imagePosition === 'bottom'
     ? VISUALIZATION_ELEMENTS
     : CARD_ELEMENTS;
@@ -119,3 +123,35 @@ export const splitFooter = (order) => {
   while (index > 0 && FOOTER_ELEMENTS.includes(order[index - 1])) index--;
   return { body: order.slice(0, index), footer: order.slice(index) };
 };
+
+// Flip cards: each element is on the front or on the back of the card
+export const FRONT = 'front';
+export const BACK = 'back';
+
+// Without a choice, the description goes to the back, everything else stays
+// on the front
+const DEFAULT_BACK_ELEMENTS = [DESCRIPTION];
+
+/**
+ * Flipping is offered on vertical cards with image and content.
+ */
+export const canFlip = (itemModel = {}) =>
+  (itemModel['@type'] ?? CARD) === CARD &&
+  (itemModel.contentMode ?? 'default') === 'default' &&
+  isVerticalImage(itemModel.imagePosition);
+
+export const isFlipEnabled = (itemModel = {}) =>
+  !!itemModel.flip && canFlip(itemModel);
+
+export const getElementSide = (itemModel = {}, id) =>
+  itemModel.flipSides?.[id] ??
+  (DEFAULT_BACK_ELEMENTS.includes(id) ? BACK : FRONT);
+
+/**
+ * Splits the order in the elements of the front and of the back of a flip
+ * card, keeping the order within each side.
+ */
+export const splitSides = (itemModel, order) => ({
+  front: order.filter((id) => getElementSide(itemModel, id) === FRONT),
+  back: order.filter((id) => getElementSide(itemModel, id) === BACK),
+});

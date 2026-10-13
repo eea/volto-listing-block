@@ -26,7 +26,6 @@ import {
   TAGS,
   TITLE,
   getElementsOrder,
-  splitFooter,
 } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 
 const Wrapper = ({ condition, wrapper, children }) =>
@@ -92,7 +91,7 @@ const ItemContentType = ({ item, itemModel, keepEmpty }) =>
     </div>
   ) : null;
 
-const ItemBody = ({ item, itemModel, order }) => {
+const ItemBody = ({ item, itemModel, order, titleOnImage }) => {
   const { hasIcon, icon, hasDescription, hasHeadMeta, size } = itemModel;
   const isCompact = size === 'compact';
   const title = item.title ? item.title : item.id;
@@ -100,16 +99,16 @@ const ItemBody = ({ item, itemModel, order }) => {
   const Header = size === 'compact' ? 'p' : 'h3';
 
   const elements = {
-    [TITLE]:
+    [TITLE]: titleOnImage ? null : (
       // already rendered with its own link (e.g. search results), or the
       // compact item links its whole body
-      React.isValidElement(title) || isCompact ? (
+      <Wrapper
+        condition={!React.isValidElement(title) && !isCompact}
+        wrapper={(children) => <CardActionLink>{children}</CardActionLink>}
+      >
         <Header className={'listing-header'}>{title}</Header>
-      ) : (
-        <CardActionLink>
-          <Header className={'listing-header'}>{title}</Header>
-        </CardActionLink>
-      ),
+      </Wrapper>
+    ),
     [DATE]: (
       <ItemDates
         item={item}
@@ -158,28 +157,32 @@ const ItemBody = ({ item, itemModel, order }) => {
  * result head slot are driven by the itemModel controls.
  */
 const ItemTemplate = (props) => {
-  const { item, className, itemModel = {}, isEditMode = false } = props;
+  const { item, className, itemModel = {} } = props;
   const title = typeof item.title === 'string' ? item.title : item.Title;
   const { size, hasHeadMeta } = itemModel;
   const imagePosition = getImagePosition(itemModel);
   const isCompact = size === 'compact';
 
-  const { body: order, footer } = splitFooter(
-    // list items have a fixed order, the one of the former templates
-    getElementsOrder({ ...itemModel, '@type': 'item', elementsOrder: null }),
-  );
-  // a content type placed last stays below the item, as it always did
-  const trailingContentType = order[order.length - 1] === CONTENT_TYPE;
+  // All sortable elements belong to the text column, including a trailing CTA.
+  const order = getElementsOrder({ ...itemModel, '@type': 'item' });
+  // Only the former compact item had metadata outside the text column.
+  // Regular items keep it alongside the title/date, not below the image.
+  const trailingContentType =
+    isCompact && order[order.length - 1] === CONTENT_TYPE;
+  // the title on the side image replaces the title of the text column
+  const titleOnImage =
+    !!itemModel.titleOnImage && imagePosition !== 'none' && !isCompact;
   const body = (
     <ItemBody
       item={item}
       itemModel={itemModel}
       order={trailingContentType ? order.slice(0, -1) : order}
+      titleOnImage={titleOnImage}
     />
   );
   const image =
     imagePosition !== 'none' ? (
-      <div className="image-wrapper">
+      <div className={cx('image-wrapper', { 'title-on-image': titleOnImage })}>
         <CardActionLink>
           <PreviewImage
             item={item}
@@ -188,9 +191,14 @@ const ItemTemplate = (props) => {
               props.preview_image_url || item.preview_image_url
             }
             fallbacks={props.preview_image_fallbacks}
-            alt={title || ''}
+            alt={titleOnImage ? '' : title || ''}
             label={getItemLabel(item, itemModel)}
           />
+          {titleOnImage && (
+            <div className="gradient">
+              <h3 className="header">{item.title || item.id}</h3>
+            </div>
+          )}
         </CardActionLink>
       </div>
     ) : null;
@@ -232,12 +240,6 @@ const ItemTemplate = (props) => {
         {!hasHeadMeta && !isCompact && (
           <div className="slot-bottom">{item?.extra}</div>
         )}
-        <CardExtra
-          item={item}
-          itemModel={itemModel}
-          isEditMode={isEditMode}
-          parts={footer}
-        />
       </div>
     </div>
   );

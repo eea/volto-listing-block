@@ -1,6 +1,9 @@
 import React from 'react';
 import config from '@plone/volto/registry';
-import { migrateItemModel } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
+import {
+  migrateItemModel,
+  getLayoutItemModel,
+} from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
 
 // Variations that are still registered, so existing blocks keep rendering,
 // but are no longer offered in the variation select. Their layout is covered
@@ -117,7 +120,13 @@ const migrateLayoutData = (data, field) => {
     };
   }
 
-  return result;
+  const layoutModel = getLayoutItemModel(
+    result.itemModel,
+    result[field] || (field === 'variation' ? 'summary' : undefined),
+  );
+  return layoutModel === result.itemModel
+    ? result
+    : { ...result, itemModel: layoutModel };
 };
 
 /**

@@ -1,9 +1,12 @@
+const isSet = (value) => value !== undefined && value !== null && value !== '';
+
+// 0 removes the limit (see the `max-0-lines` classes)
 export const getMaxLinesClasses = (itemModel = {}) => {
   const res = {};
-  if (itemModel.maxDescription) {
+  if (isSet(itemModel.maxDescription)) {
     res[`max-${itemModel.maxDescription}-lines`] = true;
   }
-  if (itemModel.maxTitle) {
+  if (isSet(itemModel.maxTitle)) {
     res[`title-max-${itemModel.maxTitle}-lines`] = true;
   }
   return res;

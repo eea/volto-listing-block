@@ -5,6 +5,7 @@ import cx from 'classnames';
 import { buildStyleClassNamesFromData } from '@plone/volto/helpers/Blocks/Blocks';
 import schemaEnhancer from './schema';
 import { migrateItemModel } from './migrate';
+import { getBorderStyles } from './border';
 import { getContentTypePreviewUrl } from './preview';
 import { CardActionProvider } from './fragments/CardAction';
 
@@ -16,7 +17,9 @@ function UniversalCard(props) {
     config.blocks.blocksConfig.listing.extensions.cardTemplates,
     itemModel,
   );
-  const styles = buildStyleClassNamesFromData(itemModel?.styles);
+  const styles = buildStyleClassNamesFromData(
+    getBorderStyles(itemModel?.styles),
+  );
 
   // replace camelCase with hyphens ex objectFit -> object-fit
   const hyphenClasses = styles.map((className) =>

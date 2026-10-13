@@ -26,6 +26,29 @@ const getItemModelSchema = (formData) =>
 const fields = (schema) => schema.fieldsets[0].fields;
 
 describe('UniversalCard schemaEnhancer', () => {
+  it('offers an opt-in drop shadow only on cards', () => {
+    const card = getItemModelSchema({
+      variation: 'cardsGallery',
+      itemModel: {},
+    }).properties.styles.schema;
+    expect(fields(card)).toContain('dropShadow:bool');
+    expect(card.properties['dropShadow:bool'].default).toBe(false);
+    const list = getItemModelSchema({ variation: 'summary', itemModel: {} })
+      .properties.styles.schema;
+    expect(fields(list)).not.toContain('dropShadow:bool');
+  });
+  it.each([
+    ['summary', 'item', 'card'],
+    ['cardsGallery', 'card', 'item'],
+  ])('locks %s to %s instead of the saved %s', (variation, type, saved) => {
+    const schema = getItemModelSchema({
+      variation,
+      itemModel: { '@type': saved, imagePosition: 'none' },
+    });
+    expect(fields(schema)).not.toContain('@type');
+    expect(schema.properties['@type'].default).toBe(type);
+    expect(fields(schema)).toContain('elementsOrder');
+  });
   beforeAll(() => {
     config.settings = { ...(config.settings || {}) };
     config.blocks = {
@@ -37,7 +60,10 @@ describe('UniversalCard schemaEnhancer', () => {
   });
 
   it('offers only the two base templates', () => {
-    const schema = getItemModelSchema({ variation: 'summary', itemModel: {} });
+    const schema = getItemModelSchema({
+      variation: 'cardsCarousel',
+      itemModel: {},
+    });
     expect(schema.properties['@type'].choices).toEqual([
       ['card', 'Card'],
       ['item', 'List item'],
@@ -84,6 +110,7 @@ describe('UniversalCard schemaEnhancer', () => {
   it('offers tags and the call to action as elements', () => {
     const schema = getItemModelSchema({
       '@type': 'listing',
+      variation: 'cardsGallery',
       itemModel: { '@type': 'card', imagePosition: 'top' },
     });
     const { elementSettings, fieldSchemas } = schema.properties.elementsOrder;
@@ -153,30 +180,48 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(fields(schema)).not.toContain('imageSource');
   });
 
-  it('builds the card controls', () => {
+  it('builds the card controls for a grid', () => {
     const schema = getItemModelSchema({
-      variation: 'summary',
+      variation: 'cardsGallery',
       itemModel: { '@type': 'card', imagePosition: 'top' },
     });
     // the element settings live in the elements widget
     expect(fields(schema)).toEqual([
-      '@type',
       'contentMode',
       'imagePosition',
+      'flip',
       'elementsOrder',
     ]);
     expect(
       schema.properties.imagePosition.choices.map(([value]) => value),
-    ).toEqual(['top', 'left', 'right', 'none']);
+    ).toEqual(['top', 'none']);
   });
 
-  it('keeps the side image settings as fields', () => {
+  it('keeps the side image label as field and the title on image in the title row', () => {
     const schema = getItemModelSchema({
       itemModel: { '@type': 'card', imagePosition: 'left' },
     });
-    expect(fields(schema)).toEqual(
-      expect.arrayContaining(['titleOnImage', 'hasLabel']),
+    expect(fields(schema)).toContain('hasLabel');
+    expect(fields(schema)).not.toContain('titleOnImage');
+    expect(
+      schema.properties.elementsOrder.elementSettings.title.fields,
+    ).toContain('titleOnImage');
+  });
+
+  it('offers the title on image in the title row of list items', () => {
+    const titleFields = (itemModel) =>
+      getItemModelSchema({ itemModel }).properties.elementsOrder.elementSettings
+        .title.fields;
+    expect(titleFields({ '@type': 'item', imagePosition: 'left' })).toContain(
+      'titleOnImage',
     );
+    expect(
+      titleFields({ '@type': 'item', imagePosition: 'none' }),
+    ).not.toContain('titleOnImage');
+    // the top image of cards has its own row with this setting
+    expect(
+      titleFields({ '@type': 'card', imagePosition: 'top' }),
+    ).not.toContain('titleOnImage');
   });
 
   it('hides horizontal image positions in carousel and gallery', () => {
@@ -200,11 +245,19 @@ describe('UniversalCard schemaEnhancer', () => {
       modes({ '@type': 'teaser', itemModel: { '@type': 'card' } }),
     ).toContain('logo');
     expect(
-      modes({ '@type': 'listing', itemModel: { '@type': 'card' } }),
+      modes({
+        '@type': 'listing',
+        variation: 'cardsGallery',
+        itemModel: { '@type': 'card' },
+      }),
     ).not.toContain('logo');
     // kept where it is already used, e.g. a former "Image on bottom" listing
     expect(
-      modes({ '@type': 'listing', itemModel: { '@type': 'imageOnBottom' } }),
+      modes({
+        '@type': 'listing',
+        variation: 'cardsGallery',
+        itemModel: { '@type': 'imageOnBottom' },
+      }),
     ).toContain('logo');
   });
 
@@ -234,8 +287,8 @@ describe('UniversalCard schemaEnhancer', () => {
     ]);
   });
 
-  it('keeps the side images of list items in grids and carousels', () => {
-    ['cardsCarousel', 'cardsGallery'].forEach((variation) => {
+  it('keeps the side images of list items in carousels', () => {
+    ['cardsCarousel'].forEach((variation) => {
       const schema = getItemModelSchema({
         variation,
         itemModel: { '@type': 'item', imagePosition: 'left' },
@@ -255,23 +308,27 @@ describe('UniversalCard schemaEnhancer', () => {
         callToAction: { enable: true },
       },
     });
-    // plain options, no elements widget: list items have a fixed order
     expect(fields(schema)).toEqual([
       '@type',
       'size',
       'imagePosition',
-      'maxTitle',
-      'hasIcon',
-      'icon',
-      'hasDate',
-      'hasEventDate',
-      'hasDescription',
-      'hasMetaType',
-      'hasTags',
-      'callToAction',
-      'enableCTAPopup',
+      'elementsOrder',
     ]);
-    expect(schema.properties.elementsOrder).toBeUndefined();
+    expect(schema.properties.elementsOrder.widget).toBe('card_elements');
+    expect(schema.properties.elementsOrder.elements.map(([id]) => id)).toEqual([
+      'title',
+      'date',
+      'description',
+      'contentType',
+      'tags',
+      'cta',
+    ]);
+    expect(
+      schema.properties.elementsOrder.elementSettings.title.fields,
+    ).toContain('icon');
+    expect(
+      schema.properties.elementsOrder.fieldSchemas['callToAction.label'],
+    ).toBeDefined();
     expect(
       schema.properties.imagePosition.choices.map(([value]) => value),
     ).toEqual(['left', 'right', 'none']);
@@ -286,7 +343,7 @@ describe('UniversalCard schemaEnhancer', () => {
       },
     });
     expect(fields(schema)).toEqual(
-      expect.arrayContaining(['maxDescription', 'hasLabel']),
+      expect.arrayContaining(['elementsOrder', 'hasLabel']),
     );
     const styles = fields(schema.properties.styles.schema);
     expect(styles).toEqual(
@@ -298,14 +355,13 @@ describe('UniversalCard schemaEnhancer', () => {
     const schema = getItemModelSchema({
       itemModel: { '@type': 'item', size: 'compact', imagePosition: 'left' },
     });
-    expect(fields(schema)).toEqual([
-      '@type',
-      'size',
-      'maxTitle',
-      'hasMetaType',
+    expect(fields(schema)).toEqual(['@type', 'size', 'elementsOrder']);
+    expect(schema.properties.elementsOrder.elements.map(([id]) => id)).toEqual([
+      'title',
+      'contentType',
     ]);
     const styles = fields(schema.properties.styles.schema);
-    expect(styles).toContain('bordered:bool');
+    expect(styles).toContain('border:noprefix');
     expect(styles).not.toContain('rounded:bool');
     expect(styles).not.toContain('objectFit');
   });
@@ -338,14 +394,35 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(itemSchema.properties.imagePosition.default).toBe('none');
   });
 
-  it('offers the top accent style only on cards', () => {
-    const styles = (itemModel) =>
-      fields(getItemModelSchema({ itemModel }).properties.styles.schema);
-    expect(styles({ '@type': 'card', imagePosition: 'top' })).toContain(
-      'topAccent:bool',
-    );
-    expect(styles({ '@type': 'item', imagePosition: 'none' })).not.toContain(
-      'topAccent:bool',
+  it('offers a single border selector, with top accent only on cards', () => {
+    const schema = (type) =>
+      getItemModelSchema({
+        itemModel: { '@type': type, imagePosition: 'top' },
+      }).properties.styles.schema;
+    const card = schema('card');
+    expect(fields(card)).toContain('border:noprefix');
+    expect(fields(card)).not.toContain('bordered:bool');
+    expect(fields(card)).not.toContain('topAccent:bool');
+    expect(
+      card.properties['border:noprefix'].choices.map(([value]) => value),
+    ).toEqual(['no-border', 'top-accent', 'bordered']);
+    expect(
+      schema('item').properties['border:noprefix'].choices.map(
+        ([value]) => value,
+      ),
+    ).toEqual(['no-border', 'bordered']);
+  });
+
+  it('displays the existing border as the selector default', () => {
+    const styleSchema = getItemModelSchema({
+      itemModel: {
+        '@type': 'card',
+        imagePosition: 'top',
+        styles: { 'topAccent:bool': true },
+      },
+    }).properties.styles.schema;
+    expect(styleSchema.properties['border:noprefix'].default).toBe(
+      'top-accent',
     );
   });
 
@@ -359,7 +436,63 @@ describe('UniversalCard schemaEnhancer', () => {
       'objectFit',
     );
     expect(styles({ '@type': 'item', imagePosition: 'none' })).toContain(
-      'bordered:bool',
+      'border:noprefix',
     );
+  });
+
+  it('offers flipping on vertical cards only', () => {
+    expect(
+      fields(
+        getItemModelSchema({
+          itemModel: { '@type': 'card', imagePosition: 'top' },
+        }),
+      ),
+    ).toContain('flip');
+    expect(
+      fields(
+        getItemModelSchema({
+          itemModel: { '@type': 'card', imagePosition: 'left' },
+        }),
+      ),
+    ).not.toContain('flip');
+    expect(
+      fields(
+        getItemModelSchema({
+          itemModel: { '@type': 'card', contentMode: 'overlay' },
+        }),
+      ),
+    ).not.toContain('flip');
+  });
+
+  it('lets every element choose its side once flipping is on', () => {
+    const settings = (itemModel) =>
+      getItemModelSchema({ itemModel }).properties.elementsOrder
+        .elementSettings;
+    expect(
+      settings({ '@type': 'card', imagePosition: 'top' }).title.fields,
+    ).not.toContainEqual({ field: 'flipSides', key: 'title' });
+
+    const schema = getItemModelSchema({
+      itemModel: { '@type': 'card', imagePosition: 'top', flip: true },
+    });
+    const { elementSettings, fieldSchemas } = schema.properties.elementsOrder;
+    Object.entries(elementSettings).forEach(([id, { fields: rowFields }]) => {
+      expect(rowFields[0]).toEqual({ field: 'flipSides', key: id });
+    });
+    expect(fieldSchemas['flipSides.description'].default).toBe('back');
+    expect(fieldSchemas['flipSides.title'].default).toBe('front');
+    expect(fieldSchemas['flipSides.title'].choices.map(([v]) => v)).toEqual([
+      'front',
+      'back',
+    ]);
+  });
+
+  it('allows up to 20 lines for the title and the description', () => {
+    const schema = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'left' },
+    });
+    expect(schema.properties.maxTitle.maximum).toBe(20);
+    expect(schema.properties.maxDescription.maximum).toBe(20);
+    expect(schema.properties.maxTitle.minimum).toBe(0);
   });
 });

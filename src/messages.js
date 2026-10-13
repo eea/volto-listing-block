@@ -57,6 +57,18 @@ const messages = defineMessages({
     id: 'Bordered',
     defaultMessage: 'Bordered',
   },
+  Border: {
+    id: 'Border',
+    defaultMessage: 'Border',
+  },
+  noBorder: {
+    id: 'noBorder',
+    defaultMessage: 'No border',
+  },
+  dropShadow: {
+    id: 'dropShadow',
+    defaultMessage: 'Drop shadow',
+  },
   ObjectFit: {
     id: 'ObjectFit',
     defaultMessage: 'Object fit',
@@ -205,7 +217,7 @@ const messages = defineMessages({
   maxTitleDescription: {
     id: 'maxTitleDescription',
     defaultMessage:
-      "Limit title to a maximum number of lines by adding trailing '...'",
+      "Limit title to a maximum number of lines by adding trailing '...'. 0 shows the whole title.",
   },
   maxDescriptionTitle: {
     id: 'maxDescriptionTitle',
@@ -214,7 +226,7 @@ const messages = defineMessages({
   maxDescriptionTitleDescription: {
     id: 'maxDescriptionTitleDescription',
     defaultMessage:
-      "Limit description to a maximum number of lines by adding trailing '...'",
+      "Limit description to a maximum number of lines by adding trailing '...'. 0 shows the whole description.",
   },
   showPortalType: {
     id: 'showPortalType',
@@ -338,8 +350,7 @@ const messages = defineMessages({
   },
   topAccentHelp: {
     id: 'topAccentHelp',
-    defaultMessage:
-      'Adds a thick colored border on top of the card, with a light shadow.',
+    defaultMessage: 'Adds a thick colored border on top of the card.',
   },
   elementsOrder: {
     id: 'elementsOrder',
@@ -349,6 +360,10 @@ const messages = defineMessages({
     id: 'elementsOrderHelp',
     defaultMessage:
       'Drag to reorder, switch elements on or off and expand them for their settings.',
+  },
+  itemElementsOrder: {
+    id: 'itemElementsOrder',
+    defaultMessage: 'List item elements',
   },
   elementContentType: {
     id: 'elementContentType',
@@ -459,6 +474,31 @@ const messages = defineMessages({
     id: 'showHeadMetaDescription',
     defaultMessage:
       'Displays the item metadata slot above the title (used by search results).',
+  },
+  flip: {
+    id: 'flip',
+    defaultMessage: 'Flip card',
+  },
+  flipHelp: {
+    id: 'flipHelp',
+    defaultMessage:
+      'The card turns over on hover or keyboard focus. Choose the side of each element in the card elements.',
+  },
+  flipSides: {
+    id: 'flipSides',
+    defaultMessage: 'Card sides',
+  },
+  flipSide: {
+    id: 'flipSide',
+    defaultMessage: 'Card side',
+  },
+  flipSideFront: {
+    id: 'flipSideFront',
+    defaultMessage: 'Front',
+  },
+  flipSideBack: {
+    id: 'flipSideBack',
+    defaultMessage: 'Back',
   },
   enableCTAPopup: {
     id: 'enableCTAPopup',

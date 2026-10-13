@@ -312,4 +312,81 @@ describe('CardTemplate', () => {
     const { container } = renderCard({}, { isEditMode: true });
     expect(container.querySelector('a')).toBeNull();
   });
+
+  describe('flip card', () => {
+    const flipModel = (extra = {}) => ({
+      '@type': 'card',
+      imagePosition: 'top',
+      hasDescription: true,
+      flip: true,
+      ...extra,
+    });
+
+    it('puts the description on the back by default', () => {
+      const { container } = renderCard(flipModel());
+      const front = container.querySelector('.flip-card-front');
+      const back = container.querySelector('.flip-card-back');
+      expect(front.querySelector('.header')).toHaveTextContent('Card title');
+      expect(front.querySelector('.description')).toBeNull();
+      expect(back.querySelector('.description')).toHaveTextContent(
+        'Card description',
+      );
+    });
+
+    it('links the whole of both sides to the card destination', () => {
+      const { container } = renderCard(flipModel());
+      ['.flip-card-front', '.flip-card-back'].forEach((side) => {
+        const link = container.querySelector(`${side} > a.flip-card-link`);
+        expect(link).toHaveAttribute('href', '/test-item');
+        expect(link).toHaveAttribute('aria-label', 'Card title');
+        expect(link).toHaveAttribute('tabindex', '-1');
+      });
+    });
+
+    it('does not link the sides in edit mode', () => {
+      const { container } = renderCard(flipModel(), { isEditMode: true });
+      expect(container.querySelector('.flip-card')).toBeInTheDocument();
+      expect(container.querySelector('a.flip-card-link')).toBeNull();
+    });
+
+    it('places each element on the chosen side', () => {
+      const { container } = renderCard(
+        flipModel({ flipSides: { image: 'back', title: 'back' } }),
+      );
+      const front = container.querySelector('.flip-card-front');
+      const back = container.querySelector('.flip-card-back');
+      expect(back.querySelector('img')).toBeInTheDocument();
+      expect(back.querySelector('.header')).toHaveTextContent('Card title');
+      expect(front.querySelector('img')).toBeNull();
+      expect(front.querySelector('.header')).toBeNull();
+    });
+
+    it('gives both sides the card styling', () => {
+      const { container } = renderCard(flipModel(), {
+        className: 'top-accent',
+      });
+      expect(container.querySelector('.flip-card')).not.toHaveClass(
+        'top-accent',
+      );
+      expect(container.querySelector('.flip-card-front')).toHaveClass(
+        'ui card u-card top-accent',
+      );
+      expect(container.querySelector('.flip-card-back')).toHaveClass(
+        'ui card u-card top-accent',
+      );
+    });
+
+    it('does not flip without anything visible on the back', () => {
+      const { container } = renderCard(flipModel({ hasDescription: false }));
+      expect(container.querySelector('.flip-card')).toBeNull();
+      expect(container.querySelector('.header')).toHaveTextContent(
+        'Card title',
+      );
+    });
+
+    it('does not flip side image cards', () => {
+      const { container } = renderCard(flipModel({ imagePosition: 'left' }));
+      expect(container.querySelector('.flip-card')).toBeNull();
+    });
+  });
 });
