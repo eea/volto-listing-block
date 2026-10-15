@@ -43,6 +43,28 @@ const BasicCard = (props) => {
 
 export const DefaultCardLayout = BasicCard;
 
+export const ImageOnBottomCardLayout = (props) => {
+  const { className } = props;
+
+  return (
+    <UiCard
+      fluid={true}
+      className={cx(
+        'u-card',
+        'image-on-bottom-card',
+        getStyles(props),
+        className,
+      )}
+    >
+      <UiCard.Content>
+        <CardTitle {...props} />
+      </UiCard.Content>
+      <CardImage {...props} />
+      <CardExtra {...props} />
+    </UiCard>
+  );
+};
+
 export const LeftImageCardLayout = (props) => (
   <BasicCard
     {...props}

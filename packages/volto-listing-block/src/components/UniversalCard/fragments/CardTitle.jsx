@@ -6,19 +6,21 @@ const CardTitle = (props) => {
   const { item, isEditMode, itemModel } = props;
   const { title, Title } = item;
   const t = title || Title;
+  const to = item.external_link || item['@id'];
 
   return t && !itemModel?.titleOnImage ? (
     <UiCard.Header>
       <ConditionalLink
         className="header-link"
-        to={item['@id']}
+        to={to}
         item={item}
         condition={
           !!(
             !isEditMode &&
             itemModel?.hasLink &&
             itemModel?.['@type'] !== 'visualizationCard' &&
-            item['@id']
+            !item.external_link &&
+            to
           )
         }
       >
