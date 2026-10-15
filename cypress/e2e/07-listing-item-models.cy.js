@@ -60,7 +60,7 @@ describe('Blocks Tests', () => {
     addBlock('listing');
     openListingBlock();
     cy.get('#field-headline').click({ force: true }).type('Advanced Listing');
-    selectListingVariation('Listing');
+    selectListingVariation('List');
     savePage();
 
     updateListingBlock((block) => ({
@@ -114,9 +114,9 @@ describe('Blocks Tests', () => {
 
     cy.visit('/cypress/my-page');
 
-    cy.get('.items.item-items .u-item.listing-item .wrapper.right-image').should(
-      'exist',
-    );
+    cy.get(
+      '.items.item-items .u-item.listing-item .wrapper.right-image',
+    ).should('exist');
 
     updateListingBlock((block) => ({
       ...block,
