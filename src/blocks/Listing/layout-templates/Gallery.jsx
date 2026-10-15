@@ -1,3 +1,4 @@
+import cx from 'classnames';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -6,6 +7,7 @@ import config from '@plone/volto/registry';
 import messages from '@eeacms/volto-listing-block/messages';
 import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
 import { getLayoutItemModel } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
+import { getBorder } from '@eeacms/volto-listing-block/components/UniversalCard/border';
 
 const Gallery = ({
   block,
@@ -18,10 +20,16 @@ const Gallery = ({
 }) => {
   moment.locale(config.settings.dateLocale);
   const getIndicatorPreview = useIndicatorPreviews(items, block);
+  // bordered cards touch and share their borders, as the cells of a table
+  const isTable = getBorder(rest.itemModel?.styles) === 'bordered';
   return (
     <>
       {items && items.length > 0 && (
-        <div className={`ui fluid ${gridSize || ''} cards`}>
+        <div
+          className={cx('ui fluid cards', gridSize, {
+            'cards-table': isTable,
+          })}
+        >
           {items.map((item, i) => (
             <UniversalCard
               key={i}

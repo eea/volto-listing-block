@@ -313,6 +313,47 @@ describe('CardTemplate', () => {
     expect(container.querySelector('a')).toBeNull();
   });
 
+  describe('metadata row', () => {
+    const order = ['contentType', 'date', 'title', 'image'];
+
+    it('shows the head title instead of the content type', () => {
+      const { container } = renderCard(
+        { '@type': 'card', hasMetaType: true, elementsOrder: order },
+        { head_title: 'Head title' },
+      );
+      expect(container.querySelector('.meta .text-left')).toHaveTextContent(
+        'Head title',
+      );
+      expect(container.querySelector('.card-source')).toBeNull();
+    });
+
+    it('keeps the content type and puts the head title below with headTitleBelow', () => {
+      const { container } = renderCard(
+        {
+          '@type': 'card',
+          hasMetaType: true,
+          headTitleBelow: true,
+          elementsOrder: order,
+        },
+        { head_title: 'Head title' },
+      );
+      expect(container.querySelector('.meta .text-left')).toHaveTextContent(
+        'Chart (interactive)',
+      );
+      expect(container.querySelector('.card-source')).toHaveTextContent(
+        'Head title',
+      );
+    });
+
+    it('leaves the date out when the item has none', () => {
+      const { container } = renderCard(
+        { '@type': 'card', hasMetaType: true, elementsOrder: order },
+        { item: { ...item, EffectiveDate: undefined } },
+      );
+      expect(container.querySelector('.meta .date')).toBeNull();
+    });
+  });
+
   describe('flip card', () => {
     const flipModel = (extra = {}) => ({
       '@type': 'card',

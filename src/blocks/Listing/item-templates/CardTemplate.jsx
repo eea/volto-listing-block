@@ -105,14 +105,24 @@ const renderElements = (order, props, image, withSource = true) => {
   const { item, itemModel } = props;
   const { hasBenchmarkLevel, hasIcon, icon } = itemModel;
   const rendered = [];
-  let hasMetaRow = false;
+  // the head title is shown in the metadata row, instead of the content type
+  let headTitleInMeta = false;
 
   for (let index = 0; index < order.length; index++) {
     const id = order[index];
 
     if (isMeta(id) && isMeta(order[index + 1])) {
-      rendered.push(<CardMeta key="meta" {...props} />);
-      hasMetaRow = true;
+      // `headTitleBelow` (set by code, e.g. the search result cards, where
+      // the head title is the source): the row keeps the content type and
+      // the head title goes below the content
+      rendered.push(
+        <CardMeta
+          key="meta"
+          {...props}
+          head_title={itemModel.headTitleBelow ? undefined : props.head_title}
+        />,
+      );
+      headTitleInMeta = !itemModel.headTitleBelow;
       index++;
       continue;
     }
@@ -157,7 +167,7 @@ const renderElements = (order, props, image, withSource = true) => {
     }
   }
 
-  if (!hasMetaRow && withSource) {
+  if (!headTitleInMeta && withSource) {
     rendered.push(<CardSource key="source" head_title={props.head_title} />);
   }
 

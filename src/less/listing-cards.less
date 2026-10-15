@@ -232,6 +232,20 @@ each(range(20), {
   --border-radius: 50%;
 }
 
+// transparent images (SVG, PNG) keep the page background under them, so
+// they stay readable on dark card themes
+.ui.card.u-card .image img,
+.u-item.listing-item .image-wrapper img {
+  background-color: @imageBackground;
+}
+
+// a subtle drop shadow under the rounded images, so their edge stays
+// visible on light images and backgrounds
+.ui.card.rounded .image img,
+.u-item.listing-item.rounded .ui.image {
+  box-shadow: @imageRoundedShadow;
+}
+
 .listing-item.primary {
   --text-color: var(--text-color--primary, #fff);
   --bg-color: var(--background-color, @primaryColor);
@@ -551,15 +565,55 @@ each(range(20), {
 // Row spacing belongs to the card grid, independently of its border style
 // (flip cards hold their sides in an outer card).
 .cardsVisualization .ui.cards,
-.ui.cards:has(> .ui.card.u-card, > .ui.card.flip-card) {
+.ui.cards:not(.cards-table):has(> .ui.card.u-card, > .ui.card.flip-card) {
   row-gap: 2rem;
 }
+
+// Grid of bordered cards: the cards touch and share their borders, as the
+// cells of a table. Each card draws its right and bottom border, the grid
+// the top and left ones.
+.ui.cards.cards-table {
+  border-top: @listingCardBorderBottom;
+  border-left: @listingCardBorderBottom;
+  margin: 0;
+  row-gap: 0;
+
+  > .ui.card {
+    padding-bottom: 0 !important;
+    border: none;
+    border-radius: 0;
+    // over the `.bordered` utility of the theme and the flip card reset
+    border-right: @listingCardBorderBottom !important;
+    border-bottom: @listingCardBorderBottom !important;
+    margin: 0;
+  }
+
+  // the sides of a flip card are inside the cell
+  .flip-card-inner > .ui.card {
+    padding-bottom: 0 !important;
+    border: none !important;
+    border-radius: 0;
+  }
+}
+
+each({
+  two: 50%;
+  three: 33.333333%;
+  four: 25%;
+  five: 20%;
+  six: 16.666667%;
+}, {
+  .ui.@{key}.cards.cards-table > .ui.card {
+    width: @value;
+  }
+});
 
 // Top accent card style, also used by the legacy Visualization Cards layout.
 .topAccentCard() {
   min-width: 200px !important;
   min-height: 326px !important;
-  border: 1px solid #f9f9f9;
+  // the edge of a white card, the theme color on the filled ones
+  border: 1px solid var(--card-edge-color, #f9f9f9);
   // Reserve space without the diagonal joins between unequal border widths.
   border-top: 12px solid transparent;
 
@@ -570,7 +624,10 @@ each(range(20), {
     right: -1px;
     left: -1px;
     height: 12px;
-    background-color: var(--card-text-color, @tertiaryColor);
+    background-color: var(
+      --card-accent-color,
+      var(--card-text-color, @tertiaryColor)
+    );
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
     content: '';
@@ -604,6 +661,22 @@ each(range(20), {
 .ui.card.u-card.top-accent {
   .topAccentCard();
 }
+
+// The top accent takes the color of the card theme. On the cards filled
+// with the theme color (not inverted) the text is white, so the accent is a
+// darker shade of the theme color: visible on the page and above the card.
+// Their edge is the theme color, not the light edge of the white cards.
+each({
+  primary: @primaryColor;
+  secondary: @secondaryColor;
+  tertiary: @tertiaryColor;
+}, {
+  .ui.card.@{key}:not(.inverted),
+  .ui.card.has--theme--@{key}:not(.has--inverted--true) {
+    --card-accent-color: darken(@value, 12%);
+    --card-edge-color: @value;
+  }
+});
 
 // An image placed between the other card elements (e.g. after the title, as
 // on the visualization cards) gets the same fixed box as the image on top of
@@ -695,13 +768,24 @@ each(range(20), {
       min-width: 0 !important;
       height: 100%;
       margin: 0;
+      -webkit-backface-visibility: hidden;
       backface-visibility: hidden;
       // both sides in the same cell (`grid-area: 1 / 1` is a division in less)
       grid-column: 1;
       grid-row: 1;
+      // Safari shows the back of a side through the other one (its links
+      // have their own layers): the turned away side also fades out half way
+      // through the turn. Opacity, not visibility, keeps the keyboard focus.
+      transition: opacity 0s linear 0.3s;
+    }
+
+    // its own 3D layer, for Safari to hide its back
+    > .flip-card-front {
+      transform: rotateY(0deg);
     }
 
     > .flip-card-back {
+      opacity: 0;
       transform: rotateY(180deg);
     }
   }
@@ -723,6 +807,14 @@ each(range(20), {
   &:hover > .flip-card-inner,
   &:focus-within > .flip-card-inner {
     transform: rotateY(180deg);
+
+    > .flip-card-front {
+      opacity: 0;
+    }
+
+    > .flip-card-back {
+      opacity: 1;
+    }
   }
 
   // the side that is turned away does not take the clicks
@@ -733,7 +825,8 @@ each(range(20), {
   }
 
   @media (prefers-reduced-motion: reduce) {
-    > .flip-card-inner {
+    > .flip-card-inner,
+    > .flip-card-inner > .ui.card {
       transition: none;
     }
   }

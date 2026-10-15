@@ -5,6 +5,12 @@
 @imageMaxWidth: 350px;
 @imageMaxHeight: 235px;
 @imageRoundedWidth: 176px;
+// under the images, so transparent images (e.g. SVG charts and logos) stay
+// readable on dark card themes: the page background (@pageBackground)
+@imageBackground: #fff;
+// keeps the edge of the rounded images visible on light images and
+// backgrounds (the drop shadow of the cards)
+@imageRoundedShadow: 0 2px 6px rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.1);
 
 @imageWrapperDisplay: flex;
 @imageWrapperMargin: 24px;

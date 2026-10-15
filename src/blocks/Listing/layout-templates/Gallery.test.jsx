@@ -42,6 +42,44 @@ describe('Gallery', () => {
     expect(container.querySelector('.ui.fluid.five.cards')).toBeInTheDocument();
   });
 
+  it('renders bordered cards as a table, without gaps', () => {
+    const { container } = renderGallery({
+      gridSize: 'four',
+      itemModel: {
+        '@type': 'card',
+        imagePosition: 'top',
+        styles: { 'border:noprefix': 'bordered' },
+      },
+    });
+    expect(
+      container.querySelector('.ui.fluid.four.cards.cards-table'),
+    ).toBeInTheDocument();
+  });
+
+  it('keeps the gaps for the other borders', () => {
+    ['no-border', 'top-accent'].forEach((border) => {
+      const { container } = renderGallery({
+        itemModel: {
+          '@type': 'card',
+          imagePosition: 'top',
+          styles: { 'border:noprefix': border },
+        },
+      });
+      expect(container.querySelector('.cards-table')).toBeNull();
+    });
+  });
+
+  it('renders the former bordered toggle as a table', () => {
+    const { container } = renderGallery({
+      itemModel: {
+        '@type': 'card',
+        imagePosition: 'top',
+        styles: { 'bordered:bool': true },
+      },
+    });
+    expect(container.querySelector('.cards-table')).toBeInTheDocument();
+  });
+
   it('passes the edit mode to the cards, so they do not navigate', () => {
     renderGallery({ isEditMode: true });
     expect(UniversalCard).toHaveBeenCalledWith(
