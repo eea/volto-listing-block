@@ -7,15 +7,19 @@ const CardMeta = (props) => {
   const { item, itemModel = {}, head_title } = props;
   const { EffectiveDate } = item;
   const locale = config.settings.dateLocale || 'en-gb';
-  const showDate = itemModel.hasDate !== false && EffectiveDate !== 'None';
-  const showMeta = !!(head_title || (itemModel?.hasMetaType && item['@type']));
+  const showDate =
+    itemModel.hasDate !== false && !!EffectiveDate && EffectiveDate !== 'None';
+  // the content type label, or the portal type without one (e.g. search
+  // results only have the label)
+  const contentType = item['type_title'] || item['@type'];
+  const showMeta = !!(head_title || (itemModel?.hasMetaType && contentType));
 
   // TODO: <EEAFormattedDate data={EffectiveDate} />
 
   return showMeta || showDate ? (
     <UiCard.Meta>
       {showMeta && (
-        <span className="text-left">{head_title || item['type_title']}</span>
+        <span className="text-left">{head_title || contentType}</span>
       )}
 
       {showDate && (
