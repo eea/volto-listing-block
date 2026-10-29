@@ -37,6 +37,27 @@ const updateListingBlock = (updater) => {
   });
 };
 
+// The block is saved from the editor with the current card model. The steps
+// below store legacy card templates, as saved before the card controls, so
+// the controls introduced since are left out.
+const NEW_MODEL_FIELDS = [
+  'imagePosition',
+  'contentMode',
+  'size',
+  'hasHeadMeta',
+  'hasBenchmarkLevel',
+  'elementsOrder',
+];
+
+const legacyItemModel = (itemModel = {}, fields) => ({
+  ...Object.fromEntries(
+    Object.entries(itemModel).filter(
+      ([key]) => !NEW_MODEL_FIELDS.includes(key),
+    ),
+  ),
+  ...fields,
+});
+
 const createDocuments = (prefix, titles) => {
   const uniquePrefix = `${prefix}-${Date.now()}`;
 
@@ -65,8 +86,7 @@ describe('Blocks Tests', () => {
 
     updateListingBlock((block) => ({
       ...block,
-      itemModel: {
-        ...(block.itemModel || {}),
+      itemModel: legacyItemModel(block.itemModel, {
         '@type': 'imageOnLeft',
         hasTags: true,
         callToAction: {
@@ -78,7 +98,7 @@ describe('Blocks Tests', () => {
           ...(block.itemModel?.styles || {}),
           objectPosition: 'right',
         },
-      },
+      }),
     }));
 
     createDocuments('listing-model-page', ['Page 1', 'Page 2']);
@@ -92,10 +112,9 @@ describe('Blocks Tests', () => {
 
     updateListingBlock((block) => ({
       ...block,
-      itemModel: {
-        ...block.itemModel,
+      itemModel: legacyItemModel(block.itemModel, {
         '@type': 'imageOnRight',
-      },
+      }),
     }));
 
     cy.visit('/cypress/my-page');
@@ -106,8 +125,7 @@ describe('Blocks Tests', () => {
 
     updateListingBlock((block) => ({
       ...block,
-      itemModel: {
-        ...block.itemModel,
+      itemModel: legacyItemModel(block.itemModel, {
         '@type': 'item',
         hasDate: true,
         hasDescription: true,
@@ -115,7 +133,7 @@ describe('Blocks Tests', () => {
         maxDescription: 3,
         hasImage: true,
         imageOnRightSide: true,
-      },
+      }),
     }));
 
     cy.visit('/cypress/my-page');
@@ -126,12 +144,11 @@ describe('Blocks Tests', () => {
 
     updateListingBlock((block) => ({
       ...block,
-      itemModel: {
-        ...block.itemModel,
+      itemModel: legacyItemModel(block.itemModel, {
         '@type': 'searchItem',
         hasImage: true,
         imageOnRightSide: true,
-      },
+      }),
     }));
 
     cy.visit('/cypress/my-page');
@@ -142,12 +159,11 @@ describe('Blocks Tests', () => {
 
     updateListingBlock((block) => ({
       ...block,
-      itemModel: {
-        ...block.itemModel,
+      itemModel: legacyItemModel(block.itemModel, {
         '@type': 'simpleItem',
         maxTitle: 3,
         hasMetaType: true,
-      },
+      }),
     }));
 
     cy.visit('/cypress/my-page');
