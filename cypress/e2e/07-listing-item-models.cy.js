@@ -83,8 +83,12 @@ describe('Blocks Tests', () => {
 
     createDocuments('listing-model-page', ['Page 1', 'Page 2']);
 
+    // List renders every card model as a list item, with the image on the
+    // same side as the legacy card template
     cy.visit('/cypress/my-page');
-    cy.get('.items.imageOnLeft-items .left-image-card').should('exist');
+    cy.get('.items.item-items .u-item.listing-item .wrapper.left-image').should(
+      'exist',
+    );
 
     updateListingBlock((block) => ({
       ...block,
@@ -96,7 +100,9 @@ describe('Blocks Tests', () => {
 
     cy.visit('/cypress/my-page');
 
-    cy.get('.items.imageOnRight-items .right-image-card').should('exist');
+    cy.get(
+      '.items.item-items .u-item.listing-item .wrapper.right-image',
+    ).should('exist');
 
     updateListingBlock((block) => ({
       ...block,
