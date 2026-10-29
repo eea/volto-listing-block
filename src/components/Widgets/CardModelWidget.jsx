@@ -1,6 +1,6 @@
 import React from 'react';
 import { Tab } from 'semantic-ui-react';
-import { Field } from '@plone/volto/components/manage/Form';
+import Field from '@plone/volto/components/manage/Form/Field';
 
 /**
  * Volto's ObjectWidget, with one addition: the fields also get

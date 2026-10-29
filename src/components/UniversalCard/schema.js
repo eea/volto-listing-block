@@ -3,7 +3,7 @@ import {
   schemaEnhancerFactory,
   addTypeSelect,
 } from '@eeacms/volto-listing-block/schema-utils';
-import { getLayoutItemModel, getLayoutItemType } from './migrate';
+import { CARD, ITEM, getLayoutItemModel, getLayoutItemType } from './migrate';
 import messages from '@eeacms/volto-listing-block/messages';
 
 export default function universalCardSchemaEnhancer(args) {
@@ -42,10 +42,20 @@ export default function universalCardSchemaEnhancer(args) {
     schema: DefaultCardModelSchema(intl),
     extensionName,
   });
-  if (getLayoutItemType(layout)) {
-    itemModelSchema.fieldsets[0].fields =
-      itemModelSchema.fieldsets[0].fields.filter((field) => field !== '@type');
-    itemModelSchema.properties['@type'].default = getLayoutItemType(layout);
+  const layoutType = getLayoutItemType(layout);
+  if (layoutType) {
+    // The layout picks between our two templates, the select only offers it
+    // together with the templates registered by other add-ons, if any
+    const typeField = itemModelSchema.properties['@type'];
+    const otherType = layoutType === ITEM ? CARD : ITEM;
+    typeField.choices = typeField.choices.filter(([id]) => id !== otherType);
+    typeField.default = layoutType;
+    if (typeField.choices.length <= 1) {
+      itemModelSchema.fieldsets[0].fields =
+        itemModelSchema.fieldsets[0].fields.filter(
+          (field) => field !== '@type',
+        );
+    }
   }
 
   const baseSchema = {

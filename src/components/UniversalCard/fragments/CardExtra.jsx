@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Card as UiCard } from 'semantic-ui-react';
 import config from '@plone/volto/registry';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
-import { CardActionProvider, useCardAction } from './CardAction';
+import {
+  CardActionProvider,
+  isCardActionLinkable,
+  useCardAction,
+} from './CardAction';
 
 // The call to action is always the plain button on the right of the card
 // footer (as on the visualization cards), whatever the card theme.
@@ -12,7 +16,7 @@ export const CallToAction = ({ itemModel }) => {
   const action = useCardAction();
   const label = itemModel.callToAction?.label || 'Read more';
 
-  return action && !action.disabled ? (
+  return isCardActionLinkable(action, { isCTA: true }) ? (
     <Button
       as={UniversalLink}
       href={action.url}

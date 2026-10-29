@@ -3,17 +3,19 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import CardModelWidget from './CardModelWidget';
 
-jest.mock('@plone/volto/components/manage/Form', () => ({
-  Field: ({ id, title, value, onChange, onChangeObject }) => (
-    <div>
-      <span data-testid={`value-${title}`}>{String(value)}</span>
-      <button onClick={() => onChange(id, 'changed')}>change {title}</button>
-      <button onClick={() => onChangeObject({ hasDate: false, maxTitle: 3 })}>
-        patch {title}
-      </button>
-    </div>
-  ),
-}));
+jest.mock(
+  '@plone/volto/components/manage/Form/Field',
+  () =>
+    ({ id, title, value, onChange, onChangeObject }) => (
+      <div>
+        <span data-testid={`value-${title}`}>{String(value)}</span>
+        <button onClick={() => onChange(id, 'changed')}>change {title}</button>
+        <button onClick={() => onChangeObject({ hasDate: false, maxTitle: 3 })}>
+          patch {title}
+        </button>
+      </div>
+    ),
+);
 
 const schema = {
   fieldsets: [{ id: 'default', title: 'Default', fields: ['a', 'b'] }],

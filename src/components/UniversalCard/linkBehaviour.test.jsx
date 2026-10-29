@@ -34,8 +34,9 @@ const cta = { enable: true, label: 'Read more', urlTemplate: '$URL/details' };
 const destination = '/en/charts/chart/details';
 
 // [itemModel, links expected: title, image, CTA]. The overlay has only the
-// image (with the title on it), the compact item is one link, and the legacy
-// list items keep their CTA off as they never showed one.
+// image (with the title on it), the compact item is one link (the CTA inside
+// it is not a link of its own), and the legacy list items keep their CTA off
+// as they never showed one.
 const CARD_TYPES = {
   'card, image on top': [{ '@type': 'card', imagePosition: 'top' }, 3],
   'card, image on the left': [{ '@type': 'card', imagePosition: 'left' }, 3],
@@ -57,7 +58,7 @@ const CARD_TYPES = {
   'list item': [{ '@type': 'item', imagePosition: 'left' }, 3],
   'list item, compact': [
     { '@type': 'item', imagePosition: 'none', size: 'compact' },
-    2,
+    1,
   ],
   'legacy visualization card': [{ '@type': 'visualizationCard' }, 3],
   'legacy image card': [{ '@type': 'imageCard', titleOnImage: true }, 1],

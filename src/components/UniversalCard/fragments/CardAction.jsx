@@ -13,7 +13,8 @@ export const POPUP_MIN_WIDTH = 1280;
 /**
  * The single destination of a card, shared by the title, the image and the
  * call to action: the CTA URL template, the CTA link, the external link of
- * the item (e.g. the "External link" of a teaser), then the item URL.
+ * the item (e.g. the "External link" of a teaser), then the item URL, with
+ * its query string or hash when the listing provides one.
  */
 export const getCardActionUrl = (item, options = {}) => {
   const { urlTemplate } = options;
@@ -21,7 +22,11 @@ export const getCardActionUrl = (item, options = {}) => {
     ? urlTemplate
         .replace('$PORTAL_URL', config.settings.publicURL)
         .replace('$URL', flattenToAppURL(item['@id'] || ''))
-    : options.href?.[0]?.['@id'] || item.external_link || item['@id'];
+    : options.href?.[0]?.['@id'] ||
+        item.external_link ||
+        item.linkHref ||
+        item.linkWithHash ||
+        item['@id'];
 };
 
 export const CardActionContext = createContext(null);
@@ -66,6 +71,8 @@ export const CardActionProvider = ({
     () => ({
       url,
       disabled: !!isEditMode || !url,
+      // cards saved with "Clickable card" off: only the CTA links
+      unlinked: itemModel.hasLink === false,
       onClick: (event) => {
         if (isEditMode) {
           event.preventDefault();
@@ -75,7 +82,7 @@ export const CardActionProvider = ({
         }
       },
     }),
-    [url, isEditMode, popupEnabled],
+    [url, isEditMode, popupEnabled, itemModel.hasLink],
   );
 
   return (
@@ -93,6 +100,15 @@ export const CardActionProvider = ({
 };
 
 /**
+ * Whether the card action can be rendered as a link here: there is an
+ * active action and we are not already inside one of its links (a link
+ * inside a link is invalid HTML, e.g. the CTA of the compact item). The
+ * call to action ignores `unlinked`, it always was a link.
+ */
+export const isCardActionLinkable = (action, { isCTA = false } = {}) =>
+  !!action && !action.disabled && !action.linked && (isCTA || !action.unlinked);
+
+/**
  * Links its children to the card action. Without an active action it
  * renders the children as they are, or wrapped in `fallback` (an element
  * type) with the same className.
@@ -104,13 +120,14 @@ export const CardActionLink = ({
   ...rest
 }) => {
   const action = useCardAction();
+  const linkedAction = useMemo(() => ({ ...action, linked: true }), [action]);
 
-  if (!action || action.disabled) {
-    return Fallback ? (
-      <Fallback className={className}>{children}</Fallback>
-    ) : (
-      children
-    );
+  if (!isCardActionLinkable(action)) {
+    if (Fallback) {
+      return <Fallback className={className}>{children}</Fallback>;
+    }
+    // React 17 does not accept undefined from render (e.g. no children)
+    return children ?? null;
   }
 
   return (
@@ -121,7 +138,9 @@ export const CardActionLink = ({
       className={className}
       {...rest}
     >
-      {children}
+      <CardActionContext.Provider value={linkedAction}>
+        {children}
+      </CardActionContext.Provider>
     </UniversalLink>
   );
 };

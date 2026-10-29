@@ -4,7 +4,7 @@ import { defineMessages, useIntl } from 'react-intl';
 import { Checkbox } from 'semantic-ui-react';
 import FormFieldWrapper from '@plone/volto/components/manage/Widgets/FormFieldWrapper';
 import DragDropList from '@plone/volto/components/manage/DragDropList/DragDropList';
-import { Field } from '@plone/volto/components/manage/Form';
+import Field from '@plone/volto/components/manage/Form/Field';
 import Icon from '@plone/volto/components/theme/Icon/Icon';
 import { reorderArray } from '@plone/volto/helpers/Utils/Utils';
 

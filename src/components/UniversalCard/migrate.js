@@ -196,6 +196,13 @@ export const migrateItemModel = (itemModel) => {
   };
 };
 
+/**
+ * Whether the card template id is one of ours (current or legacy). Card
+ * templates registered by other add-ons render themselves, so the layout
+ * does not replace them.
+ */
+export const isOwnCardType = (type) => !!LEGACY_TEMPLATES[type];
+
 export const getLayoutItemType = (layout) =>
   layout === 'summary' ? ITEM : layout === 'cardsGallery' ? CARD : undefined;
 
@@ -205,6 +212,8 @@ export const getLayoutItemModel = (storedModel, layout) => {
   const model = migrateItemModel(storedModel);
   const type = getLayoutItemType(layout);
   if (!type) return model;
+  // a template registered by another add-on keeps its own model
+  if (model?.['@type'] && !isOwnCardType(model['@type'])) return model;
   const imagePosition = model?.imagePosition;
   const position =
     type === ITEM

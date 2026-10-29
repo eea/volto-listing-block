@@ -35,18 +35,20 @@ jest.mock(
 );
 
 // a minimal Field: an input showing its value
-jest.mock('@plone/volto/components/manage/Form', () => ({
-  Field: ({ id, title, value, onChange }) => (
-    <label>
-      {title}
-      <input
-        data-testid={id}
-        value={value ?? ''}
-        onChange={(e) => onChange(id, e.target.value)}
-      />
-    </label>
-  ),
-}));
+jest.mock(
+  '@plone/volto/components/manage/Form/Field',
+  () =>
+    ({ id, title, value, onChange }) => (
+      <label>
+        {title}
+        <input
+          data-testid={id}
+          value={value ?? ''}
+          onChange={(e) => onChange(id, e.target.value)}
+        />
+      </label>
+    ),
+);
 
 const elements = [
   ['image', 'Image'],

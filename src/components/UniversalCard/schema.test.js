@@ -495,4 +495,55 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(schema.properties.maxDescription.maximum).toBe(20);
     expect(schema.properties.maxTitle.minimum).toBe(0);
   });
+
+  describe('with card templates of other add-ons', () => {
+    const reportsCard = {
+      id: 'reports-card',
+      isDefault: false,
+      title: 'Reports Card',
+      schemaEnhancer: ({ schema }) => {
+        const itemModel = schema.properties.itemModel.schema;
+        itemModel.fieldsets[0].fields.push('reportsOption');
+        itemModel.properties.reportsOption = { title: 'Reports option' };
+        return schema;
+      },
+    };
+    let cardTemplates;
+
+    beforeEach(() => {
+      cardTemplates =
+        config.blocks.blocksConfig.listing.extensions.cardTemplates;
+      config.blocks.blocksConfig.listing.extensions.cardTemplates = [
+        ...cardTemplates,
+        reportsCard,
+      ];
+    });
+
+    afterEach(() => {
+      config.blocks.blocksConfig.listing.extensions.cardTemplates =
+        cardTemplates;
+    });
+
+    it.each([
+      ['summary', 'item', 'List item'],
+      ['cardsGallery', 'card', 'Card'],
+    ])('offers them next to the %s template', (variation, type, title) => {
+      const schema = getItemModelSchema({ variation, itemModel: {} });
+      expect(fields(schema)).toContain('@type');
+      expect(schema.properties['@type'].choices).toEqual([
+        [type, title],
+        ['reports-card', 'Reports Card'],
+      ]);
+      expect(schema.properties['@type'].default).toBe(type);
+    });
+
+    it('keeps the selected template and its own controls', () => {
+      const schema = getItemModelSchema({
+        variation: 'summary',
+        itemModel: { '@type': 'reports-card' },
+      });
+      expect(fields(schema)).toContain('@type');
+      expect(fields(schema)).toContain('reportsOption');
+    });
+  });
 });

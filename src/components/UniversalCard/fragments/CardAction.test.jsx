@@ -38,12 +38,21 @@ const item = {
   title: 'My chart',
 };
 
-const renderCard = ({ itemModel = {}, isEditMode, width = 1024 } = {}) => {
+const renderCard = ({
+  itemModel = {},
+  isEditMode,
+  width = 1024,
+  extraItem = {},
+} = {}) => {
   const model = {
     callToAction: { enable: true, label: 'Read more' },
     ...itemModel,
   };
-  const props = { item, itemModel: model, isEditMode };
+  const props = {
+    item: { ...item, ...extraItem },
+    itemModel: model,
+    isEditMode,
+  };
   return render(
     <Provider
       store={mockStore({ screen: { width }, userSession: { token: null } })}
@@ -125,6 +134,25 @@ describe('card action', () => {
     expect(container.querySelectorAll('a')).toHaveLength(0);
     expect(container.querySelector('div.image img')).toBeInTheDocument();
     expect(screen.getByText('Read more').tagName).toBe('BUTTON');
+  });
+
+  it('links only the CTA of cards saved with the card link off', () => {
+    const { container } = renderCard({ itemModel: { hasLink: false } });
+    expect(getLinks(container)).toEqual(['/my-chart']);
+    expect(container.querySelector('a.card-cta')).toHaveTextContent(
+      'Read more',
+    );
+    expect(container.querySelector('.header a')).toBeNull();
+    expect(container.querySelector('div.image img')).toBeInTheDocument();
+  });
+
+  it('keeps the query string of the listing link', () => {
+    const { container } = renderCard({
+      extraItem: { linkHref: '/my-chart?region=north' },
+    });
+    expect(new Set(getLinks(container))).toEqual(
+      new Set(['/my-chart?region=north']),
+    );
   });
 
   describe('external link', () => {

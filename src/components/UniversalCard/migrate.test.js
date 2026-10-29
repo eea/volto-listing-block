@@ -1,5 +1,6 @@
 import {
   getCardVariant,
+  getLayoutItemModel,
   migrateItemModel,
   needsItemModelMigration,
 } from './migrate';
@@ -269,5 +270,23 @@ describe('getCardVariant', () => {
 
   it('defaults to card', () => {
     expect(getCardVariant({})).toBe('card');
+  });
+});
+
+describe('getLayoutItemModel', () => {
+  it('gives the layout template to our own and legacy models', () => {
+    expect(getLayoutItemModel({ '@type': 'card' }, 'summary')).toMatchObject({
+      '@type': 'item',
+      imagePosition: 'left',
+    });
+    expect(
+      getLayoutItemModel({ '@type': 'imageOnLeft' }, 'cardsGallery'),
+    ).toMatchObject({ '@type': 'card', imagePosition: 'top' });
+  });
+
+  it('keeps the templates registered by other add-ons', () => {
+    const reports = { '@type': 'reports-card', hasDescription: true };
+    expect(getLayoutItemModel(reports, 'summary')).toBe(reports);
+    expect(getLayoutItemModel(reports, 'cardsGallery')).toBe(reports);
   });
 });
