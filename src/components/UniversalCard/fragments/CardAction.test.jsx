@@ -146,6 +146,14 @@ describe('card action', () => {
     expect(container.querySelector('div.image img')).toBeInTheDocument();
   });
 
+  it('keeps the links of list items saved with the card link off', () => {
+    const { container } = renderCard({
+      itemModel: { '@type': 'item', imagePosition: 'left', hasLink: false },
+    });
+    expect(container.querySelector('a.header-link')).toBeInTheDocument();
+    expect(container.querySelector('a.image')).toBeInTheDocument();
+  });
+
   it('keeps the query string of the listing link', () => {
     const { container } = renderCard({
       extraItem: { linkHref: '/my-chart?region=north' },

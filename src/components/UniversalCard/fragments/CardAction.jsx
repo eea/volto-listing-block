@@ -5,6 +5,7 @@ import config from '@plone/volto/registry';
 import UniversalLink from '@plone/volto/components/manage/UniversalLink/UniversalLink';
 import { flattenToAppURL } from '@plone/volto/helpers/Url/Url';
 
+import { ITEM } from '../migrate';
 import RenderBlocksWrapper from './RenderBlocksWrapper';
 
 // The popup is only used on large screens, below it the action navigates
@@ -66,13 +67,15 @@ export const CardActionProvider = ({
   const popupEnabled =
     !!itemModel.enableCTAPopup && screenWidth >= POPUP_MIN_WIDTH;
   const url = getCardActionUrl(item, itemModel.callToAction);
+  // cards saved with "Clickable card" off: only the CTA links. The list
+  // items never had this setting, they always link.
+  const unlinked = itemModel.hasLink === false && itemModel['@type'] !== ITEM;
 
   const action = useMemo(
     () => ({
       url,
       disabled: !!isEditMode || !url,
-      // cards saved with "Clickable card" off: only the CTA links
-      unlinked: itemModel.hasLink === false,
+      unlinked,
       onClick: (event) => {
         if (isEditMode) {
           event.preventDefault();
@@ -82,7 +85,7 @@ export const CardActionProvider = ({
         }
       },
     }),
-    [url, isEditMode, popupEnabled, itemModel.hasLink],
+    [url, isEditMode, popupEnabled, unlinked],
   );
 
   return (
