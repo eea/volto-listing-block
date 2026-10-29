@@ -60,7 +60,7 @@ describe('Blocks Tests', () => {
     addBlock('listing');
     openListingBlock();
     cy.get('#field-headline').click({ force: true }).type('Gallery Headline');
-    selectListingVariation('Gallery');
+    selectListingVariation('Grid');
     savePage();
 
     createDocuments('gallery-page', ['Page 1', 'Page 2', 'Page 3', 'Page 4']);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import PreviewImage from './PreviewImage';
 import * as helpers from '@eeacms/volto-object-widget/helpers';
@@ -70,6 +70,38 @@ describe('PreviewImage', () => {
     render(<PreviewImage item={{ title: 'No Image' }} />);
     const img = screen.getByRole('img');
     expect(img.src).toContain('default-image.svg');
+  });
+
+  it('tries the fallbacks when an image fails to load', () => {
+    render(
+      <PreviewImage
+        item={{ title: 'Test Item' }}
+        preview_image_url="/dead.png"
+        fallbacks={['/also-dead.png', '/chart.svg']}
+      />,
+    );
+    const img = screen.getByRole('img');
+    expect(img).toHaveAttribute('src', '/dead.png');
+    fireEvent.error(img);
+    expect(img).toHaveAttribute('src', '/also-dead.png');
+    fireEvent.error(img);
+    expect(img).toHaveAttribute('src', '/chart.svg');
+  });
+
+  it('ends with the item image when all candidates fail', () => {
+    render(
+      <PreviewImage
+        item={testItem}
+        preview_image_url="/dead.png"
+        fallbacks={[]}
+      />,
+    );
+    const img = screen.getByRole('img');
+    fireEvent.error(img);
+    expect(img).toHaveAttribute('src', 'http://example.com/preview.jpg');
+    // no further retries
+    fireEvent.error(img);
+    expect(img).toHaveAttribute('src', 'http://example.com/preview.jpg');
   });
 
   it('renders label when provided', () => {
