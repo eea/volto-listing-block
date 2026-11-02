@@ -118,6 +118,30 @@ describe('ItemTemplate', () => {
     );
     expect(container.querySelectorAll('.simple-item-meta')).toHaveLength(1);
   });
+  it('renders the date and the description when the model does not set them', () => {
+    // a listing block saved without a card model, e.g. before the card
+    // controls existed: both are shown, as the card elements widget says
+    renderItem({
+      '@type': 'item',
+      imagePosition: 'left',
+    });
+    expect(screen.getByText('05 Oct 2023')).toHaveClass('listing-date');
+    expect(screen.getByText('Item description')).toHaveClass(
+      'listing-description',
+    );
+  });
+
+  it('keeps the date and the description off when they are switched off', () => {
+    const { container } = renderItem({
+      '@type': 'item',
+      imagePosition: 'left',
+      hasDate: false,
+      hasDescription: false,
+    });
+    expect(container.querySelector('.listing-date')).toBeNull();
+    expect(container.querySelector('.listing-description')).toBeNull();
+  });
+
   it('renders a default list item with image on the left', () => {
     const { container } = renderItem({
       imagePosition: 'left',

@@ -56,3 +56,38 @@ export const createChildDocuments = (titles) => {
     });
   });
 };
+
+// Rewrites the listing block of a page through the API, so a spec can store
+// the data of older versions of the block (e.g. a missing card model) without
+// going through the sidebar.
+export const updateListingBlock = (updater, path = '/cypress/my-page') => {
+  const apiUrl = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
+  const auth = { user: 'admin', pass: 'admin' };
+
+  return cy
+    .request({
+      method: 'GET',
+      url: `${apiUrl}${path}`,
+      headers: { Accept: 'application/json' },
+      auth,
+    })
+    .then(({ body }) => {
+      const listingBlockId = Object.keys(body.blocks).find(
+        (id) => body.blocks[id]['@type'] === 'listing',
+      );
+
+      cy.request({
+        method: 'PATCH',
+        url: `${apiUrl}${path}`,
+        headers: { Accept: 'application/json' },
+        auth,
+        body: {
+          blocks: {
+            ...body.blocks,
+            [listingBlockId]: updater(body.blocks[listingBlockId]),
+          },
+          blocks_layout: body.blocks_layout,
+        },
+      });
+    });
+};

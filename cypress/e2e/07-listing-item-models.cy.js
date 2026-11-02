@@ -5,37 +5,8 @@ import {
   savePage,
   selectListingVariation,
   setPageTitle,
+  updateListingBlock,
 } from '../support/listingBlock';
-
-const updateListingBlock = (updater) => {
-  const apiUrl = Cypress.env('API_PATH') || 'http://localhost:8080/Plone';
-  const auth = { user: 'admin', pass: 'admin' };
-
-  cy.request({
-    method: 'GET',
-    url: `${apiUrl}/cypress/my-page`,
-    headers: { Accept: 'application/json' },
-    auth,
-  }).then(({ body }) => {
-    const listingBlockId = Object.keys(body.blocks).find(
-      (id) => body.blocks[id]['@type'] === 'listing',
-    );
-
-    cy.request({
-      method: 'PATCH',
-      url: `${apiUrl}/cypress/my-page`,
-      headers: { Accept: 'application/json' },
-      auth,
-      body: {
-        blocks: {
-          ...body.blocks,
-          [listingBlockId]: updater(body.blocks[listingBlockId]),
-        },
-        blocks_layout: body.blocks_layout,
-      },
-    });
-  });
-};
 
 // The block is saved from the editor with the current card model. The steps
 // below store legacy card templates, as saved before the card controls, so
@@ -169,5 +140,39 @@ describe('Blocks Tests', () => {
     cy.visit('/cypress/my-page');
 
     cy.get('.items.simpleItem-items .simple-listing-item').should('exist');
+  });
+
+  it('Add Block: Listing without a card model', () => {
+    setPageTitle('Listing Without Card Model');
+
+    addBlock('listing');
+    openListingBlock();
+    cy.get('#field-headline').click({ force: true }).type('Plain Listing');
+    selectListingVariation('List');
+    savePage();
+
+    // a listing block saved before the card controls existed: Volto stores
+    // only the values the editor touched, so the card model is missing
+    updateListingBlock((block) => {
+      const { itemModel, ...rest } = block;
+      return rest;
+    });
+
+    createDocuments('listing-no-model-page', ['Page 1', 'Page 2']);
+
+    cy.visit('/cypress/my-page');
+
+    // the date and the description are shown, as the card elements widget
+    // says, with the title and the image leading to the content
+    cy.get('.items.item-items .u-item.listing-item .listing-date').should(
+      'exist',
+    );
+    cy.get(
+      '.items.item-items .u-item.listing-item .listing-description',
+    ).should('exist');
+    cy.get('.items.item-items .u-item.listing-item a.header-link').should(
+      'have.attr',
+      'href',
+    );
   });
 });

@@ -43,8 +43,12 @@ const getImagePosition = ({ imagePosition }) =>
 // which also gives its spacing below the title
 const ItemDates = ({ item, itemModel, keepEmpty }) => {
   const locale = config.settings.dateLocale || 'en-gb';
+  // shown unless it was switched off, as in the card template and the
+  // sidebar toggle of the card elements
   const showDate =
-    itemModel.hasDate && item.EffectiveDate && item.EffectiveDate !== 'None';
+    itemModel.hasDate !== false &&
+    item.EffectiveDate &&
+    item.EffectiveDate !== 'None';
   const showEventDate = !!item.start && itemModel.hasEventDate;
 
   return showDate || showEventDate || keepEmpty ? (
@@ -92,7 +96,10 @@ const ItemContentType = ({ item, itemModel, keepEmpty }) =>
   ) : null;
 
 const ItemBody = ({ item, itemModel, order, titleOnImage }) => {
-  const { hasIcon, icon, hasDescription, hasHeadMeta, size } = itemModel;
+  const { hasIcon, icon, hasHeadMeta, size } = itemModel;
+  // shown unless it was switched off, as in the card template and the
+  // sidebar toggle of the card elements
+  const hasDescription = itemModel.hasDescription !== false;
   const isCompact = size === 'compact';
   const title = item.title ? item.title : item.id;
   const showIcon = !!(hasIcon && icon);
