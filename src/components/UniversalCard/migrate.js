@@ -112,14 +112,18 @@ const itemDefaults = {
 // that reproduce what the legacy template rendered.
 const LEGACY_TEMPLATES = {
   card: (m) => ({ ...cardDefaults, hasDate: showDate(m) }),
+  // the side image cards became list items in the List layout, with the
+  // small size they keep the title size of the cards
   imageOnLeft: (m) => ({
     ...cardDefaults,
     imagePosition: 'left',
+    size: 'small',
     hasDate: showDate(m),
   }),
   imageOnRight: (m) => ({
     ...cardDefaults,
     imagePosition: 'right',
+    size: 'small',
     hasDate: showDate(m),
   }),
   imageCard: (m) => ({

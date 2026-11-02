@@ -209,6 +209,7 @@ const ItemTemplate = (props) => {
         'u-item listing-item',
         {
           'simple-listing-item': isCompact,
+          'small-listing-item': size === 'small',
           'result-item': hasHeadMeta,
         },
         getVoltoStyles(getMaxLinesClasses(itemModel)),
@@ -249,7 +250,7 @@ ItemTemplate.propTypes = {
   item: PropTypes.object.isRequired,
   itemModel: PropTypes.shape({
     imagePosition: PropTypes.oneOf(['left', 'right', 'none']),
-    size: PropTypes.oneOf(['default', 'compact']),
+    size: PropTypes.oneOf(['default', 'small', 'compact']),
     hasHeadMeta: PropTypes.bool,
     elementsOrder: PropTypes.arrayOf(PropTypes.string),
   }),

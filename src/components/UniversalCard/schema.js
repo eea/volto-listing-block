@@ -1,9 +1,17 @@
+import omit from 'lodash/omit';
 import {
   DefaultCardModelSchema,
   schemaEnhancerFactory,
   addTypeSelect,
 } from '@eeacms/volto-listing-block/schema-utils';
-import { CARD, ITEM, getLayoutItemModel, getLayoutItemType } from './migrate';
+import {
+  CARD,
+  ITEM,
+  getLayoutItemModel,
+  getLayoutItemType,
+  needsItemModelMigration,
+} from './migrate';
+import { keepLegacyLayoutsOnGrid } from '@eeacms/volto-listing-block/blocks/Listing/variations';
 import messages from '@eeacms/volto-listing-block/messages';
 
 export default function universalCardSchemaEnhancer(args) {
@@ -11,14 +19,19 @@ export default function universalCardSchemaEnhancer(args) {
   const { schema, intl } = props;
 
   const formData = props.formData || props.data;
-  // build the schema for the consolidated model, also for legacy data
+  // build the schema for the consolidated model and layout, also for legacy
+  // data, so the block defaults Volto applies are the migrated values
+  const layoutField = formData?.listingBodyTemplate
+    ? 'listingBodyTemplate'
+    : 'variation';
+  const layoutData = keepLegacyLayoutsOnGrid(formData, layoutField);
   const layout =
-    formData?.listingBodyTemplate ||
-    formData?.variation ||
-    (formData?.['@type'] === 'listing' ? 'summary' : undefined);
+    layoutData?.listingBodyTemplate ||
+    layoutData?.variation ||
+    (layoutData?.['@type'] === 'listing' ? 'summary' : undefined);
   props.formData = {
-    ...formData,
-    itemModel: getLayoutItemModel(formData?.itemModel, layout),
+    ...layoutData,
+    itemModel: getLayoutItemModel(layoutData?.itemModel, layout),
   };
   const extensionName = 'cardTemplates';
   const enhancer = schemaEnhancerFactory({
@@ -76,6 +89,22 @@ export default function universalCardSchemaEnhancer(args) {
     ...props,
     schema: baseSchema,
   });
+
+  // Without a default position a legacy card model stays legacy once Volto
+  // applies the block defaults, in any container. The view then still
+  // migrates it: a List of legacy cards renders as the Grid, and the controls
+  // the legacy templates did not render stay off.
+  const modelProperties =
+    enhancedSchema.properties.itemModel?.schema?.properties;
+  if (
+    needsItemModelMigration(formData?.itemModel) &&
+    modelProperties?.imagePosition
+  ) {
+    enhancedSchema.properties.itemModel.schema.properties = {
+      ...modelProperties,
+      imagePosition: omit(modelProperties.imagePosition, 'default'),
+    };
+  }
 
   return enhancedSchema;
 }

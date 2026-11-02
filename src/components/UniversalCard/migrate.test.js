@@ -86,13 +86,36 @@ describe('migrateItemModel', () => {
 
   it('migrates image on left / right cards to imagePosition', () => {
     expect(migrateItemModel({ '@type': 'imageOnLeft' })).toEqual(
-      expect.objectContaining({ '@type': 'card', imagePosition: 'left' }),
+      expect.objectContaining({
+        '@type': 'card',
+        imagePosition: 'left',
+        size: 'small',
+      }),
     );
     expect(
       migrateItemModel({ '@type': 'imageOnRight', imagePosition: 'top' }),
     ).toEqual(
-      expect.objectContaining({ '@type': 'card', imagePosition: 'right' }),
+      expect.objectContaining({
+        '@type': 'card',
+        imagePosition: 'right',
+        size: 'small',
+      }),
     );
+  });
+
+  it('lists the side image cards as small items, with the card title size', () => {
+    expect(getLayoutItemModel({ '@type': 'imageOnRight' }, 'summary')).toEqual(
+      expect.objectContaining({
+        '@type': 'item',
+        imagePosition: 'right',
+        size: 'small',
+      }),
+    );
+    // a size chosen later is kept
+    expect(
+      getLayoutItemModel({ '@type': 'imageOnLeft', size: 'default' }, 'summary')
+        .size,
+    ).toBe('default');
   });
 
   it('migrates the image card to the overlay content mode', () => {

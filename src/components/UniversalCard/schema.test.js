@@ -332,6 +332,11 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(
       schema.properties.imagePosition.choices.map(([value]) => value),
     ).toEqual(['left', 'right', 'none']);
+    expect(schema.properties.size.choices).toEqual([
+      ['default', 'Default'],
+      ['small', 'Small'],
+      ['compact', 'Compact (title only)'],
+    ]);
   });
 
   it('shows image and description options only when they apply', () => {
@@ -382,7 +387,6 @@ describe('UniversalCard schemaEnhancer', () => {
     const schema = getItemModelSchema({
       itemModel: { '@type': 'imageOnRight' },
     });
-    expect(schema.properties.imagePosition.default).toBe('right');
     // the former card schema defaulted the date to off
     expect(schema.properties.hasDate.default).toBe(false);
 
@@ -391,7 +395,18 @@ describe('UniversalCard schemaEnhancer', () => {
     });
     expect(fields(itemSchema)).toContain('size');
     expect(itemSchema.properties.size.default).toBe('compact');
-    expect(itemSchema.properties.imagePosition.default).toBe('none');
+  });
+
+  it('keeps legacy data without a default image position', () => {
+    // the position tells the legacy model apart once the defaults are applied
+    ['imageOnRight', 'simpleItem', 'item', 'card'].forEach((type) => {
+      const schema = getItemModelSchema({ itemModel: { '@type': type } });
+      expect(schema.properties.imagePosition.default).toBeUndefined();
+    });
+    const current = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'right' },
+    });
+    expect(current.properties.imagePosition.default).toBe('right');
   });
 
   it('offers a single border selector, with top accent only on cards', () => {

@@ -28,7 +28,6 @@ each(range(20), {
 .useMaxLines(@value: 5) {
   display: -webkit-box !important;
   overflow: hidden;
-  min-height: calc(var(--max-lines, @value) * 1lh);
   box-sizing: content-box;
 
   -webkit-box-orient: vertical;
@@ -38,11 +37,20 @@ each(range(20), {
 .useTitleMaxLines(@value: 5) {
   display: -webkit-box !important;
   overflow: hidden;
-  min-height: calc(var(--title-max-lines, @value) * 1lh);
   box-sizing: content-box;
 
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--title-max-lines, @value);
+}
+
+// Cards side by side (grid, carousel) reserve the height of their lines, so
+// their elements stay aligned. List items keep the height of their text.
+.reserveMaxLines(@value: 5) {
+  min-height: calc(var(--max-lines, @value) * 1lh);
+}
+
+.reserveTitleMaxLines(@value: 5) {
+  min-height: calc(var(--title-max-lines, @value) * 1lh);
 }
 
 .ui.cards > .card,
@@ -63,6 +71,17 @@ each(range(20), {
 
   .listing-header {
     .useTitleMaxLines();
+  }
+}
+
+// list items shown side by side in a carousel
+.slick-slide .u-item {
+  .listing-description {
+    .reserveMaxLines();
+  }
+
+  .listing-header {
+    .reserveTitleMaxLines();
   }
 }
 
@@ -239,6 +258,24 @@ each(range(20), {
   background-color: @imageBackground;
 }
 
+// Small list items: the side image with the title size of the cards, as the
+// former image on left / right cards
+.u-item.listing-item.small-listing-item .listing-header {
+  font-size: 1.125rem;
+}
+
+// the New / Archived ribbon on the image of list items, placed as on the
+// image of the cards instead of pushing the image aside
+.u-item.listing-item .image-wrapper {
+  position: relative;
+
+  .ui.ribbon.label {
+    position: absolute;
+    top: 1rem;
+    left: calc(-1.2em - 0.05rem);
+  }
+}
+
 // a subtle drop shadow under the rounded images, so their edge stays
 // visible on light images and backgrounds
 .ui.card.rounded .image img,
@@ -370,10 +407,12 @@ each(range(20), {
 
   .header {
     .useTitleMaxLines();
+    .reserveTitleMaxLines();
   }
 
   .description {
     .useMaxLines();
+    .reserveMaxLines();
   }
 }
 

@@ -1,11 +1,17 @@
 import config from '@plone/volto/registry';
+import { applySchemaDefaults } from '@plone/volto/helpers/Blocks/Blocks';
 import installListing from '@eeacms/volto-listing-block/blocks/Listing';
+import { getLayoutItemModel } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
+import { getBorder } from '@eeacms/volto-listing-block/components/UniversalCard/border';
 import {
   hideHiddenVariations,
+  keepLegacyCardsOnGrid,
   keepSearchLayoutOnDefault,
   keepUnknownVariationOnDefault,
   migrateListingData,
   migrateSearchData,
+  withSearchLayoutFallback,
+  withUnknownVariationFallback,
 } from './variations';
 
 jest.mock('uuid', () => ({ v4: () => 'uuid' }), { virtual: true });
@@ -180,8 +186,36 @@ describe('migrateListingData', () => {
           'tags',
           'cta',
         ],
-        styles: { 'theme:noprefix': 'primary', 'topAccent:bool': true },
+        styles: {
+          'theme:noprefix': 'primary',
+          'topAccent:bool': true,
+          'dropShadow:bool': true,
+        },
       }),
+    });
+  });
+
+  it('keeps a drop shadow turned off on Visualization Cards', () => {
+    expect(
+      migrateListingData({
+        variation: 'cardsVisualization',
+        itemModel: { '@type': 'card', styles: { 'dropShadow:bool': false } },
+      }).itemModel.styles,
+    ).toEqual({ 'topAccent:bool': true, 'dropShadow:bool': false });
+  });
+
+  it('renders Visualization Cards as the Grid in view mode', () => {
+    const View = () => null;
+    const { data } = withUnknownVariationFallback(View)({
+      data: { variation: 'cardsVisualization', itemModel: { '@type': 'card' } },
+    }).props;
+    expect(data).toEqual({
+      variation: 'cardsGallery',
+      gridSize: 'five',
+      itemModel: {
+        '@type': 'card',
+        styles: { 'topAccent:bool': true, 'dropShadow:bool': true },
+      },
     });
   });
 
@@ -200,6 +234,224 @@ describe('migrateListingData', () => {
     ).toEqual({
       variation: 'summary',
       itemModel: expect.objectContaining({ '@type': 'item', size: 'compact' }),
+    });
+  });
+});
+
+describe('keepLegacyCardsOnGrid', () => {
+  const legacyCardList = {
+    variation: 'summary',
+    gridSize: 'six',
+    itemModel: { '@type': 'card', hasLabel: true, maxTitle: 5 },
+  };
+
+  it('turns a List of legacy cards into the Grid it rendered', () => {
+    expect(keepLegacyCardsOnGrid(legacyCardList)).toEqual({
+      ...legacyCardList,
+      variation: 'cardsGallery',
+      gridSize: 'three',
+    });
+    expect(
+      keepLegacyCardsOnGrid({
+        ...legacyCardList,
+        itemModel: { '@type': 'imageCard' },
+      }).variation,
+    ).toBe('cardsGallery');
+  });
+
+  it('keeps the cards of the migrated data, with their label', () => {
+    expect(migrateListingData(legacyCardList)).toEqual({
+      variation: 'cardsGallery',
+      gridSize: 'three',
+      itemModel: expect.objectContaining({
+        '@type': 'card',
+        imagePosition: 'top',
+        hasLabel: true,
+        maxTitle: 5,
+      }),
+    });
+  });
+
+  it.each(['imageOnLeft', 'imageOnRight', 'imageOnBottom', 'item'])(
+    'leaves the List of legacy %s alone',
+    (type) => {
+      const data = { variation: 'summary', itemModel: { '@type': type } };
+      expect(keepLegacyCardsOnGrid(data)).toBe(data);
+    },
+  );
+
+  it('leaves current cards and other layouts alone', () => {
+    const current = {
+      variation: 'summary',
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    };
+    expect(keepLegacyCardsOnGrid(current)).toBe(current);
+    const carousel = { ...legacyCardList, variation: 'cardsCarousel' };
+    expect(keepLegacyCardsOnGrid(carousel)).toBe(carousel);
+    expect(keepLegacyCardsOnGrid(undefined)).toBeUndefined();
+  });
+
+  it('renders the Grid in view mode, before the block is edited', () => {
+    const View = () => null;
+    const element = withUnknownVariationFallback(View)({
+      data: legacyCardList,
+    });
+    expect(element.props.data.variation).toBe('cardsGallery');
+  });
+
+  it('applies to the results layout of the search block', () => {
+    const data = {
+      listingBodyTemplate: 'summary',
+      itemModel: { '@type': 'card' },
+    };
+    expect(migrateSearchData(data)).toEqual(
+      expect.objectContaining({
+        listingBodyTemplate: 'cardsGallery',
+        gridSize: 'three',
+        itemModel: expect.objectContaining({
+          '@type': 'card',
+          imagePosition: 'top',
+        }),
+      }),
+    );
+    const View = () => null;
+    expect(
+      withSearchLayoutFallback(View)({ data }).props.data.listingBodyTemplate,
+    ).toBe('cardsGallery');
+  });
+});
+
+// What the view renders: Volto applies the block defaults of the variation
+// schema to the stored data, in any container, before the block view
+describe('legacy layouts with the block defaults applied', () => {
+  const intl = { formatMessage: ({ defaultMessage }) => defaultMessage };
+  const View = () => null;
+  const render = (stored) => {
+    const variation = config.blocks.blocksConfig.listing.variations.find(
+      ({ id }) => id === stored.variation,
+    );
+    const schema = variation.schemaEnhancer({
+      schema: { fieldsets: [{ id: 'default', fields: [] }], properties: {} },
+      formData: stored,
+      intl,
+    });
+    const data = applySchemaDefaults({ data: stored, schema, intl });
+    const viewData = withUnknownVariationFallback(View)({ data }).props.data;
+    return {
+      ...viewData,
+      itemModel: getLayoutItemModel(viewData.itemModel, viewData.variation),
+    };
+  };
+
+  it('renders a List of legacy cards as the Grid', () => {
+    const data = render({
+      '@type': 'listing',
+      variation: 'summary',
+      gridSize: 'six',
+      itemModel: { '@type': 'card', hasLabel: true, maxTitle: 5 },
+    });
+    expect(data.variation).toBe('cardsGallery');
+    expect(data.gridSize).toBe('three');
+    expect(data.itemModel).toEqual(
+      expect.objectContaining({
+        '@type': 'card',
+        imagePosition: 'top',
+        hasLabel: true,
+        maxTitle: 5,
+      }),
+    );
+  });
+
+  it('keeps the List of legacy side image cards and current items', () => {
+    expect(
+      render({
+        '@type': 'listing',
+        variation: 'summary',
+        itemModel: { '@type': 'imageOnLeft' },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        variation: 'summary',
+        itemModel: expect.objectContaining({
+          '@type': 'item',
+          imagePosition: 'left',
+          size: 'small',
+        }),
+      }),
+    );
+    expect(
+      render({
+        '@type': 'listing',
+        variation: 'summary',
+        itemModel: { '@type': 'item', imagePosition: 'right' },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        variation: 'summary',
+        itemModel: expect.objectContaining({ imagePosition: 'right' }),
+      }),
+    );
+  });
+
+  it('keeps off the controls the legacy list item did not render', () => {
+    const data = render({
+      '@type': 'listing',
+      variation: 'summary',
+      itemModel: {
+        '@type': 'item',
+        hasImage: true,
+        imageOnRightSide: true,
+        hasMetaType: true,
+        hasTags: true,
+        hasLabel: true,
+        callToAction: { enable: true, label: 'Read more' },
+      },
+    });
+    expect(data.itemModel).toEqual(
+      expect.objectContaining({
+        '@type': 'item',
+        imagePosition: 'right',
+        hasMetaType: false,
+        hasTags: false,
+        hasLabel: false,
+        callToAction: expect.objectContaining({ enable: false }),
+      }),
+    );
+  });
+
+  it('renders Visualization Cards with top accent and drop shadow', () => {
+    const data = render({
+      '@type': 'listing',
+      variation: 'cardsVisualization',
+      itemModel: { '@type': 'card' },
+    });
+    expect(data.variation).toBe('cardsGallery');
+    expect(data.gridSize).toBe('five');
+    expect(getBorder(data.itemModel.styles)).toBe('top-accent');
+    expect(data.itemModel.styles['dropShadow:bool']).toBe(true);
+  });
+
+  it('keeps a drop shadow turned off and the stored grid size', () => {
+    const data = render({
+      '@type': 'listing',
+      variation: 'cardsVisualization',
+      gridSize: 'four',
+      itemModel: { '@type': 'card', styles: { 'dropShadow:bool': false } },
+    });
+    expect(data.gridSize).toBe('four');
+    expect(data.itemModel.styles['dropShadow:bool']).toBe(false);
+  });
+
+  it('leaves the current Grid and Carousel cards without shadow', () => {
+    ['cardsGallery', 'cardsCarousel'].forEach((variation) => {
+      const data = render({
+        '@type': 'listing',
+        variation,
+        itemModel: { '@type': 'card', imagePosition: 'top' },
+      });
+      expect(data.variation).toBe(variation);
+      expect(data.itemModel.styles['dropShadow:bool']).toBe(false);
+      expect(getBorder(data.itemModel.styles)).toBe('no-border');
     });
   });
 });
@@ -277,7 +529,7 @@ describe('search block', () => {
         gridSize: 'five',
         itemModel: expect.objectContaining({
           '@type': 'card',
-          styles: { 'topAccent:bool': true },
+          styles: { 'topAccent:bool': true, 'dropShadow:bool': true },
         }),
       }),
     );

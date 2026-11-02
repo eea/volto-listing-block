@@ -47,7 +47,11 @@ const Gallery = ({
   );
 };
 
-Gallery.schemaEnhancer = ({ schema, intl }) => {
+Gallery.schemaEnhancer = ({ schema, intl, formData }) => {
+  // the former Visualization Cards defaulted to five cards per row
+  const isVisualizationCards =
+    (formData?.listingBodyTemplate || formData?.variation) ===
+    'cardsVisualization';
   schema.fieldsets.splice(1, 0, {
     id: 'cardsGallery',
     title: intl.formatMessage(messages.gridTitle),
@@ -64,7 +68,7 @@ Gallery.schemaEnhancer = ({ schema, intl }) => {
         ['five', intl.formatMessage(messages.five)],
         ['six', intl.formatMessage(messages.six)],
       ],
-      default: 'three',
+      default: isVisualizationCards ? 'five' : 'three',
       factory: 'Choice',
       type: 'string',
     },
