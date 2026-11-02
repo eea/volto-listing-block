@@ -4,15 +4,22 @@ import { Item } from './model';
 import cx from 'classnames';
 import { buildStyleClassNamesFromData } from '@plone/volto/helpers/Blocks/Blocks';
 import schemaEnhancer from './schema';
+import { migrateItemModel } from './migrate';
+import { getBorderStyles } from './border';
+import { getContentTypePreviewUrl } from './preview';
+import { CardActionProvider } from './fragments/CardAction';
 
 function UniversalCard(props) {
-  const { itemModel = {}, item, ...rest } = props;
+  const { item, itemModel: storedItemModel, ...rest } = props;
+  const itemModel = migrateItemModel(storedItemModel || {});
   const extension = resolveExtension(
     '@type',
     config.blocks.blocksConfig.listing.extensions.cardTemplates,
     itemModel,
   );
-  const styles = buildStyleClassNamesFromData(itemModel?.styles);
+  const styles = buildStyleClassNamesFromData(
+    getBorderStyles(itemModel?.styles),
+  );
 
   // replace camelCase with hyphens ex objectFit -> object-fit
   const hyphenClasses = styles.map((className) =>
@@ -28,13 +35,26 @@ function UniversalCard(props) {
 
   const CardTemplate = extension.template;
 
+  // an explicit preview (e.g. resolved indicator preview, search thumbnail)
+  // or a chosen preview image win over the content type based preview
+  const preview_image_url =
+    rest.preview_image_url ??
+    (rest.preview_image?.[0] ? undefined : getContentTypePreviewUrl(item));
+
   return (
-    <CardTemplate
-      item={new Item(item)}
+    <CardActionProvider
+      item={item || {}}
       itemModel={itemModel}
-      {...rest}
-      className={cx([rest.className, ...hyphenClasses])}
-    />
+      isEditMode={rest.isEditMode}
+    >
+      <CardTemplate
+        item={new Item(item)}
+        itemModel={itemModel}
+        {...rest}
+        preview_image_url={preview_image_url}
+        className={cx([rest.className, ...hyphenClasses])}
+      />
+    </CardActionProvider>
   );
 }
 

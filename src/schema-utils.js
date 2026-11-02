@@ -16,7 +16,10 @@ export const addTypeSelect = ({ formData, intl, schema, extensionName }) => {
   });
   schema.properties[field] = {
     title: intl.formatMessage(messages.cardType),
-    choices: filteredVariations.map(({ id, title }) => [id, title]),
+    choices: filteredVariations.map(({ id, title }) => [
+      id,
+      typeof title === 'string' ? title : intl.formatMessage(title),
+    ]),
     default: filteredVariations.find(({ isDefault }) => isDefault).id,
   };
   schema.fieldsets[0].fields.unshift(field);
