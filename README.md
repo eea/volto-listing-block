@@ -28,6 +28,56 @@ It provides several views and integrates with the Teaser Grid.
 
 ## Upgrade
 
+### Upgrading to 11.x
+
+The card templates and the listing layouts are consolidated. Existing content
+keeps rendering as before and is migrated to the new model when a block is
+edited, so no upgrade step is needed.
+
+**Card templates.** There are only two card templates left, the others are
+now controls of these:
+
+| Old template (`itemModel['@type']`) | New template | Settings                                          |
+| ----------------------------------- | ------------ | ------------------------------------------------- |
+| `card`                              | Card         | image on top                                      |
+| `imageOnLeft` / `imageOnRight`      | Card         | image on the left / right                         |
+| `imageCard`                         | Card         | content over the image                            |
+| `imageOnBottom`                     | Card         | title on top, logo below it                       |
+| `visualizationCard`                 | Card         | visualization element order, benchmark level      |
+| `item`                              | List item    | image on the left / right / none                  |
+| `searchItem`                        | List item    | head meta (content type and date above the title) |
+| `simpleItem`                        | List item    | compact size, no image and no description         |
+
+**Layouts.** The listing block offers List (`summary`, now the default),
+Grid (`cardsGallery`), Carousel (`cardsCarousel`) and Accordion. The layout
+picks the template: List uses the list item, Grid and Carousel use the card.
+
+- Visualization Cards (`cardsVisualization`) becomes a Grid with five columns
+  and the top accent card style.
+- Volto's own listing templates and the Image Gallery are only offered for the
+  blocks that already use them.
+- Blocks saved with a variation that is not registered anymore keep Volto's
+  default list, as do search blocks without a results layout.
+
+**Editing.** The listing, search and teaser blocks migrate their data when
+they are selected in edit mode. Save the page to store the migrated data. The
+view migrates on the fly, so unedited pages render the same.
+
+**Customizations.** These modules were removed, so update the shadows or
+imports that point to them:
+
+- `blocks/Listing/item-templates/CardTemplates.jsx`, `ItemTemplates.jsx`,
+  `SearchItemTemplate.jsx`, `SimpleItemTemplates.jsx` and
+  `VisualizationCard.jsx`, replaced by `CardTemplate.jsx` and
+  `ItemTemplate.jsx`
+- `blocks/Listing/layout-templates/VisualizationCards.jsx`, replaced by
+  `Gallery.jsx`
+
+Card templates registered by other add-ons in
+`config.blocks.blocksConfig.listing.extensions.cardTemplates` are not migrated
+and keep rendering themselves. The migration lives in
+`src/components/UniversalCard/migrate.js`.
+
 ### Upgrading to 1.x
 
 This version requires: `@plone/volto >= 16.0.0.alpha.15` (`volto-slate` part of Volto Core).
