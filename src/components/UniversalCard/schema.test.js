@@ -332,6 +332,11 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(
       schema.properties.imagePosition.choices.map(([value]) => value),
     ).toEqual(['left', 'right', 'none']);
+    expect(schema.properties.size.choices).toEqual([
+      ['default', 'Default'],
+      ['small', 'Small'],
+      ['compact', 'Compact (title only)'],
+    ]);
   });
 
   it('shows image and description options only when they apply', () => {

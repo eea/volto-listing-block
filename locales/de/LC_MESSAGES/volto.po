@@ -584,17 +584,17 @@ msgstr ""
 #. Default: "Size"
 #: messages
 msgid "size"
-msgstr ""
+msgstr "Größe"
 
 #. Default: "Compact (title only)"
 #: messages
 msgid "sizeCompact"
-msgstr ""
+msgstr "Kompakt (nur Titel)"
 
 #. Default: "Default"
 #: messages
 msgid "sizeDefault"
-msgstr ""
+msgstr "Standard"
 
 #. Default: "Large"
 #: messages

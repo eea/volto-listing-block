@@ -457,6 +457,7 @@ export const setItemModelSchema = (args) => {
         title: intl.formatMessage(messages.size),
         choices: [
           ['default', intl.formatMessage(messages.sizeDefault)],
+          ['small', intl.formatMessage(messages.sizeSmall)],
           ['compact', intl.formatMessage(messages.sizeCompact)],
         ],
         default: 'default',

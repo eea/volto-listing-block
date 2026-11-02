@@ -375,6 +375,7 @@ describe('legacy layouts with the block defaults applied', () => {
         itemModel: expect.objectContaining({
           '@type': 'item',
           imagePosition: 'left',
+          size: 'small',
         }),
       }),
     );
