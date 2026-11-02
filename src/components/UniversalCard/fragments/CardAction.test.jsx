@@ -111,23 +111,54 @@ describe('card action', () => {
     expect(screen.queryByText('Read more')).toBeNull();
   });
 
-  it('opens the same popup from every entry point on large screens', () => {
+  it('opens the popup from the call to action only, on large screens', () => {
     const { container } = renderCard({
       itemModel: { enableCTAPopup: true },
       width: 1280,
     });
+    // the title and the image always navigate to the content
     fireEvent.click(container.querySelector('a.header-link'));
+    expect(screen.queryByTestId('popup-content')).toBeNull();
+    fireEvent.click(container.querySelector('a.card-cta'));
     expect(screen.getByTestId('popup-content')).toHaveTextContent('/my-chart');
   });
 
-  it('navigates instead of opening the popup on small screens', () => {
+  it('navigates from the CTA instead of opening the popup on small screens', () => {
     const { container } = renderCard({
       itemModel: { enableCTAPopup: true },
       width: 1024,
     });
     fireEvent.click(container.querySelector('a.image'));
+    fireEvent.click(container.querySelector('a.card-cta'));
     expect(screen.queryByTestId('popup-content')).toBeNull();
   });
+
+  it('keeps the popup off when the call to action is switched off', () => {
+    // the card cannot be opened in the popup without a CTA to open it
+    const { container } = renderCard({
+      itemModel: {
+        enableCTAPopup: true,
+        callToAction: { enable: false },
+      },
+      width: 1280,
+    });
+    fireEvent.click(container.querySelector('a.header-link'));
+    expect(screen.queryByTestId('popup-content')).toBeNull();
+  });
+
+  it.each([
+    ['URL template', { urlTemplate: '$URL/@@details' }],
+    ['CTA link', { href: [{ '@id': '/en/cta-page' }] }],
+  ])(
+    'ignores the CTA %s when the call to action is switched off',
+    (name, cta) => {
+      const { container } = renderCard({
+        itemModel: { callToAction: { enable: false, ...cta } },
+      });
+      expect(getLinks(container)).toEqual(['/my-chart', '/my-chart']);
+      expect(container.querySelector('.card-cta')).toBeNull();
+    },
+  );
 
   it('renders no links in edit mode', () => {
     const { container } = renderCard({ isEditMode: true });

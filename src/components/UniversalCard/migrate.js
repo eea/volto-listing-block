@@ -141,6 +141,9 @@ const LEGACY_TEMPLATES = {
     hasDate: showDate(m),
     // "Display content type" of the visualization card
     hasMetaType: m.hasMetaType ?? m.hasContentType,
+    // the content popup is a call to action: without a CTA there is nothing
+    // to open, so the flag is only kept for the cards that show one
+    enableCTAPopup: m.callToAction?.enable !== false,
   }),
   item: (m) => ({
     ...itemIgnoredControls(m),

@@ -84,6 +84,18 @@ describe('migrateItemModel', () => {
     );
   });
 
+  it('keeps the content popup only for the cards that show a call to action', () => {
+    expect(
+      migrateItemModel({
+        '@type': 'visualizationCard',
+        callToAction: { enable: false },
+      }),
+    ).toEqual(expect.objectContaining({ enableCTAPopup: false }));
+    expect(migrateItemModel({ '@type': 'visualizationCard' })).toEqual(
+      expect.objectContaining({ enableCTAPopup: true }),
+    );
+  });
+
   it('migrates image on left / right cards to imagePosition', () => {
     expect(migrateItemModel({ '@type': 'imageOnLeft' })).toEqual(
       expect.objectContaining({ '@type': 'card', imagePosition: 'left' }),

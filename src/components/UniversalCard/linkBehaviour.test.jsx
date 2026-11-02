@@ -33,10 +33,11 @@ const item = {
 const cta = { enable: true, label: 'Read more', urlTemplate: '$URL/details' };
 const destination = '/en/charts/chart/details';
 
-// [itemModel, links expected: title, image, CTA]. The overlay has only the
-// image (with the title on it), the compact item is one link (the CTA inside
-// it is not a link of its own), and the legacy list items keep their CTA off
-// as they never showed one.
+// [itemModel, links expected: title, image, CTA, whether the card shows the
+// CTA]. The overlay has only the image (with the title on it), the compact
+// item is one link (the CTA inside it is not a link of its own), and the
+// legacy list items keep their CTA off as they never showed one, so they
+// link to the content of the item and not to the CTA destination.
 const CARD_TYPES = {
   'card, image on top': [{ '@type': 'card', imagePosition: 'top' }, 3],
   'card, image on the left': [{ '@type': 'card', imagePosition: 'left' }, 3],
@@ -49,6 +50,7 @@ const CARD_TYPES = {
       titleOnImage: true,
     },
     1,
+    { cta: false },
   ],
   'card, title and logo': [
     { '@type': 'card', imagePosition: 'top', contentMode: 'logo' },
@@ -59,11 +61,26 @@ const CARD_TYPES = {
   'list item, compact': [
     { '@type': 'item', imagePosition: 'none', size: 'compact' },
     1,
+    // the whole row is one link, so the CTA is not a link of its own (and the
+    // popup is only reachable from the cards, not from the compact items)
+    { cta: false },
   ],
   'legacy visualization card': [{ '@type': 'visualizationCard' }, 3],
-  'legacy image card': [{ '@type': 'imageCard', titleOnImage: true }, 1],
-  'legacy listing item': [{ '@type': 'item', hasImage: true }, 2],
-  'legacy simple item': [{ '@type': 'simpleItem' }, 1],
+  'legacy image card': [
+    { '@type': 'imageCard', titleOnImage: true },
+    1,
+    { cta: false },
+  ],
+  'legacy listing item': [
+    { '@type': 'item', hasImage: true },
+    2,
+    { cta: false, ctaDestination: false },
+  ],
+  'legacy simple item': [
+    { '@type': 'simpleItem' },
+    1,
+    { cta: false, ctaDestination: false },
+  ],
 };
 
 const renderCard = (itemModel, { width = 1024, isEditMode = false } = {}) =>
@@ -110,58 +127,71 @@ describe('card link behaviour', () => {
     installListing(config);
   });
 
-  Object.entries(CARD_TYPES).forEach(([name, [model, linkCount]]) => {
-    describe(name, () => {
+  Object.entries(CARD_TYPES).forEach(
+    ([name, [model, linkCount, opts = {}]]) => {
+      const { cta: hasCTA = true, ctaDestination } = opts;
       const itemModel = { ...model, callToAction: cta };
+      // a card without a CTA links to its content, the CTA destination only
+      // applies while the action is shown
+      const expected = ctaDestination === false ? item['@id'] : destination;
 
-      it('links title, image and call to action to the same destination', () => {
-        const container = renderCard(itemModel);
-        const hrefs = links(container);
-        expect(hrefs).toHaveLength(linkCount);
-        expect(new Set(hrefs)).toEqual(new Set([destination]));
-      });
+      describe(name, () => {
+        it('links title, image and call to action to the same destination', () => {
+          const container = renderCard(itemModel);
+          const hrefs = links(container);
+          expect(hrefs).toHaveLength(linkCount);
+          expect(new Set(hrefs)).toEqual(new Set([expected]));
+        });
 
-      it('opens the popup from every link on large screens', () => {
-        const container = renderCard(
-          { ...itemModel, enableCTAPopup: true },
-          { width: 1280 },
-        );
-        const anchors = Array.from(container.querySelectorAll('a'));
-        anchors.forEach((anchor) => {
-          fireEvent.click(anchor);
-          expect(screen.getByTestId('popup-content')).toHaveTextContent(
-            destination,
+        it('opens the popup from the call to action, on large screens', () => {
+          const container = renderCard(
+            { ...itemModel, enableCTAPopup: true },
+            { width: 1280 },
           );
+          // the title and the image always navigate to the content
+          const contentLink = container.querySelector('a.header-link, a.image');
+          if (contentLink) fireEvent.click(contentLink);
+          expect(screen.queryByTestId('popup-content')).toBeNull();
+
+          const button = container.querySelector('a.card-cta');
+          if (hasCTA) {
+            fireEvent.click(button);
+            expect(screen.getByTestId('popup-content')).toHaveTextContent(
+              expected,
+            );
+          } else {
+            expect(button).toBeNull();
+          }
+        });
+
+        it('navigates instead of opening the popup on small screens', () => {
+          const container = renderCard(
+            { ...itemModel, enableCTAPopup: true },
+            { width: 1279 },
+          );
+          Array.from(container.querySelectorAll('a')).forEach((anchor) =>
+            fireEvent.click(anchor),
+          );
+          expect(screen.queryByTestId('popup-content')).toBeNull();
+          expect(new Set(links(container))).toEqual(new Set([expected]));
+        });
+
+        it('does nothing in edit mode', () => {
+          const container = renderCard(
+            { ...itemModel, enableCTAPopup: true },
+            { width: 1280, isEditMode: true },
+          );
+          expect(container.querySelectorAll('a')).toHaveLength(0);
+          const button = screen.queryByText('Read more');
+          if (button) fireEvent.click(button);
+          Array.from(container.querySelectorAll('img, .header')).forEach((el) =>
+            fireEvent.click(el),
+          );
+          expect(screen.queryByTestId('popup-content')).toBeNull();
         });
       });
-
-      it('navigates instead of opening the popup on small screens', () => {
-        const container = renderCard(
-          { ...itemModel, enableCTAPopup: true },
-          { width: 1279 },
-        );
-        Array.from(container.querySelectorAll('a')).forEach((anchor) =>
-          fireEvent.click(anchor),
-        );
-        expect(screen.queryByTestId('popup-content')).toBeNull();
-        expect(new Set(links(container))).toEqual(new Set([destination]));
-      });
-
-      it('does nothing in edit mode', () => {
-        const container = renderCard(
-          { ...itemModel, enableCTAPopup: true },
-          { width: 1280, isEditMode: true },
-        );
-        expect(container.querySelectorAll('a')).toHaveLength(0);
-        const button = screen.queryByText('Read more');
-        if (button) fireEvent.click(button);
-        Array.from(container.querySelectorAll('img, .header')).forEach((el) =>
-          fireEvent.click(el),
-        );
-        expect(screen.queryByTestId('popup-content')).toBeNull();
-      });
-    });
-  });
+    },
+  );
 
   describe('teaser', () => {
     const data = {

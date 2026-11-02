@@ -16,14 +16,18 @@ export const POPUP_MIN_WIDTH = 1280;
  * call to action: the CTA URL template, the CTA link, the external link of
  * the item (e.g. the "External link" of a teaser), then the item URL, with
  * its query string or hash when the listing provides one.
+ *
+ * The CTA URL template and the CTA link only apply while the CTA is shown:
+ * a card whose action was switched off keeps linking to its content, as it
+ * did before, even when the template or the link are still stored.
  */
 export const getCardActionUrl = (item, options = {}) => {
-  const { urlTemplate } = options;
-  return urlTemplate
+  const { enable, urlTemplate, href } = options;
+  return enable && urlTemplate
     ? urlTemplate
         .replace('$PORTAL_URL', config.settings.publicURL)
         .replace('$URL', flattenToAppURL(item['@id'] || ''))
-    : options.href?.[0]?.['@id'] ||
+    : (enable && href?.[0]?.['@id']) ||
         item.external_link ||
         item.linkHref ||
         item.linkWithHash ||
@@ -52,9 +56,9 @@ export const RenderModal = React.memo(({ children, open, onClose }) => (
 
 /**
  * Provides the card action shared by the title, the image and the call to
- * action button, so they all lead to the same destination. With the CTA
- * popup enabled they all open the same popup (large screens only). In edit
- * mode they do nothing.
+ * action button, so they all lead to the same destination. The content popup
+ * is a call to action behaviour: only the CTA opens it, and only when the CTA
+ * is shown (large screens only). In edit mode they do nothing.
  */
 export const CardActionProvider = ({
   item,
@@ -64,8 +68,11 @@ export const CardActionProvider = ({
 }) => {
   const [open, setOpen] = useState(false);
   const screenWidth = useSelector((state) => state.screen?.width);
+  // the popup is offered for the CTA only, so it needs a CTA to open it
   const popupEnabled =
-    !!itemModel.enableCTAPopup && screenWidth >= POPUP_MIN_WIDTH;
+    !!itemModel.enableCTAPopup &&
+    !!itemModel.callToAction?.enable &&
+    screenWidth >= POPUP_MIN_WIDTH;
   const url = getCardActionUrl(item, itemModel.callToAction);
   // cards saved with "Clickable card" off: only the CTA links. The list
   // items never had this setting, they always link.
@@ -114,7 +121,8 @@ export const isCardActionLinkable = (action, { isCTA = false } = {}) =>
 /**
  * Links its children to the card action. Without an active action it
  * renders the children as they are, or wrapped in `fallback` (an element
- * type) with the same className.
+ * type) with the same className. The content popup is left to the call to
+ * action button, these links always navigate.
  */
 export const CardActionLink = ({
   children,
@@ -136,7 +144,6 @@ export const CardActionLink = ({
   return (
     <UniversalLink
       href={action.url}
-      onClick={action.onClick}
       openLinkInNewTab={false}
       className={className}
       {...rest}
