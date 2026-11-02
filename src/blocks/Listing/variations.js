@@ -3,6 +3,7 @@ import config from '@plone/volto/registry';
 import {
   migrateItemModel,
   getLayoutItemModel,
+  needsItemModelMigration,
 } from '@eeacms/volto-listing-block/components/UniversalCard/migrate';
 
 // Variations that are still registered, so existing blocks keep rendering,
@@ -65,12 +66,64 @@ export const keepUnknownVariationOnDefault = (data) => {
   return isUnknown ? { ...data, variation: LEGACY_DEFAULT_VARIATION } : data;
 };
 
+// Legacy card templates the former List layout showed in a grid of cards
+// (.card-items, .imageCard-items), not one below the other
+const LEGACY_GRID_CARD_TYPES = ['card', 'imageCard'];
+
+// That grid fit as many cards of at least 275px as the container allowed,
+// three at container width. The stored gridSize was not used by List.
+const LEGACY_GRID_SIZE = 'three';
+
+/**
+ * Blocks saved with the List layout and a legacy card template showing the
+ * image on top rendered a grid of cards. List renders list items now, so keep
+ * those blocks on the Grid layout.
+ */
+export const keepLegacyCardsOnGrid = (data, field = 'variation') => {
+  const isLegacyCardGrid =
+    data?.[field] === 'summary' &&
+    LEGACY_GRID_CARD_TYPES.includes(data.itemModel?.['@type']) &&
+    needsItemModelMigration(data.itemModel);
+
+  return isLegacyCardGrid
+    ? { ...data, [field]: 'cardsGallery', gridSize: LEGACY_GRID_SIZE }
+    : data;
+};
+
+/**
+ * Visualization Cards was a Grid with a top accent border and a drop shadow
+ * on the cards. A shadow turned off explicitly stays off.
+ */
+export const keepVisualizationCardsOnGrid = (data, field = 'variation') => {
+  if (data?.[field] !== 'cardsVisualization') return data;
+
+  const styles = data.itemModel?.styles || {};
+  return {
+    ...data,
+    [field]: 'cardsGallery',
+    gridSize: data.gridSize || 'five',
+    itemModel: {
+      ...(data.itemModel || {}),
+      styles: {
+        ...styles,
+        'topAccent:bool': true,
+        'dropShadow:bool': styles['dropShadow:bool'] ?? true,
+      },
+    },
+  };
+};
+
+// The former layouts covered by the Grid, applied by the edit migration and
+// on the fly by the view, so blocks look the same before they are edited
+const keepLegacyLayoutsOnGrid = (data, field = 'variation') =>
+  keepVisualizationCardsOnGrid(keepLegacyCardsOnGrid(data, field), field);
+
 export const withUnknownVariationFallback = (View) => {
   if (!View) return View;
   const WithUnknownVariationFallback = (props) =>
     React.createElement(View, {
       ...props,
-      data: keepUnknownVariationOnDefault(props.data),
+      data: keepLegacyLayoutsOnGrid(keepUnknownVariationOnDefault(props.data)),
     });
   return WithUnknownVariationFallback;
 };
@@ -89,7 +142,10 @@ export const withSearchLayoutFallback = (View) => {
   const WithSearchLayoutFallback = (props) =>
     React.createElement(View, {
       ...props,
-      data: keepSearchLayoutOnDefault(props.data),
+      data: keepLegacyLayoutsOnGrid(
+        keepSearchLayoutOnDefault(props.data),
+        'listingBodyTemplate',
+      ),
     });
   return WithSearchLayoutFallback;
 };
@@ -97,27 +153,12 @@ export const withSearchLayoutFallback = (View) => {
 // The card model and the former Visualization Cards layout, for the field
 // holding the layout (`variation` or `listingBodyTemplate`)
 const migrateLayoutData = (data, field) => {
-  let result = data;
+  // before the card model migration, it tells the legacy card templates apart
+  let result = keepLegacyLayoutsOnGrid(data, field);
 
   const itemModel = migrateItemModel(result.itemModel);
   if (itemModel !== result.itemModel) {
     result = { ...result, itemModel };
-  }
-
-  // Visualization Cards was a grid with a top accent border on the cards
-  if (result[field] === 'cardsVisualization') {
-    result = {
-      ...result,
-      [field]: 'cardsGallery',
-      gridSize: result.gridSize || 'five',
-      itemModel: {
-        ...(result.itemModel || {}),
-        styles: {
-          ...(result.itemModel?.styles || {}),
-          'topAccent:bool': true,
-        },
-      },
-    };
   }
 
   const layoutModel = getLayoutItemModel(

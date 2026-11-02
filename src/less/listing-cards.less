@@ -239,6 +239,18 @@ each(range(20), {
   background-color: @imageBackground;
 }
 
+// the New / Archived ribbon on the image of list items, placed as on the
+// image of the cards instead of pushing the image aside
+.u-item.listing-item .image-wrapper {
+  position: relative;
+
+  .ui.ribbon.label {
+    position: absolute;
+    top: 1rem;
+    left: calc(-1.2em - 0.05rem);
+  }
+}
+
 // a subtle drop shadow under the rounded images, so their edge stays
 // visible on light images and backgrounds
 .ui.card.rounded .image img,

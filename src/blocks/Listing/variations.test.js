@@ -2,10 +2,13 @@ import config from '@plone/volto/registry';
 import installListing from '@eeacms/volto-listing-block/blocks/Listing';
 import {
   hideHiddenVariations,
+  keepLegacyCardsOnGrid,
   keepSearchLayoutOnDefault,
   keepUnknownVariationOnDefault,
   migrateListingData,
   migrateSearchData,
+  withSearchLayoutFallback,
+  withUnknownVariationFallback,
 } from './variations';
 
 jest.mock('uuid', () => ({ v4: () => 'uuid' }), { virtual: true });
@@ -180,8 +183,36 @@ describe('migrateListingData', () => {
           'tags',
           'cta',
         ],
-        styles: { 'theme:noprefix': 'primary', 'topAccent:bool': true },
+        styles: {
+          'theme:noprefix': 'primary',
+          'topAccent:bool': true,
+          'dropShadow:bool': true,
+        },
       }),
+    });
+  });
+
+  it('keeps a drop shadow turned off on Visualization Cards', () => {
+    expect(
+      migrateListingData({
+        variation: 'cardsVisualization',
+        itemModel: { '@type': 'card', styles: { 'dropShadow:bool': false } },
+      }).itemModel.styles,
+    ).toEqual({ 'topAccent:bool': true, 'dropShadow:bool': false });
+  });
+
+  it('renders Visualization Cards as the Grid in view mode', () => {
+    const View = () => null;
+    const { data } = withUnknownVariationFallback(View)({
+      data: { variation: 'cardsVisualization', itemModel: { '@type': 'card' } },
+    }).props;
+    expect(data).toEqual({
+      variation: 'cardsGallery',
+      gridSize: 'five',
+      itemModel: {
+        '@type': 'card',
+        styles: { 'topAccent:bool': true, 'dropShadow:bool': true },
+      },
     });
   });
 
@@ -201,6 +232,89 @@ describe('migrateListingData', () => {
       variation: 'summary',
       itemModel: expect.objectContaining({ '@type': 'item', size: 'compact' }),
     });
+  });
+});
+
+describe('keepLegacyCardsOnGrid', () => {
+  const legacyCardList = {
+    variation: 'summary',
+    gridSize: 'six',
+    itemModel: { '@type': 'card', hasLabel: true, maxTitle: 5 },
+  };
+
+  it('turns a List of legacy cards into the Grid it rendered', () => {
+    expect(keepLegacyCardsOnGrid(legacyCardList)).toEqual({
+      ...legacyCardList,
+      variation: 'cardsGallery',
+      gridSize: 'three',
+    });
+    expect(
+      keepLegacyCardsOnGrid({
+        ...legacyCardList,
+        itemModel: { '@type': 'imageCard' },
+      }).variation,
+    ).toBe('cardsGallery');
+  });
+
+  it('keeps the cards of the migrated data, with their label', () => {
+    expect(migrateListingData(legacyCardList)).toEqual({
+      variation: 'cardsGallery',
+      gridSize: 'three',
+      itemModel: expect.objectContaining({
+        '@type': 'card',
+        imagePosition: 'top',
+        hasLabel: true,
+        maxTitle: 5,
+      }),
+    });
+  });
+
+  it.each(['imageOnLeft', 'imageOnRight', 'imageOnBottom', 'item'])(
+    'leaves the List of legacy %s alone',
+    (type) => {
+      const data = { variation: 'summary', itemModel: { '@type': type } };
+      expect(keepLegacyCardsOnGrid(data)).toBe(data);
+    },
+  );
+
+  it('leaves current cards and other layouts alone', () => {
+    const current = {
+      variation: 'summary',
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    };
+    expect(keepLegacyCardsOnGrid(current)).toBe(current);
+    const carousel = { ...legacyCardList, variation: 'cardsCarousel' };
+    expect(keepLegacyCardsOnGrid(carousel)).toBe(carousel);
+    expect(keepLegacyCardsOnGrid(undefined)).toBeUndefined();
+  });
+
+  it('renders the Grid in view mode, before the block is edited', () => {
+    const View = () => null;
+    const element = withUnknownVariationFallback(View)({
+      data: legacyCardList,
+    });
+    expect(element.props.data.variation).toBe('cardsGallery');
+  });
+
+  it('applies to the results layout of the search block', () => {
+    const data = {
+      listingBodyTemplate: 'summary',
+      itemModel: { '@type': 'card' },
+    };
+    expect(migrateSearchData(data)).toEqual(
+      expect.objectContaining({
+        listingBodyTemplate: 'cardsGallery',
+        gridSize: 'three',
+        itemModel: expect.objectContaining({
+          '@type': 'card',
+          imagePosition: 'top',
+        }),
+      }),
+    );
+    const View = () => null;
+    expect(
+      withSearchLayoutFallback(View)({ data }).props.data.listingBodyTemplate,
+    ).toBe('cardsGallery');
   });
 });
 
@@ -277,7 +391,7 @@ describe('search block', () => {
         gridSize: 'five',
         itemModel: expect.objectContaining({
           '@type': 'card',
-          styles: { 'topAccent:bool': true },
+          styles: { 'topAccent:bool': true, 'dropShadow:bool': true },
         }),
       }),
     );

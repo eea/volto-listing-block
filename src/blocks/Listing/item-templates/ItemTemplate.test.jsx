@@ -148,6 +148,26 @@ describe('ItemTemplate', () => {
     expect(slotTop.lastChild).toHaveClass('image-wrapper');
   });
 
+  it('shows the New ribbon on the image when the label is enabled', () => {
+    const { container } = renderItem(
+      { imagePosition: 'left', hasLabel: true },
+      {},
+      { ...item, isNew: true },
+    );
+    expect(
+      container.querySelector('.image-wrapper .ui.ribbon.label'),
+    ).toHaveTextContent('New');
+  });
+
+  it('shows no ribbon when the label is disabled', () => {
+    const { container } = renderItem(
+      { imagePosition: 'left', hasLabel: false },
+      {},
+      { ...item, isNew: true },
+    );
+    expect(container.querySelector('.ui.ribbon.label')).toBeNull();
+  });
+
   it('displays the title on the side image', () => {
     const { container } = renderItem({
       imagePosition: 'left',
