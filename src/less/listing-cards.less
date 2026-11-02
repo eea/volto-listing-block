@@ -28,7 +28,6 @@ each(range(20), {
 .useMaxLines(@value: 5) {
   display: -webkit-box !important;
   overflow: hidden;
-  min-height: calc(var(--max-lines, @value) * 1lh);
   box-sizing: content-box;
 
   -webkit-box-orient: vertical;
@@ -38,11 +37,20 @@ each(range(20), {
 .useTitleMaxLines(@value: 5) {
   display: -webkit-box !important;
   overflow: hidden;
-  min-height: calc(var(--title-max-lines, @value) * 1lh);
   box-sizing: content-box;
 
   -webkit-box-orient: vertical;
   -webkit-line-clamp: var(--title-max-lines, @value);
+}
+
+// Cards side by side (grid, carousel) reserve the height of their lines, so
+// their elements stay aligned. List items keep the height of their text.
+.reserveMaxLines(@value: 5) {
+  min-height: calc(var(--max-lines, @value) * 1lh);
+}
+
+.reserveTitleMaxLines(@value: 5) {
+  min-height: calc(var(--title-max-lines, @value) * 1lh);
 }
 
 .ui.cards > .card,
@@ -63,6 +71,17 @@ each(range(20), {
 
   .listing-header {
     .useTitleMaxLines();
+  }
+}
+
+// list items shown side by side in a carousel
+.slick-slide .u-item {
+  .listing-description {
+    .reserveMaxLines();
+  }
+
+  .listing-header {
+    .reserveTitleMaxLines();
   }
 }
 
@@ -382,10 +401,12 @@ each(range(20), {
 
   .header {
     .useTitleMaxLines();
+    .reserveTitleMaxLines();
   }
 
   .description {
     .useMaxLines();
+    .reserveMaxLines();
   }
 }
 

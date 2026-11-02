@@ -114,8 +114,9 @@ export const keepVisualizationCardsOnGrid = (data, field = 'variation') => {
 };
 
 // The former layouts covered by the Grid, applied by the edit migration and
-// on the fly by the view, so blocks look the same before they are edited
-const keepLegacyLayoutsOnGrid = (data, field = 'variation') =>
+// on the fly by the view, so blocks look the same before they are edited.
+// The card schema is built for them too, so the block defaults match.
+export const keepLegacyLayoutsOnGrid = (data, field = 'variation') =>
   keepVisualizationCardsOnGrid(keepLegacyCardsOnGrid(data, field), field);
 
 export const withUnknownVariationFallback = (View) => {

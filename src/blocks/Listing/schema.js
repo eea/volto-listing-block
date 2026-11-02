@@ -536,7 +536,7 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
     'dropShadow:bool': {
       title: intl.formatMessage(messages.dropShadow),
       type: 'boolean',
-      default: false,
+      default: !!itemModel.styles?.['dropShadow:bool'],
     },
     text: {
       title: intl.formatMessage(messages.textAlign),
