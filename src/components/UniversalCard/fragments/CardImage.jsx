@@ -1,22 +1,9 @@
 import React from 'react';
-import ConditionalLink from '@plone/volto/components/manage/ConditionalLink/ConditionalLink';
 import { Card } from 'semantic-ui-react';
 
 import PreviewImage from '@eeacms/volto-listing-block/PreviewImage';
-
-const getLabel = (props) => {
-  const { item, itemModel = {} } = props;
-  const text = item.isNew ? 'New' : item.isExpired ? 'Archived' : null;
-
-  return itemModel?.hasLabel && text
-    ? {
-        text,
-        side: true,
-        // TODO: set the colors from css?
-        color: item.isExpired ? 'yellow' : 'green',
-      }
-    : null;
-};
+import { getItemLabel } from '../utils';
+import { CardActionLink } from './CardAction';
 
 const CardTitleOnImage = (props) => {
   const { item, itemModel = {} } = props;
@@ -28,47 +15,29 @@ const CardTitleOnImage = (props) => {
 };
 
 const CardImage = (props) => {
-  const { item, isEditMode, preview_image, preview_image_url, itemModel } =
-    props;
-  const label = getLabel(props);
-  const to = item.external_link || item['@id'];
-  const showLink =
-    !isEditMode &&
-    itemModel?.hasLink &&
-    (itemModel?.titleOnImage || !!item.external_link) &&
-    to;
+  const {
+    item,
+    preview_image,
+    preview_image_url,
+    preview_image_fallbacks,
+    itemModel,
+  } = props;
+  const label = getItemLabel(item, itemModel);
+  const title = typeof item.title === 'string' ? item.title : item.Title;
 
+  // the image leads to the same destination as the title and the CTA
   return (
-    <ConditionalLink
-      to={to}
-      className="image"
-      item={item}
-      condition={!!showLink}
-    >
-      {showLink ? (
-        <>
-          <PreviewImage
-            item={item}
-            preview_image={preview_image}
-            preview_image_url={preview_image_url}
-            alt={itemModel?.titleOnImage ? '' : item.title}
-            label={label}
-          />
-          <CardTitleOnImage {...props} />
-        </>
-      ) : (
-        <div className={'image'}>
-          <PreviewImage
-            item={item}
-            preview_image={preview_image}
-            preview_image_url={preview_image_url}
-            alt={item.title}
-            label={label}
-          />
-          <CardTitleOnImage {...props} />
-        </div>
-      )}
-    </ConditionalLink>
+    <CardActionLink className="image" fallback="div">
+      <PreviewImage
+        item={item}
+        preview_image={preview_image}
+        preview_image_url={preview_image_url}
+        fallbacks={preview_image_fallbacks}
+        alt={itemModel?.titleOnImage ? '' : title || ''}
+        label={label}
+      />
+      <CardTitleOnImage {...props} />
+    </CardActionLink>
   );
 };
 

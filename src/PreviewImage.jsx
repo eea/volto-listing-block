@@ -35,10 +35,19 @@ function PreviewImage(props) {
     preview_image,
     size = 'preview',
     label,
+    fallbacks,
     ...rest
   } = props;
+  // images to try, in order, when the current one fails to load
+  const [failed, setFailed] = React.useState(0);
+  const fallbackKey = (fallbacks || []).join('|');
+  React.useEffect(() => setFailed(0), [preview_image_url, fallbackKey]);
+
+  const candidates = preview_image_url
+    ? [preview_image_url, ...(fallbacks || [])]
+    : [];
   const src =
-    preview_image_url ||
+    (failed < candidates.length ? candidates[failed] : null) ||
     (preview_image?.[0]
       ? getImageScaleParams(preview_image, size).download
       : item.image_field
@@ -58,6 +67,10 @@ function PreviewImage(props) {
         src={src}
         alt={item.title}
         {...rest}
+        onError={(event) => {
+          if (failed < candidates.length) setFailed(failed + 1);
+          rest.onError?.(event);
+        }}
       />
     </>
   );

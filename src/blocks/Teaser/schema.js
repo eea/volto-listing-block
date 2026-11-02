@@ -44,6 +44,8 @@ export const adjustTeaserSchema = ({ schema }) => {
   schema.properties.href.selectedItemAttrs.push('EffectiveDate');
   schema.properties.href.selectedItemAttrs.push('ExpirationDate');
   schema.properties.href.selectedItemAttrs.push('start');
+  // used to resolve content type based previews (e.g. indicators)
+  schema.properties.href.selectedItemAttrs.push('UID');
 
   addExternalLinkField(schema);
 

@@ -4,10 +4,14 @@ import { adjustTeaserSchema } from './schema';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
 import { Label } from 'semantic-ui-react';
 import React from 'react';
+import withItemModelMigration from '@eeacms/volto-listing-block/components/UniversalCard/withItemModelMigration';
 
 const applyConfig = (config) => {
   if (config.blocks.blocksConfig.teaser) {
     config.blocks.blocksConfig.teaser.restricted = false;
+    config.blocks.blocksConfig.teaser.edit = withItemModelMigration(
+      config.blocks.blocksConfig.teaser.edit,
+    );
     config.blocks.blocksConfig.teaser.schemaEnhancer = composeSchema(
       config.blocks.blocksConfig.teaser.schemaEnhancer,
       // addStyling,

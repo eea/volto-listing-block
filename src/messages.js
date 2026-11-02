@@ -57,6 +57,18 @@ const messages = defineMessages({
     id: 'Bordered',
     defaultMessage: 'Bordered',
   },
+  Border: {
+    id: 'Border',
+    defaultMessage: 'Border',
+  },
+  noBorder: {
+    id: 'noBorder',
+    defaultMessage: 'No border',
+  },
+  dropShadow: {
+    id: 'dropShadow',
+    defaultMessage: 'Drop shadow',
+  },
   ObjectFit: {
     id: 'ObjectFit',
     defaultMessage: 'Object fit',
@@ -186,14 +198,6 @@ const messages = defineMessages({
     id: 'displayTitle',
     defaultMessage: 'Display title on image',
   },
-  enableLink: {
-    id: 'enableLink',
-    defaultMessage: 'Enable link',
-  },
-  enableLinkDescription: {
-    id: 'enableLinkDescription',
-    defaultMessage: 'Link to source content.',
-  },
   publicationDate: {
     id: 'publicationDate',
     defaultMessage: 'Publication date',
@@ -213,7 +217,7 @@ const messages = defineMessages({
   maxTitleDescription: {
     id: 'maxTitleDescription',
     defaultMessage:
-      "Limit title to a maximum number of lines by adding trailing '...'",
+      "Limit title to a maximum number of lines by adding trailing '...'. 0 shows the whole title.",
   },
   maxDescriptionTitle: {
     id: 'maxDescriptionTitle',
@@ -222,7 +226,7 @@ const messages = defineMessages({
   maxDescriptionTitleDescription: {
     id: 'maxDescriptionTitleDescription',
     defaultMessage:
-      "Limit description to a maximum number of lines by adding trailing '...'",
+      "Limit description to a maximum number of lines by adding trailing '...'. 0 shows the whole description.",
   },
   showPortalType: {
     id: 'showPortalType',
@@ -328,6 +332,67 @@ const messages = defineMessages({
     id: 'four',
     defaultMessage: 'Four',
   },
+  five: {
+    id: 'five',
+    defaultMessage: 'Five',
+  },
+  six: {
+    id: 'six',
+    defaultMessage: 'Six',
+  },
+  gridTitle: {
+    id: 'gridTitle',
+    defaultMessage: 'Grid',
+  },
+  topAccent: {
+    id: 'topAccent',
+    defaultMessage: 'Top accent border',
+  },
+  topAccentHelp: {
+    id: 'topAccentHelp',
+    defaultMessage: 'Adds a thick colored border on top of the card.',
+  },
+  elementsOrder: {
+    id: 'elementsOrder',
+    defaultMessage: 'Card elements',
+  },
+  elementsOrderHelp: {
+    id: 'elementsOrderHelp',
+    defaultMessage:
+      'Drag to reorder, switch elements on or off and expand them for their settings.',
+  },
+  itemElementsOrder: {
+    id: 'itemElementsOrder',
+    defaultMessage: 'List item elements',
+  },
+  elementContentType: {
+    id: 'elementContentType',
+    defaultMessage: 'Content type',
+  },
+  elementDate: {
+    id: 'elementDate',
+    defaultMessage: 'Date',
+  },
+  elementTags: {
+    id: 'elementTags',
+    defaultMessage: 'Tags',
+  },
+  elementCallToAction: {
+    id: 'elementCallToAction',
+    defaultMessage: 'Call to action',
+  },
+  elementTitle: {
+    id: 'elementTitle',
+    defaultMessage: 'Title',
+  },
+  elementBenchmark: {
+    id: 'elementBenchmark',
+    defaultMessage: 'Benchmark level',
+  },
+  imagePositionVertical: {
+    id: 'imagePositionVertical',
+    defaultMessage: 'In the card (see elements order)',
+  },
   noItemsToShow: {
     id: 'noItemsToShow',
     defaultMessage: 'There are no items to show in this view.',
@@ -348,6 +413,100 @@ const messages = defineMessages({
   navigate: {
     id: 'Browse the site',
     defaultMessage: 'Browse the site',
+  },
+  cardTemplate: {
+    id: 'cardTemplate',
+    defaultMessage: 'Card',
+  },
+  itemTemplate: {
+    id: 'itemTemplate',
+    defaultMessage: 'List item',
+  },
+  imagePosition: {
+    id: 'imagePosition',
+    defaultMessage: 'Image position',
+  },
+  imagePositionBottom: {
+    id: 'imagePositionBottom',
+    defaultMessage: 'Bottom (after description)',
+  },
+  imagePositionNone: {
+    id: 'imagePositionNone',
+    defaultMessage: 'No image',
+  },
+  contentMode: {
+    id: 'contentMode',
+    defaultMessage: 'Content mode',
+  },
+  contentModeDefault: {
+    id: 'contentModeDefault',
+    defaultMessage: 'Image and content',
+  },
+  contentModeOverlay: {
+    id: 'contentModeOverlay',
+    defaultMessage: 'Image only (title on image)',
+  },
+  contentModeLogo: {
+    id: 'contentModeLogo',
+    defaultMessage: 'Title and logo',
+  },
+  showBenchmarkLevel: {
+    id: 'showBenchmarkLevel',
+    defaultMessage: 'Show benchmark level',
+  },
+  size: {
+    id: 'size',
+    defaultMessage: 'Size',
+  },
+  sizeDefault: {
+    id: 'sizeDefault',
+    defaultMessage: 'Default',
+  },
+  sizeCompact: {
+    id: 'sizeCompact',
+    defaultMessage: 'Compact (title only)',
+  },
+  showHeadMeta: {
+    id: 'showHeadMeta',
+    defaultMessage: 'Show head metadata',
+  },
+  showHeadMetaDescription: {
+    id: 'showHeadMetaDescription',
+    defaultMessage:
+      'Displays the item metadata slot above the title (used by search results).',
+  },
+  flip: {
+    id: 'flip',
+    defaultMessage: 'Flip card',
+  },
+  flipHelp: {
+    id: 'flipHelp',
+    defaultMessage:
+      'The card turns over on hover or keyboard focus. Choose the side of each element in the card elements.',
+  },
+  flipSides: {
+    id: 'flipSides',
+    defaultMessage: 'Card sides',
+  },
+  flipSide: {
+    id: 'flipSide',
+    defaultMessage: 'Card side',
+  },
+  flipSideFront: {
+    id: 'flipSideFront',
+    defaultMessage: 'Front',
+  },
+  flipSideBack: {
+    id: 'flipSideBack',
+    defaultMessage: 'Back',
+  },
+  enableCTAPopup: {
+    id: 'enableCTAPopup',
+    defaultMessage: 'Enable CTA content popup',
+  },
+  enableCTAPopupDescription: {
+    id: 'enableCTAPopupDescription',
+    defaultMessage: 'Will enable the CTA content popup only from 1280px and up',
   },
 });
 
