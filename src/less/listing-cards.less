@@ -251,6 +251,16 @@ each(range(20), {
   --border-radius: 50%;
 }
 
+// The rounded image keeps its size also when it is the first element of the
+// card, where `.ui.cards > .card > .image` (Semantic UI) gives it the whole
+// width of the card and is no longer the flex box that centres it
+.ui.cards > .ui.card.rounded > .image > img,
+.ui.card.u-card.rounded > .image > img {
+  width: @imageRoundedWidth;
+  height: @imageRoundedWidth;
+  margin: 0 auto;
+}
+
 // transparent images (SVG, PNG) keep the page background under them, so
 // they stay readable on dark card themes
 .ui.card.u-card .image img,
