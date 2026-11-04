@@ -410,8 +410,10 @@ each(range(20), {
     .reserveTitleMaxLines();
   }
 
-  // the title on the image stays at the bottom of the image
+  // the title on the image stays at the bottom of the image, also in the
+  // grid block editor that gives `.image > div > div` the full height
   .gradient .header {
+    height: auto;
     min-height: 0;
   }
 
