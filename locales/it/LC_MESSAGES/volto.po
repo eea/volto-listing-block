@@ -206,6 +206,26 @@ msgstr ""
 msgid "center"
 msgstr ""
 
+#. Default: "Interactive chart preview"
+#: messages
+msgid "chartPreview"
+msgstr ""
+
+#. Default: "The miniature is made for small cards; charts with several plots may not fit in it."
+#: messages
+msgid "chartPreviewHelp"
+msgstr ""
+
+#. Default: "Chart image"
+#: messages
+msgid "chartPreviewImage"
+msgstr ""
+
+#. Default: "Miniature"
+#: messages
+msgid "chartPreviewMiniature"
+msgstr ""
+
 #. Default: "contain"
 #: messages
 msgid "contain"

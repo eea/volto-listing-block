@@ -206,6 +206,26 @@ msgstr "Karussell"
 msgid "center"
 msgstr "Mitte"
 
+#. Default: "Interactive chart preview"
+#: messages
+msgid "chartPreview"
+msgstr "Vorschau interaktiver Diagramme"
+
+#. Default: "The miniature is made for small cards; charts with several plots may not fit in it."
+#: messages
+msgid "chartPreviewHelp"
+msgstr "Die Miniaturansicht ist für kleine Karten gedacht; Diagramme mit mehreren Plots passen möglicherweise nicht hinein."
+
+#. Default: "Chart image"
+#: messages
+msgid "chartPreviewImage"
+msgstr "Diagrammbild"
+
+#. Default: "Miniature"
+#: messages
+msgid "chartPreviewMiniature"
+msgstr "Miniaturansicht"
+
 #. Default: "contain"
 #: messages
 msgid "contain"

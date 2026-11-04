@@ -466,6 +466,23 @@ const messages = defineMessages({
     id: 'sizeCompact',
     defaultMessage: 'Compact (title only)',
   },
+  chartPreview: {
+    id: 'chartPreview',
+    defaultMessage: 'Interactive chart preview',
+  },
+  chartPreviewHelp: {
+    id: 'chartPreviewHelp',
+    defaultMessage:
+      'The miniature is made for small cards; charts with several plots may not fit in it.',
+  },
+  chartPreviewImage: {
+    id: 'chartPreviewImage',
+    defaultMessage: 'Chart image',
+  },
+  chartPreviewMiniature: {
+    id: 'chartPreviewMiniature',
+    defaultMessage: 'Miniature',
+  },
   showHeadMeta: {
     id: 'showHeadMeta',
     defaultMessage: 'Show head metadata',

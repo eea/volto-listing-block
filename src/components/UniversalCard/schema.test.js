@@ -284,7 +284,42 @@ describe('UniversalCard schemaEnhancer', () => {
       'contentMode',
       'titleOnImage',
       'hasLabel',
+      'chartPreview',
     ]);
+  });
+
+  it('offers the chart preview next to the image', () => {
+    const card = getItemModelSchema({
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    });
+    expect(
+      card.properties.elementsOrder.elementSettings.image.fields,
+    ).toContain('chartPreview');
+    expect(card.properties.chartPreview).toMatchObject({
+      widget: 'chart_preview',
+      default: 'miniature',
+    });
+    const item = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'left' },
+    });
+    expect(fields(item)).toContain('chartPreview');
+    expect(item.properties.chartPreview.default).toBe('image');
+    // the stored choice is the default of the form
+    const stored = getItemModelSchema({
+      itemModel: {
+        '@type': 'card',
+        imagePosition: 'top',
+        chartPreview: 'image',
+      },
+    });
+    expect(stored.properties.chartPreview.default).toBe('image');
+  });
+
+  it('does not offer the chart preview without image', () => {
+    const item = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'none' },
+    });
+    expect(fields(item)).not.toContain('chartPreview');
   });
 
   it('keeps the side images of list items in carousels', () => {

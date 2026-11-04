@@ -16,12 +16,29 @@ export const PLOTLY_PREVIEW_PATH = '/@@plotly_preview.svg/soer_miniature';
 export const getPlotlyPreviewUrl = (item) =>
   `${item['@id']}${PLOTLY_PREVIEW_PATH}`;
 
+export const isChartItem = (item) => PLOTLY_TYPES.includes(item?.['@type']);
+
+// How interactive charts are previewed: with their own preview image (the
+// whole chart) or with the miniature generated from the chart, made for the
+// small charts of the cards (the former Visualization Cards)
+export const CHART_PREVIEW_IMAGE = 'image';
+export const CHART_PREVIEW_MINIATURE = 'miniature';
+
+export const getChartPreview = (itemModel = {}) =>
+  itemModel.chartPreview ??
+  (itemModel['@type'] === 'item'
+    ? CHART_PREVIEW_IMAGE
+    : CHART_PREVIEW_MINIATURE);
+
 /**
  * Preview url that only depends on the item content type. Indicators need
- * extra requests, see useIndicatorPreviews.
+ * extra requests, see useIndicatorPreviews. A chart without its own preview
+ * image uses the miniature.
  */
-export const getContentTypePreviewUrl = (item) =>
-  item?.['@id'] && PLOTLY_TYPES.includes(item['@type'])
+export const getContentTypePreviewUrl = (item, itemModel) =>
+  item?.['@id'] &&
+  isChartItem(item) &&
+  (getChartPreview(itemModel) === CHART_PREVIEW_MINIATURE || !item.image_field)
     ? getPlotlyPreviewUrl(item)
     : undefined;
 

@@ -55,6 +55,18 @@ describe('UniversalCard preview image', () => {
     );
   });
 
+  it('uses the preview image of the charts in list items', () => {
+    renderCard({
+      itemModel: { '@type': 'item', imagePosition: 'left' },
+      item: {
+        '@id': '/chart',
+        '@type': 'visualization',
+        image_field: 'preview_image',
+      },
+    });
+    expect(screen.getByTestId('card')).toHaveTextContent('no-preview');
+  });
+
   it('uses the item image for other content types', () => {
     renderCard({ item: { '@id': '/page', '@type': 'Document' } });
     expect(screen.getByTestId('card')).toHaveTextContent('no-preview');

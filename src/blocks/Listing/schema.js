@@ -14,6 +14,11 @@ import {
   isFlipEnabled,
 } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 import { getBorder } from '@eeacms/volto-listing-block/components/UniversalCard/border';
+import {
+  CHART_PREVIEW_IMAGE,
+  CHART_PREVIEW_MINIATURE,
+  getChartPreview,
+} from '@eeacms/volto-listing-block/components/UniversalCard/preview';
 
 import alignLeftSVG from '@plone/volto/icons/align-left.svg';
 import alignCenterSVG from '@plone/volto/icons/align-center.svg';
@@ -127,7 +132,7 @@ const booleanToggle = (field, defaultVisible) => ({
 const getElementSettings = (itemModel, template, blockType) => ({
   image: {
     toggle: { field: 'imagePosition', on: 'top', off: 'none' },
-    fields: ['titleOnImage', 'hasLabel'],
+    fields: ['titleOnImage', 'hasLabel', 'chartPreview'],
   },
   contentType: { toggle: booleanToggle('hasMetaType', false) },
   date: {
@@ -342,6 +347,22 @@ const commonModelProperties = ({ formData, intl }) => ({
   },
 });
 
+// shown only when the block displays interactive charts (chart_preview)
+const chartPreviewProperty = (intl, template) => ({
+  title: intl.formatMessage(messages.chartPreview),
+  description: intl.formatMessage(messages.chartPreviewHelp),
+  widget: 'chart_preview',
+  choices: [
+    [CHART_PREVIEW_IMAGE, intl.formatMessage(messages.chartPreviewImage)],
+    [
+      CHART_PREVIEW_MINIATURE,
+      intl.formatMessage(messages.chartPreviewMiniature),
+    ],
+  ],
+  default: getChartPreview({ '@type': template }),
+  noValueOption: false,
+});
+
 export const setCardModelSchema = (args) => {
   const { formData, schema, intl } = args;
   const itemModel = formData?.itemModel || {};
@@ -360,7 +381,7 @@ export const setCardModelSchema = (args) => {
     ...itemModelSchema.fieldsets[0].fields,
     'contentMode',
     ...(isOverlay
-      ? ['titleOnImage', 'hasLabel']
+      ? ['titleOnImage', 'hasLabel', 'chartPreview']
       : isLogo
         ? [
             'maxTitle',
@@ -372,7 +393,7 @@ export const setCardModelSchema = (args) => {
             'imagePosition',
             ...(canFlip({ ...itemModel, '@type': CARD }) ? ['flip'] : []),
             'elementsOrder',
-            ...(hasSideImage && hasImage ? ['hasLabel'] : []),
+            ...(hasSideImage && hasImage ? ['hasLabel', 'chartPreview'] : []),
           ]),
   ];
   const properties = applyModelDefaults(
@@ -412,6 +433,7 @@ export const setCardModelSchema = (args) => {
         type: 'boolean',
         default: false,
       },
+      chartPreview: chartPreviewProperty(intl, CARD),
     },
     itemModel,
   );
@@ -429,7 +451,11 @@ export const setCardModelSchema = (args) => {
 const getItemFields = (itemModel, hasImage) =>
   itemModel.size === 'compact'
     ? ['elementsOrder']
-    : ['imagePosition', ...(hasImage ? ['hasLabel'] : []), 'elementsOrder'];
+    : [
+        'imagePosition',
+        ...(hasImage ? ['hasLabel', 'chartPreview'] : []),
+        'elementsOrder',
+      ];
 
 export const setItemModelSchema = (args) => {
   const { formData, schema, intl } = args;
@@ -463,6 +489,7 @@ export const setItemModelSchema = (args) => {
         default: 'default',
       },
       hasDescription: { ...common.hasDescription, default: true },
+      chartPreview: chartPreviewProperty(intl, ITEM),
     },
     itemModel,
   );

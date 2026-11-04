@@ -32,6 +32,11 @@
     &.card-element--off .card-element-name {
       opacity: 0.5;
     }
+
+    // the menus of the select settings open over the next rows
+    &.card-element--expanded {
+      overflow: visible;
+    }
   }
 
   .card-element-header {
@@ -112,6 +117,7 @@
 
   .card-element-settings {
     padding: 0.25rem 0.75rem 0.5rem;
+    border-radius: 0 0 4px 4px;
     border-top: 1px solid #eee;
     background: #fafafa;
 
