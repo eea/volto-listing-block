@@ -93,6 +93,22 @@ describe('withItemModelMigration', () => {
     expect(getByText('charts')).toBeInTheDocument();
   });
 
+  it('finds the results stored with the content UID', () => {
+    const { getByText } = render(
+      withStore(<WrappedEdit data={{}} block="b1" />, {
+        querystringsearch: {
+          subrequests: {
+            'uid123-b1': {
+              items: [{ '@id': '/chart', '@type': 'visualization' }],
+            },
+            'uid123-b2': { items: [] },
+          },
+        },
+      }),
+    );
+    expect(getByText('charts')).toBeInTheDocument();
+  });
+
   it('tells the sidebar when the teaser shows an interactive chart', () => {
     const { getByText } = render(
       withStore(
