@@ -8,10 +8,23 @@ const ChartPreviewContext = React.createContext(false);
 
 export const useHasCharts = () => React.useContext(ChartPreviewContext);
 
-const getBlockItems = (state, block) => [
-  ...(state.querystringsearch?.subrequests?.[block]?.items || []),
-  ...(state.search?.subrequests?.[block]?.items || []),
-];
+// Volto keys the results by the block id, prefixed by the content UID when
+// the listing knows its content (`<UID>-<block>`)
+const isBlockRequest = (key, block) =>
+  key === block || key.endsWith(`-${block}`);
+
+const getRequestItems = (subrequests = {}, block) =>
+  Object.keys(subrequests)
+    .filter((key) => isBlockRequest(key, block))
+    .flatMap((key) => subrequests[key]?.items || []);
+
+const getBlockItems = (state, block) =>
+  block
+    ? [
+        ...getRequestItems(state.querystringsearch?.subrequests, block),
+        ...getRequestItems(state.search?.subrequests, block),
+      ]
+    : [];
 
 /**
  * The listing and search results of the block, or the content chosen in a

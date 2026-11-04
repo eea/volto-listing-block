@@ -508,6 +508,18 @@ describe('UniversalCard schemaEnhancer', () => {
     );
   });
 
+  it('offers the image format in the styling of the cards', () => {
+    const styleSchema = (itemModel) =>
+      getItemModelSchema({ itemModel }).properties.styles.schema;
+    const card = styleSchema({ '@type': 'card', imagePosition: 'top' });
+    expect(fields(card)).toContain('imageFormat');
+    expect(card.properties.imageFormat.default).toBe('fixed');
+    // list items have their own image size
+    expect(
+      fields(styleSchema({ '@type': 'item', imagePosition: 'left' })),
+    ).not.toContain('imageFormat');
+  });
+
   it('offers flipping on vertical cards only', () => {
     expect(
       fields(
