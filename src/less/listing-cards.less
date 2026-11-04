@@ -251,6 +251,16 @@ each(range(20), {
   --border-radius: 50%;
 }
 
+// The rounded image keeps its size also when it is the first element of the
+// card, where `.ui.cards > .card > .image` (Semantic UI) gives it the whole
+// width of the card and is no longer the flex box that centres it
+.ui.cards > .ui.card.rounded > .image > img,
+.ui.card.u-card.rounded > .image > img {
+  width: @imageRoundedWidth;
+  height: @imageRoundedWidth;
+  margin: 0 auto;
+}
+
 // transparent images (SVG, PNG) keep the page background under them, so
 // they stay readable on dark card themes
 .ui.card.u-card .image img,
@@ -420,6 +430,12 @@ each(range(20), {
   .description {
     .useMaxLines();
     .reserveMaxLines();
+  }
+
+  // "Reserve the space of the lines" turned off: the text keeps its height
+  &.free-title-lines .header,
+  &.free-description-lines .description {
+    min-height: 0;
   }
 }
 
@@ -796,6 +812,41 @@ each({
     object-position: var(--image-object-position, center);
   }
 }
+
+// "Image format" of the card styling: the fixed height above (and of the
+// theme for the image on top), the height of the image itself, or a ratio
+.ui.cards > .ui.card.u-card.has--image-format--original:not(.rounded),
+.ui.card.u-card.has--image-format--original:not(.rounded) {
+  > .image,
+  > .content > .image {
+    height: auto;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.imageFormatRatio(@format, @ratio) {
+  .ui.cards > .ui.card.u-card.has--image-format--@{format}:not(.rounded),
+  .ui.card.u-card.has--image-format--@{format}:not(.rounded) {
+    > .image,
+    > .content > .image {
+      height: auto;
+      aspect-ratio: @ratio;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+}
+
+.imageFormatRatio(~'16-9', ~'16 / 9');
+.imageFormatRatio(~'4-3', ~'4 / 3');
+.imageFormatRatio(~'1-1', 1);
 
 // "Display title on image" on the side image of list items, as on cards
 .u-item.listing-item .image-wrapper.title-on-image {

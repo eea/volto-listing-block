@@ -96,6 +96,7 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(property.elementSettings.title.toggle).toBeUndefined();
     expect(property.elementSettings.title.fields).toEqual([
       'maxTitle',
+      'reserveTitleLines',
       'hasIcon',
     ]);
     expect(property.elementSettings.image.toggle).toEqual({
@@ -150,7 +151,7 @@ describe('UniversalCard schemaEnhancer', () => {
     });
     expect(
       schema.properties.elementsOrder.elementSettings.title.fields,
-    ).toEqual(['maxTitle', 'hasIcon', 'icon']);
+    ).toEqual(['maxTitle', 'reserveTitleLines', 'hasIcon', 'icon']);
     expect(schema.properties.elementsOrder.fieldSchemas.icon).toBeDefined();
   });
 
@@ -284,7 +285,59 @@ describe('UniversalCard schemaEnhancer', () => {
       'contentMode',
       'titleOnImage',
       'hasLabel',
+      'chartPreview',
     ]);
+  });
+
+  it('offers the reserved lines on cards', () => {
+    const card = getItemModelSchema({
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    });
+    const settings = card.properties.elementsOrder.elementSettings;
+    expect(settings.title.fields).toContain('reserveTitleLines');
+    expect(settings.description.fields).toContain('reserveDescriptionLines');
+    expect(card.properties.reserveTitleLines.default).toBe(true);
+    expect(card.properties.reserveDescriptionLines.default).toBe(true);
+    // list items keep the height of their texts
+    const item = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'left' },
+    });
+    const itemSettings = item.properties.elementsOrder.elementSettings;
+    expect(itemSettings.title.fields).not.toContain('reserveTitleLines');
+  });
+
+  it('offers the chart preview next to the image', () => {
+    const card = getItemModelSchema({
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    });
+    expect(
+      card.properties.elementsOrder.elementSettings.image.fields,
+    ).toContain('chartPreview');
+    expect(card.properties.chartPreview).toMatchObject({
+      widget: 'chart_preview',
+      default: 'miniature',
+    });
+    const item = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'left' },
+    });
+    expect(fields(item)).toContain('chartPreview');
+    expect(item.properties.chartPreview.default).toBe('image');
+    // the stored choice is the default of the form
+    const stored = getItemModelSchema({
+      itemModel: {
+        '@type': 'card',
+        imagePosition: 'top',
+        chartPreview: 'image',
+      },
+    });
+    expect(stored.properties.chartPreview.default).toBe('image');
+  });
+
+  it('does not offer the chart preview without image', () => {
+    const item = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'none' },
+    });
+    expect(fields(item)).not.toContain('chartPreview');
   });
 
   it('keeps the side images of list items in carousels', () => {

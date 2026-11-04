@@ -28,6 +28,43 @@ describe('getContentTypePreviewUrl', () => {
     );
   });
 
+  it('uses the preview image of the charts when chosen', () => {
+    const chart = {
+      '@id': '/chart',
+      '@type': 'visualization',
+      image_field: 'preview_image',
+    };
+    // list items show the preview image of the chart by default
+    expect(getContentTypePreviewUrl(chart, { '@type': 'item' })).toBe(
+      undefined,
+    );
+    expect(
+      getContentTypePreviewUrl(chart, {
+        '@type': 'card',
+        chartPreview: 'image',
+      }),
+    ).toBe(undefined);
+    // cards show the miniature by default
+    expect(getContentTypePreviewUrl(chart, { '@type': 'card' })).toBe(
+      '/chart/@@plotly_preview.svg/soer_miniature',
+    );
+    expect(
+      getContentTypePreviewUrl(chart, {
+        '@type': 'item',
+        chartPreview: 'miniature',
+      }),
+    ).toBe('/chart/@@plotly_preview.svg/soer_miniature');
+  });
+
+  it('uses the miniature for charts without preview image', () => {
+    expect(
+      getContentTypePreviewUrl(
+        { '@id': '/chart', '@type': 'visualization' },
+        { '@type': 'item' },
+      ),
+    ).toBe('/chart/@@plotly_preview.svg/soer_miniature');
+  });
+
   it('has no content type preview for other types', () => {
     ['Document', 'chart_static', 'ims_indicator'].forEach((type) => {
       expect(

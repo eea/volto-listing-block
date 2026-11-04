@@ -14,6 +14,11 @@ import {
   isFlipEnabled,
 } from '@eeacms/volto-listing-block/components/UniversalCard/elements';
 import { getBorder } from '@eeacms/volto-listing-block/components/UniversalCard/border';
+import {
+  CHART_PREVIEW_IMAGE,
+  CHART_PREVIEW_MINIATURE,
+  getChartPreview,
+} from '@eeacms/volto-listing-block/components/UniversalCard/preview';
 
 import alignLeftSVG from '@plone/volto/icons/align-left.svg';
 import alignCenterSVG from '@plone/volto/icons/align-center.svg';
@@ -127,7 +132,7 @@ const booleanToggle = (field, defaultVisible) => ({
 const getElementSettings = (itemModel, template, blockType) => ({
   image: {
     toggle: { field: 'imagePosition', on: 'top', off: 'none' },
-    fields: ['titleOnImage', 'hasLabel'],
+    fields: ['titleOnImage', 'hasLabel', 'chartPreview'],
   },
   contentType: { toggle: booleanToggle('hasMetaType', false) },
   date: {
@@ -137,6 +142,8 @@ const getElementSettings = (itemModel, template, blockType) => ({
   title: {
     fields: [
       'maxTitle',
+      // cards side by side reserve the lines of their texts
+      ...(template === CARD ? ['reserveTitleLines'] : []),
       // side images have no row of their own, their title on image is here
       ...(hasSideImageWithTitle(itemModel, template) ? ['titleOnImage'] : []),
       'hasIcon',
@@ -146,7 +153,10 @@ const getElementSettings = (itemModel, template, blockType) => ({
   benchmark: { toggle: booleanToggle('hasBenchmarkLevel', false) },
   description: {
     toggle: booleanToggle('hasDescription', template === ITEM),
-    fields: ['maxDescription'],
+    fields: [
+      'maxDescription',
+      ...(template === CARD ? ['reserveDescriptionLines'] : []),
+    ],
   },
   tags: { toggle: booleanToggle('hasTags', false) },
   cta: {
@@ -342,6 +352,22 @@ const commonModelProperties = ({ formData, intl }) => ({
   },
 });
 
+// shown only when the block displays interactive charts (chart_preview)
+const chartPreviewProperty = (intl, template) => ({
+  title: intl.formatMessage(messages.chartPreview),
+  description: intl.formatMessage(messages.chartPreviewHelp),
+  widget: 'chart_preview',
+  choices: [
+    [CHART_PREVIEW_IMAGE, intl.formatMessage(messages.chartPreviewImage)],
+    [
+      CHART_PREVIEW_MINIATURE,
+      intl.formatMessage(messages.chartPreviewMiniature),
+    ],
+  ],
+  default: getChartPreview({ '@type': template }),
+  noValueOption: false,
+});
+
 export const setCardModelSchema = (args) => {
   const { formData, schema, intl } = args;
   const itemModel = formData?.itemModel || {};
@@ -360,7 +386,7 @@ export const setCardModelSchema = (args) => {
     ...itemModelSchema.fieldsets[0].fields,
     'contentMode',
     ...(isOverlay
-      ? ['titleOnImage', 'hasLabel']
+      ? ['titleOnImage', 'hasLabel', 'chartPreview']
       : isLogo
         ? [
             'maxTitle',
@@ -372,7 +398,7 @@ export const setCardModelSchema = (args) => {
             'imagePosition',
             ...(canFlip({ ...itemModel, '@type': CARD }) ? ['flip'] : []),
             'elementsOrder',
-            ...(hasSideImage && hasImage ? ['hasLabel'] : []),
+            ...(hasSideImage && hasImage ? ['hasLabel', 'chartPreview'] : []),
           ]),
   ];
   const properties = applyModelDefaults(
@@ -412,6 +438,19 @@ export const setCardModelSchema = (args) => {
         type: 'boolean',
         default: false,
       },
+      chartPreview: chartPreviewProperty(intl, CARD),
+      reserveTitleLines: {
+        title: intl.formatMessage(messages.reserveLines),
+        description: intl.formatMessage(messages.reserveLinesHelp),
+        type: 'boolean',
+        default: true,
+      },
+      reserveDescriptionLines: {
+        title: intl.formatMessage(messages.reserveLines),
+        description: intl.formatMessage(messages.reserveLinesHelp),
+        type: 'boolean',
+        default: true,
+      },
     },
     itemModel,
   );
@@ -429,7 +468,11 @@ export const setCardModelSchema = (args) => {
 const getItemFields = (itemModel, hasImage) =>
   itemModel.size === 'compact'
     ? ['elementsOrder']
-    : ['imagePosition', ...(hasImage ? ['hasLabel'] : []), 'elementsOrder'];
+    : [
+        'imagePosition',
+        ...(hasImage ? ['hasLabel', 'chartPreview'] : []),
+        'elementsOrder',
+      ];
 
 export const setItemModelSchema = (args) => {
   const { formData, schema, intl } = args;
@@ -463,6 +506,7 @@ export const setItemModelSchema = (args) => {
         default: 'default',
       },
       hasDescription: { ...common.hasDescription, default: true },
+      chartPreview: chartPreviewProperty(intl, ITEM),
     },
     itemModel,
   );
@@ -494,6 +538,10 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
     // image options only when there is an image
     ...(hasImage ? ['rounded:bool'] : []),
     'text',
+    // the format of the image box of the cards, list items have their own
+    ...(hasImage && isCard && !itemModel.styles?.['rounded:bool']
+      ? ['imageFormat']
+      : []),
     ...(hasImage ? ['objectFit', 'objectPosition'] : []),
   );
   styleSchema.properties = {
@@ -544,6 +592,18 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
       widget: 'style_text_align',
       actions: Object.keys(ALIGN_INFO_MAP(intl)),
       actionsInfoMap: ALIGN_INFO_MAP(intl),
+    },
+    imageFormat: {
+      title: intl.formatMessage(messages.imageFormat),
+      choices: [
+        ['fixed', intl.formatMessage(messages.imageFormatFixed)],
+        ['original', intl.formatMessage(messages.imageFormatOriginal)],
+        ['16-9', intl.formatMessage(messages.imageFormatLandscape)],
+        ['4-3', intl.formatMessage(messages.imageFormatStandard)],
+        ['1-1', intl.formatMessage(messages.imageFormatSquare)],
+      ],
+      default: 'fixed',
+      noValueOption: false,
     },
     objectFit: {
       title: intl.formatMessage(messages.ObjectFit),

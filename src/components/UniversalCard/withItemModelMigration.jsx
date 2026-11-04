@@ -1,5 +1,6 @@
 import React from 'react';
 import { migrateItemModel } from './migrate';
+import ChartPreviewContext, { useBlockHasCharts } from './ChartPreviewContext';
 
 export const migrateBlockItemModel = (data) => {
   const itemModel = migrateItemModel(data?.itemModel);
@@ -10,7 +11,8 @@ export const migrateBlockItemModel = (data) => {
  * Wraps a block edit component (listing, teaser) and, once the block is
  * selected, rewrites legacy block data (card template ids, removed layout
  * variations) to the consolidated model. `migrate` returns the same object
- * when nothing needs to change. The view side migrates on the fly.
+ * when nothing needs to change. The view side migrates on the fly. It also
+ * tells the sidebar whether the block shows interactive charts.
  */
 export default function withItemModelMigration(
   WrappedComponent,
@@ -24,6 +26,7 @@ export default function withItemModelMigration(
     const { data, block, onChangeBlock, selected } = props;
     const migrated = React.useMemo(() => migrate(data), [data]);
     const needsMigration = migrated !== data;
+    const hasCharts = useBlockHasCharts(block, migrated);
 
     React.useEffect(() => {
       if (selected && needsMigration && onChangeBlock) {
@@ -33,7 +36,11 @@ export default function withItemModelMigration(
     }, [selected, needsMigration]);
 
     // render what the view renders, also before the data is rewritten
-    return <WrappedComponent {...props} data={migrated} />;
+    return (
+      <ChartPreviewContext.Provider value={hasCharts}>
+        <WrappedComponent {...props} data={migrated} />
+      </ChartPreviewContext.Provider>
+    );
   };
 
   WithItemModelMigration.displayName = `WithItemModelMigration(${

@@ -82,6 +82,20 @@ describe('CardTemplate', () => {
     expect(container.querySelector('img')).toBeNull();
   });
 
+  it('marks the texts without reserved lines', () => {
+    const { container } = renderCard({
+      reserveTitleLines: false,
+      reserveDescriptionLines: false,
+    });
+    expect(container.querySelector('.u-card')).toHaveClass(
+      'free-title-lines',
+      'free-description-lines',
+    );
+    // the lines are reserved by default
+    const { container: defaults } = renderCard({});
+    expect(defaults.querySelector('.u-card').className).not.toMatch(/free-/);
+  });
+
   it('renders only the image in overlay mode', () => {
     const { container } = renderCard({
       contentMode: 'overlay',

@@ -22,6 +22,9 @@ const NEW_FIELDS = [
   'size',
   'hasHeadMeta',
   'elementsOrder',
+  'chartPreview',
+  'reserveTitleLines',
+  'reserveDescriptionLines',
 ];
 
 // Volto filled the fields missing from the saved data with the defaults of
@@ -94,12 +97,15 @@ const itemIgnoredControls = (m) => ({
   callToAction: { ...(m.callToAction || {}), enable: false },
 });
 
+// Only the Visualization Card showed the miniature of the interactive
+// charts, the other templates their preview image
 const cardDefaults = {
   '@type': CARD,
   imagePosition: 'top',
   contentMode: 'default',
   hasBenchmarkLevel: false,
   hasIcon: false,
+  chartPreview: 'image',
 };
 
 const itemDefaults = {
@@ -142,6 +148,12 @@ const LEGACY_TEMPLATES = {
     // image at the bottom, content type above and date below the title
     elementsOrder: VISUALIZATION_ELEMENTS,
     hasBenchmarkLevel: true,
+    chartPreview: 'miniature',
+    // the chart kept its own height, below the benchmark level
+    styles: { ...(m.styles || {}), imageFormat: 'original' },
+    // the texts kept their own height, without aligning the cards
+    reserveTitleLines: false,
+    reserveDescriptionLines: false,
     hasDate: showDate(m),
     // "Display content type" of the visualization card
     hasMetaType: m.hasMetaType ?? m.hasContentType,

@@ -39,7 +39,9 @@ function UniversalCard(props) {
   // or a chosen preview image win over the content type based preview
   const preview_image_url =
     rest.preview_image_url ??
-    (rest.preview_image?.[0] ? undefined : getContentTypePreviewUrl(item));
+    (rest.preview_image?.[0]
+      ? undefined
+      : getContentTypePreviewUrl(item, itemModel));
 
   return (
     <CardActionProvider

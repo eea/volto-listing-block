@@ -206,6 +206,26 @@ msgstr ""
 msgid "center"
 msgstr ""
 
+#. Default: "Interactive chart preview"
+#: messages
+msgid "chartPreview"
+msgstr ""
+
+#. Default: "The miniature is made for small cards; charts with several plots may not fit in it."
+#: messages
+msgid "chartPreviewHelp"
+msgstr ""
+
+#. Default: "Chart image"
+#: messages
+msgid "chartPreviewImage"
+msgstr ""
+
+#. Default: "Miniature"
+#: messages
+msgid "chartPreviewMiniature"
+msgstr ""
+
 #. Default: "contain"
 #: messages
 msgid "contain"
@@ -401,6 +421,36 @@ msgstr ""
 msgid "image"
 msgstr ""
 
+#. Default: "Image format"
+#: messages
+msgid "imageFormat"
+msgstr ""
+
+#. Default: "Fixed height (200px)"
+#: messages
+msgid "imageFormatFixed"
+msgstr ""
+
+#. Default: "Landscape (16:9)"
+#: messages
+msgid "imageFormatLandscape"
+msgstr ""
+
+#. Default: "Original"
+#: messages
+msgid "imageFormatOriginal"
+msgstr ""
+
+#. Default: "Square (1:1)"
+#: messages
+msgid "imageFormatSquare"
+msgstr ""
+
+#. Default: "Standard (4:3)"
+#: messages
+msgid "imageFormatStandard"
+msgstr ""
+
 #. Default: "Image on left"
 #: messages
 msgid "imageLeft"
@@ -524,6 +574,16 @@ msgstr ""
 #. Default: "Read more"
 #: messages
 msgid "readMore"
+msgstr ""
+
+#. Default: "Reserve the space of the lines"
+#: messages
+msgid "reserveLines"
+msgstr ""
+
+#. Default: "The cards of a row stay aligned when their texts are shorter."
+#: messages
+msgid "reserveLinesHelp"
 msgstr ""
 
 #. Default: "Right"
