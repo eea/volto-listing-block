@@ -190,6 +190,7 @@ describe('migrateListingData', () => {
           'theme:noprefix': 'primary',
           'topAccent:bool': true,
           'dropShadow:bool': true,
+          imageFormat: 'original',
         },
       }),
     });
@@ -529,7 +530,11 @@ describe('search block', () => {
         gridSize: 'five',
         itemModel: expect.objectContaining({
           '@type': 'card',
-          styles: { 'topAccent:bool': true, 'dropShadow:bool': true },
+          styles: {
+            'topAccent:bool': true,
+            'dropShadow:bool': true,
+            imageFormat: 'original',
+          },
         }),
       }),
     );
