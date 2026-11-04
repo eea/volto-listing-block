@@ -223,7 +223,15 @@ const CardTemplate = (props) => {
 
   // the preview image is picked by content type in UniversalCard
   const image = <CardImage {...props} />;
-  const classes = cx('u-card', getMaxLinesClasses(itemModel), className);
+  const classes = cx(
+    'u-card',
+    getMaxLinesClasses(itemModel),
+    {
+      'free-title-lines': itemModel.reserveTitleLines === false,
+      'free-description-lines': itemModel.reserveDescriptionLines === false,
+    },
+    className,
+  );
 
   if (contentMode === 'overlay') {
     return (
@@ -298,6 +306,8 @@ CardTemplate.propTypes = {
   itemModel: PropTypes.shape({
     imagePosition: PropTypes.oneOf(['top', 'bottom', 'left', 'right', 'none']),
     contentMode: PropTypes.oneOf(['default', 'overlay', 'logo']),
+    reserveTitleLines: PropTypes.bool,
+    reserveDescriptionLines: PropTypes.bool,
     hasBenchmarkLevel: PropTypes.bool,
     elementsOrder: PropTypes.arrayOf(PropTypes.string),
     flip: PropTypes.bool,

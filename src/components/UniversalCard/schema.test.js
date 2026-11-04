@@ -96,6 +96,7 @@ describe('UniversalCard schemaEnhancer', () => {
     expect(property.elementSettings.title.toggle).toBeUndefined();
     expect(property.elementSettings.title.fields).toEqual([
       'maxTitle',
+      'reserveTitleLines',
       'hasIcon',
     ]);
     expect(property.elementSettings.image.toggle).toEqual({
@@ -150,7 +151,7 @@ describe('UniversalCard schemaEnhancer', () => {
     });
     expect(
       schema.properties.elementsOrder.elementSettings.title.fields,
-    ).toEqual(['maxTitle', 'hasIcon', 'icon']);
+    ).toEqual(['maxTitle', 'reserveTitleLines', 'hasIcon', 'icon']);
     expect(schema.properties.elementsOrder.fieldSchemas.icon).toBeDefined();
   });
 
@@ -286,6 +287,23 @@ describe('UniversalCard schemaEnhancer', () => {
       'hasLabel',
       'chartPreview',
     ]);
+  });
+
+  it('offers the reserved lines on cards', () => {
+    const card = getItemModelSchema({
+      itemModel: { '@type': 'card', imagePosition: 'top' },
+    });
+    const settings = card.properties.elementsOrder.elementSettings;
+    expect(settings.title.fields).toContain('reserveTitleLines');
+    expect(settings.description.fields).toContain('reserveDescriptionLines');
+    expect(card.properties.reserveTitleLines.default).toBe(true);
+    expect(card.properties.reserveDescriptionLines.default).toBe(true);
+    // list items keep the height of their texts
+    const item = getItemModelSchema({
+      itemModel: { '@type': 'item', imagePosition: 'left' },
+    });
+    const itemSettings = item.properties.elementsOrder.elementSettings;
+    expect(itemSettings.title.fields).not.toContain('reserveTitleLines');
   });
 
   it('offers the chart preview next to the image', () => {

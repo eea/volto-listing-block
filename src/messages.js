@@ -483,6 +483,39 @@ const messages = defineMessages({
     id: 'chartPreviewMiniature',
     defaultMessage: 'Miniature',
   },
+  reserveLines: {
+    id: 'reserveLines',
+    defaultMessage: 'Reserve the space of the lines',
+  },
+  reserveLinesHelp: {
+    id: 'reserveLinesHelp',
+    defaultMessage:
+      'The cards of a row stay aligned when their texts are shorter.',
+  },
+  imageFormat: {
+    id: 'imageFormat',
+    defaultMessage: 'Image format',
+  },
+  imageFormatFixed: {
+    id: 'imageFormatFixed',
+    defaultMessage: 'Fixed height (200px)',
+  },
+  imageFormatOriginal: {
+    id: 'imageFormatOriginal',
+    defaultMessage: 'Original',
+  },
+  imageFormatLandscape: {
+    id: 'imageFormatLandscape',
+    defaultMessage: 'Landscape (16:9)',
+  },
+  imageFormatStandard: {
+    id: 'imageFormatStandard',
+    defaultMessage: 'Standard (4:3)',
+  },
+  imageFormatSquare: {
+    id: 'imageFormatSquare',
+    defaultMessage: 'Square (1:1)',
+  },
   showHeadMeta: {
     id: 'showHeadMeta',
     defaultMessage: 'Show head metadata',

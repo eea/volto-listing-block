@@ -421,6 +421,36 @@ msgstr "Icon Größe"
 msgid "image"
 msgstr "Bild"
 
+#. Default: "Image format"
+#: messages
+msgid "imageFormat"
+msgstr "Bildformat"
+
+#. Default: "Fixed height (200px)"
+#: messages
+msgid "imageFormatFixed"
+msgstr "Feste Höhe (200px)"
+
+#. Default: "Landscape (16:9)"
+#: messages
+msgid "imageFormatLandscape"
+msgstr "Querformat (16:9)"
+
+#. Default: "Original"
+#: messages
+msgid "imageFormatOriginal"
+msgstr "Original"
+
+#. Default: "Square (1:1)"
+#: messages
+msgid "imageFormatSquare"
+msgstr "Quadratisch (1:1)"
+
+#. Default: "Standard (4:3)"
+#: messages
+msgid "imageFormatStandard"
+msgstr "Standard (4:3)"
+
 #. Default: "Image on left"
 #: messages
 msgid "imageLeft"
@@ -545,6 +575,16 @@ msgstr "Abfrage"
 #: messages
 msgid "readMore"
 msgstr "Mehr lesen"
+
+#. Default: "Reserve the space of the lines"
+#: messages
+msgid "reserveLines"
+msgstr "Platz für die Zeilen reservieren"
+
+#. Default: "The cards of a row stay aligned when their texts are shorter."
+#: messages
+msgid "reserveLinesHelp"
+msgstr "Die Karten einer Reihe bleiben ausgerichtet, wenn ihre Texte kürzer sind."
 
 #. Default: "Right"
 #: messages

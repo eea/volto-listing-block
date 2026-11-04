@@ -142,6 +142,8 @@ const getElementSettings = (itemModel, template, blockType) => ({
   title: {
     fields: [
       'maxTitle',
+      // cards side by side reserve the lines of their texts
+      ...(template === CARD ? ['reserveTitleLines'] : []),
       // side images have no row of their own, their title on image is here
       ...(hasSideImageWithTitle(itemModel, template) ? ['titleOnImage'] : []),
       'hasIcon',
@@ -151,7 +153,10 @@ const getElementSettings = (itemModel, template, blockType) => ({
   benchmark: { toggle: booleanToggle('hasBenchmarkLevel', false) },
   description: {
     toggle: booleanToggle('hasDescription', template === ITEM),
-    fields: ['maxDescription'],
+    fields: [
+      'maxDescription',
+      ...(template === CARD ? ['reserveDescriptionLines'] : []),
+    ],
   },
   tags: { toggle: booleanToggle('hasTags', false) },
   cta: {
@@ -434,6 +439,18 @@ export const setCardModelSchema = (args) => {
         default: false,
       },
       chartPreview: chartPreviewProperty(intl, CARD),
+      reserveTitleLines: {
+        title: intl.formatMessage(messages.reserveLines),
+        description: intl.formatMessage(messages.reserveLinesHelp),
+        type: 'boolean',
+        default: true,
+      },
+      reserveDescriptionLines: {
+        title: intl.formatMessage(messages.reserveLines),
+        description: intl.formatMessage(messages.reserveLinesHelp),
+        type: 'boolean',
+        default: true,
+      },
     },
     itemModel,
   );
@@ -521,6 +538,10 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
     // image options only when there is an image
     ...(hasImage ? ['rounded:bool'] : []),
     'text',
+    // the format of the image box of the cards, list items have their own
+    ...(hasImage && isCard && !itemModel.styles?.['rounded:bool']
+      ? ['imageFormat']
+      : []),
     ...(hasImage ? ['objectFit', 'objectPosition'] : []),
   );
   styleSchema.properties = {
@@ -571,6 +592,18 @@ export const setCardStylingSchema = ({ schema, formData, intl }) => {
       widget: 'style_text_align',
       actions: Object.keys(ALIGN_INFO_MAP(intl)),
       actionsInfoMap: ALIGN_INFO_MAP(intl),
+    },
+    imageFormat: {
+      title: intl.formatMessage(messages.imageFormat),
+      choices: [
+        ['fixed', intl.formatMessage(messages.imageFormatFixed)],
+        ['original', intl.formatMessage(messages.imageFormatOriginal)],
+        ['16-9', intl.formatMessage(messages.imageFormatLandscape)],
+        ['4-3', intl.formatMessage(messages.imageFormatStandard)],
+        ['1-1', intl.formatMessage(messages.imageFormatSquare)],
+      ],
+      default: 'fixed',
+      noValueOption: false,
     },
     objectFit: {
       title: intl.formatMessage(messages.ObjectFit),

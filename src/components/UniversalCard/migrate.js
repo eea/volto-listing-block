@@ -23,6 +23,8 @@ const NEW_FIELDS = [
   'hasHeadMeta',
   'elementsOrder',
   'chartPreview',
+  'reserveTitleLines',
+  'reserveDescriptionLines',
 ];
 
 // Volto filled the fields missing from the saved data with the defaults of
@@ -147,6 +149,11 @@ const LEGACY_TEMPLATES = {
     elementsOrder: VISUALIZATION_ELEMENTS,
     hasBenchmarkLevel: true,
     chartPreview: 'miniature',
+    // the chart kept its own height, below the benchmark level
+    styles: { ...(m.styles || {}), imageFormat: 'original' },
+    // the texts kept their own height, without aligning the cards
+    reserveTitleLines: false,
+    reserveDescriptionLines: false,
     hasDate: showDate(m),
     // "Display content type" of the visualization card
     hasMetaType: m.hasMetaType ?? m.hasContentType,

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Plone\n"
-"POT-Creation-Date: 2026-11-04T14:06:12.156Z\n"
+"POT-Creation-Date: 2026-11-04T14:45:18.314Z\n"
 "Last-Translator: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Language-Team: Plone i18n <plone-i18n@lists.sourceforge.net>\n"
 "Content-Type: text/plain; charset=utf-8\n"
@@ -423,6 +423,36 @@ msgstr ""
 msgid "image"
 msgstr ""
 
+#. Default: "Image format"
+#: messages
+msgid "imageFormat"
+msgstr ""
+
+#. Default: "Fixed height (200px)"
+#: messages
+msgid "imageFormatFixed"
+msgstr ""
+
+#. Default: "Landscape (16:9)"
+#: messages
+msgid "imageFormatLandscape"
+msgstr ""
+
+#. Default: "Original"
+#: messages
+msgid "imageFormatOriginal"
+msgstr ""
+
+#. Default: "Square (1:1)"
+#: messages
+msgid "imageFormatSquare"
+msgstr ""
+
+#. Default: "Standard (4:3)"
+#: messages
+msgid "imageFormatStandard"
+msgstr ""
+
 #. Default: "Image on left"
 #: messages
 msgid "imageLeft"
@@ -546,6 +576,16 @@ msgstr ""
 #. Default: "Read more"
 #: messages
 msgid "readMore"
+msgstr ""
+
+#. Default: "Reserve the space of the lines"
+#: messages
+msgid "reserveLines"
+msgstr ""
+
+#. Default: "The cards of a row stay aligned when their texts are shorter."
+#: messages
+msgid "reserveLinesHelp"
 msgstr ""
 
 #. Default: "Right"

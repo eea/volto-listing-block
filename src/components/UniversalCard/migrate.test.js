@@ -137,6 +137,25 @@ describe('migrateItemModel', () => {
     ).toBe('image');
   });
 
+  it('keeps the visualization card texts and chart at their own height', () => {
+    expect(
+      migrateItemModel({
+        '@type': 'visualizationCard',
+        styles: { 'topAccent:bool': true },
+      }),
+    ).toEqual(
+      expect.objectContaining({
+        styles: { 'topAccent:bool': true, imageFormat: 'original' },
+        reserveTitleLines: false,
+        reserveDescriptionLines: false,
+      }),
+    );
+    // the other cards keep the defaults: fixed image, reserved lines
+    const card = migrateItemModel({ '@type': 'card' });
+    expect(card.styles?.imageFormat).toBeUndefined();
+    expect(card.reserveTitleLines).toBeUndefined();
+  });
+
   it('migrates the image card to the overlay content mode', () => {
     expect(
       migrateItemModel({ '@type': 'imageCard', titleOnImage: true }),
