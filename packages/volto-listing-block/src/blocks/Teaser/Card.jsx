@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import omit from 'lodash/omit';
 import UniversalCard from '@eeacms/volto-listing-block/components/UniversalCard/UniversalCard';
+import useIndicatorPreviews from '@eeacms/volto-listing-block/components/UniversalCard/useIndicatorPreviews';
 import { useIntl } from 'react-intl';
 import messages from '@eeacms/volto-listing-block/messages';
 import { Message } from 'semantic-ui-react';
@@ -15,6 +16,12 @@ const TeaserCardTemplate = (props) => {
   const intl = useIntl();
 
   const item = data.href?.[0];
+  const items = React.useMemo(() => (item ? [item] : []), [item]);
+  const getIndicatorPreview = useIndicatorPreviews(items, block);
+  // a chosen preview image wins over the indicator preview
+  const indicatorPreview = data.preview_image?.[0]
+    ? {}
+    : getIndicatorPreview(item);
 
   return item || data.preview_image ? (
     <UniversalCard
@@ -24,10 +31,8 @@ const TeaserCardTemplate = (props) => {
         ...data,
       }}
       item={{ ...(item || {}), ...omit(data, ['@type']) }}
-      itemModel={{
-        ...(data.itemModel || {}),
-        hasLink: item ? data.itemModel?.hasLink : false,
-      }}
+      itemModel={data.itemModel || {}}
+      {...indicatorPreview}
     />
   ) : isEditMode ? (
     <Message>

@@ -18,7 +18,7 @@ describe('Blocks Tests', () => {
     addBlock('listing');
     openListingBlock();
     cy.get('#field-headline').click({ force: true }).type('Test Headline');
-    selectListingVariation('Gallery');
+    selectListingVariation('Grid');
     savePage();
 
     createChildDocuments(['Page 1', 'Page 2', 'Page 3', 'Page 4']);
