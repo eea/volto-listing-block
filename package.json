@@ -1,6 +1,7 @@
 {
   "name": "@eeacms/volto-listing-block-dev",
-  "version": "1.0.0-alpha.0",
+  "private": true,
+  "version": "12.0.0",
   "description": "@eeacms/volto-listing-block: Volto add-on",
   "author": "European Environment Agency: IDM2 A-Team",
   "homepage": "https://github.com/eea/volto-listing-block",
