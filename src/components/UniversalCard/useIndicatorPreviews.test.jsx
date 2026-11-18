@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import '@testing-library/jest-dom';
 import useIndicatorPreviews, {
-  getSitePath,
+  getChildrenQuery,
   getSubrequestId,
 } from './useIndicatorPreviews';
 
@@ -56,6 +56,27 @@ const renderPreviews = (items, subrequests = {}) =>
     </Provider>,
   );
 
+const indicatorPath = '/en/analysis/indicators/test';
+const childrenId = getSubrequestId('indicator-children', 'b1', [indicatorPath]);
+
+const chart = (id, review_state = 'published') => ({
+  '@id': `${indicatorPath}/${id}`,
+  '@type': 'visualization',
+  review_state,
+  image_scales: {
+    preview_image: [
+      {
+        download: `@@images/preview_image-1200-${id}.svg`,
+        scales: {
+          preview: { download: `@@images/preview_image-400-${id}.svg` },
+        },
+      },
+    ],
+  },
+});
+const previewOf = (id) =>
+  `${indicatorPath}/${id}/@@images/preview_image-400-${id}.svg`;
+
 describe('useIndicatorPreviews', () => {
   beforeEach(() => mockSearchContent.mockClear());
 
@@ -64,133 +85,84 @@ describe('useIndicatorPreviews', () => {
     expect(mockSearchContent).not.toHaveBeenCalled();
   });
 
-  it('searches the indicators by UID in one batch', () => {
-    renderPreviews([page, indicator]);
+  it('searches the children of all the indicators in one batch', () => {
+    const other = {
+      ...indicator,
+      '@id': '/en/analysis/indicators/other',
+      UID: 'other-uid',
+    };
+    // the same indicator twice, once with a trailing slash
+    renderPreviews([
+      page,
+      indicator,
+      other,
+      { ...indicator, '@id': `${indicatorPath}/` },
+    ]);
+    const paths = [indicatorPath, '/en/analysis/indicators/other'];
     expect(mockSearchContent).toHaveBeenCalledTimes(1);
     expect(mockSearchContent).toHaveBeenCalledWith(
       '',
-      expect.objectContaining({
-        portal_type: 'ims_indicator',
-        UID: ['indicator-uid'],
-        metadata_fields: expect.arrayContaining([
-          'blocks',
-          'image_scales',
-          'getPath',
-        ]),
-      }),
-      getSubrequestId('indicators', 'b1', ['indicator-uid']),
+      getChildrenQuery(paths),
+      getSubrequestId('indicator-children', 'b1', paths),
     );
   });
 
-  it('falls back to the path for items without UID', () => {
-    const { UID, ...withoutUID } = indicator;
-    renderPreviews([withoutUID]);
+  it('searches absolute urls of another host by their path', () => {
+    // e.g. a proxied backend returns the urls of its own host
+    renderPreviews([
+      { ...indicator, '@id': `https://staging.eea.europa.eu${indicatorPath}` },
+    ]);
     expect(mockSearchContent).toHaveBeenCalledWith(
       '',
-      expect.objectContaining({
-        path: ['/en/analysis/indicators/test'],
-        'path.depth': 0,
-      }),
-      getSubrequestId('indicator-paths', 'b1', [
-        '/en/analysis/indicators/test',
-      ]),
+      getChildrenQuery([indicatorPath]),
+      childrenId,
     );
   });
 
-  it('returns the preview of the first embedded chart', () => {
-    const id = getSubrequestId('indicators', 'b1', ['indicator-uid']);
+  it('does not search again once loaded', () => {
+    renderPreviews([indicator], { [childrenId]: { loaded: true, items: [] } });
+    expect(mockSearchContent).not.toHaveBeenCalled();
+  });
+
+  it('returns the preview of the first published child', () => {
     const { getByTestId } = renderPreviews([page, indicator], {
-      [id]: {
+      [childrenId]: {
         loaded: true,
-        items: [
-          {
-            ...indicator,
-            blocks_layout: { items: ['chart'] },
-            blocks: {
-              chart: {
-                '@type': 'embed_visualization',
-                vis_url: '/en/charts/chart',
-              },
-            },
-          },
-        ],
+        items: [chart('draft', 'private'), chart('first'), chart('second')],
       },
     });
-    expect(mockSearchContent).not.toHaveBeenCalled();
-    expect(getByTestId('/en/analysis/indicators/test')).toHaveTextContent(
-      '/en/charts/chart/@@plotly_preview.svg/soer_miniature',
-    );
+    const preview = getByTestId(indicatorPath);
+    expect(preview.childNodes[0].textContent).toBe(previewOf('first'));
+    expect(
+      [...preview.querySelectorAll('i')].map((node) => node.textContent),
+    ).toEqual([previewOf('second'), previewOf('draft')]);
     expect(getByTestId('/en/page')).toHaveTextContent('none');
   });
 
-  it('prefixes embedded content paths with the site path', () => {
-    const id = getSubrequestId('indicators', 'b1', ['indicator-uid']);
-    renderPreviews([indicator], {
-      [id]: {
-        loaded: true,
-        items: [
-          {
-            ...indicator,
-            getPath: '/www/en/analysis/indicators/test',
-            blocks_layout: { items: ['figure'] },
-            blocks: {
-              figure: { '@type': 'embed_content', url: '/en/figures/map' },
-            },
-          },
-        ],
-      },
-    });
-    expect(mockSearchContent).toHaveBeenCalledWith(
-      '',
-      expect.objectContaining({ path: ['/www/en/figures/map'] }),
-      expect.any(String),
-    );
-  });
-});
-
-describe('useIndicatorPreviews fallbacks', () => {
-  it('returns the next embedded previews as fallbacks', () => {
-    const id = getSubrequestId('indicators', 'b1', ['indicator-uid']);
+  it('has no preview for indicators without charts', () => {
     const { getByTestId } = renderPreviews([indicator], {
-      [id]: {
-        loaded: true,
-        items: [
-          {
-            ...indicator,
-            blocks_layout: { items: ['dead', 'chart'] },
-            blocks: {
-              dead: {
-                '@type': 'embed_content',
-                url: 'https://www.eea.europa.eu/data-and-maps/figures/old.png',
-              },
-              chart: {
-                '@type': 'embed_visualization',
-                vis_url: '/en/charts/chart',
-              },
-            },
-          },
-        ],
-      },
+      [childrenId]: { loaded: true, items: [] },
     });
-    const preview = getByTestId('/en/analysis/indicators/test');
-    expect(preview).toHaveTextContent(
-      'https://www.eea.europa.eu/data-and-maps/figures/old.png',
-    );
-    expect(preview.querySelector('i')).toHaveTextContent(
-      '/en/charts/chart/@@plotly_preview.svg/soer_miniature',
-    );
+    expect(getByTestId(indicatorPath)).toHaveTextContent('none');
   });
 });
 
-describe('getSitePath', () => {
-  it('derives the physical site prefix', () => {
-    expect(getSitePath([{ '@id': '/en/x', getPath: '/www/en/x' }])).toBe(
-      '/www',
-    );
+describe('getChildrenQuery', () => {
+  it('only asks for catalog metadata', () => {
+    const query = getChildrenQuery(['/en/a', '/en/b']);
+    expect(query).toEqual({
+      'path.query': ['/en/a', '/en/b'],
+      'path.depth': 1,
+      sort_on: 'getObjPositionInParent',
+      b_size: 25,
+      metadata_fields: ['image_field', 'image_scales'],
+    });
+    expect(query.metadata_fields).not.toContain('blocks');
+    expect(query.metadata_fields).not.toContain('blocks_layout');
   });
 
-  it('is empty for virtual hosted sites', () => {
-    expect(getSitePath([{ '@id': '/en/x', getPath: '/en/x' }])).toBe('');
-    expect(getSitePath([])).toBe('');
+  it('fits the children of all the indicators in one batch', () => {
+    const paths = Array.from({ length: 30 }, (_, index) => `/en/${index}`);
+    expect(getChildrenQuery(paths).b_size).toBe(300);
   });
 });
