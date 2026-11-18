@@ -1,7 +1,7 @@
 import {
   getContentTypePreviewUrl,
-  getEmbedContentReferences,
   getIndicatorPreviewUrl,
+  getIndicatorPreviewUrls,
 } from './preview';
 
 jest.mock('@plone/volto/registry', () => ({
@@ -76,334 +76,118 @@ describe('getContentTypePreviewUrl', () => {
 });
 
 // Ported from the IMS visualization cards work (ims-vizualization-cards)
-describe('getIndicatorPreviewUrl', () => {
-  it('prefers an indicator lead image over embedded previews', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-      image_field: 'image',
-      image_scales: {
-        image: [
+const INDICATOR = '/en/analysis/indicators/emissions-of-the-main-air';
+
+// as returned by @search?path.query=...&path.depth=1&metadata_fields=image_scales
+const child = (id, { review_state = 'published', preview = true } = {}) => ({
+  '@id': `${INDICATOR}/${id}`,
+  '@type': 'visualization',
+  review_state,
+  image_field: '',
+  image_scales: preview
+    ? {
+        preview_image: [
           {
-            base_path: '/en/analysis/indicators/test-indicator/@@images/image',
+            'content-type': 'image/svg+xml',
+            download: `@@images/preview_image-1200-${id}.svg`,
             scales: {
-              preview: {
-                download: 'preview-image.png',
-                width: 400,
-                height: 300,
-              },
+              preview: { download: `@@images/preview_image-400-${id}.svg` },
             },
           },
         ],
-      },
-    };
+      }
+    : null,
+});
 
+const previewOf = (id) =>
+  `${INDICATOR}/${id}/@@images/preview_image-400-${id}.svg`;
+
+describe('getIndicatorPreviewUrl', () => {
+  const indicator = { '@id': INDICATOR, '@type': 'ims_indicator' };
+
+  it('uses the preview image of the first child', () => {
     expect(
-      getIndicatorPreviewUrl(indicator, [
-        {
-          '@id': indicator['@id'],
-          blocks: {
-            figure: {
-              '@type': 'embed_content',
-              url: '../../../../resolveuid/embedded-uid',
-            },
-          },
-        },
-      ]),
-    ).toBe(
-      '/en/analysis/indicators/test-indicator/@@images/image/preview-image.png',
-    );
+      getIndicatorPreviewUrls(indicator, [child('first'), child('second')]),
+    ).toEqual([previewOf('first'), previewOf('second')]);
   });
 
-  it('uses the first embed content that has a preview image', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-    };
-    const indicatorContent = {
-      ...indicator,
-      blocks_layout: { items: ['group'] },
-      blocks: {
-        group: {
-          '@type': 'group',
-          data: {
-            blocks_layout: { items: ['first', 'second'] },
-            blocks: {
-              first: {
-                '@type': 'embed_content',
-                url: '../../../../resolveuid/first-uid',
-              },
-              second: {
-                '@type': 'embed_content',
-                url: '../../../../resolveuid/second-uid',
-              },
-            },
-          },
-        },
-      },
-    };
-    const previewDownload = '@@images/preview_image-400.svg';
-
+  it('prefers an indicator lead image over its children', () => {
     expect(
       getIndicatorPreviewUrl(
-        indicator,
-        [indicatorContent],
-        [
-          {
-            UID: 'second-uid',
-            '@id': '/visualizations/second',
-            image_field: 'preview_image',
-            image_scales: {
-              preview_image: [
-                {
-                  base_path: '/visualizations/second',
-                  scales: { preview: { download: previewDownload } },
+        {
+          ...indicator,
+          image_field: 'image',
+          image_scales: {
+            image: [
+              {
+                download: '@@images/image-800-lead.png',
+                scales: {
+                  preview: { download: '@@images/image-400-lead.png' },
                 },
-              ],
-            },
+              },
+            ],
           },
-          {
-            UID: 'first-uid',
-            '@id': '/visualizations/first',
-            image_field: 'preview_image',
-            image_scales: {
-              preview_image: [
-                {
-                  base_path: '/visualizations/first',
-                  scales: { preview: { download: previewDownload } },
-                },
-              ],
-            },
-          },
-        ],
+        },
+        [child('first')],
       ),
-    ).toBe(`/visualizations/first/${previewDownload}`);
+    ).toBe(`${INDICATOR}/@@images/image-400-lead.png`);
   });
 
-  it('uses the second embed when the first has no preview image', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-    };
-    const previewDownload = '@@images/preview_image-400.svg';
-
+  it('skips the children without preview image', () => {
     expect(
-      getIndicatorPreviewUrl(
-        indicator,
-        [
-          {
-            ...indicator,
-            blocks_layout: { items: ['first', 'second'] },
-            blocks: {
-              first: {
-                '@type': 'embed_content',
-                url: '../../../../resolveuid/first-uid',
-              },
-              second: {
-                '@type': 'embed_content',
-                url: '../../../../resolveuid/second-uid',
-              },
-            },
-          },
-        ],
-        [
-          { UID: 'first-uid', '@id': '/visualizations/first' },
-          {
-            UID: 'second-uid',
-            '@id': '/visualizations/second',
-            image_field: 'preview_image',
-            image_scales: {
-              preview_image: [
-                {
-                  base_path: '/visualizations/second',
-                  scales: { preview: { download: previewDownload } },
-                },
-              ],
-            },
-          },
-        ],
-      ),
-    ).toBe(`/visualizations/second/${previewDownload}`);
+      getIndicatorPreviewUrl(indicator, [
+        { '@id': `${INDICATOR}/photo`, '@type': 'Image', review_state: null },
+        child('no-preview', { preview: false }),
+        child('chart'),
+      ]),
+    ).toBe(previewOf('chart'));
   });
 
-  it('uses preview scales included directly in an embed content block', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-    };
-    const previewDownload = '@@images/preview_image-400.svg';
+  it('prefers the published children', () => {
+    expect(
+      getIndicatorPreviewUrls(indicator, [
+        child('draft', { review_state: 'private' }),
+        child('published'),
+      ]),
+    ).toEqual([previewOf('published'), previewOf('draft')]);
+  });
 
+  it('only uses the children of the indicator', () => {
     expect(
       getIndicatorPreviewUrl(indicator, [
         {
-          ...indicator,
-          blocks: {
-            chart: {
-              '@type': 'embed_content',
-              url: '/en/analysis/maps-and-charts/chart',
-              image_scales: {
-                preview_image: [
-                  {
-                    scales: {
-                      preview: { download: previewDownload },
-                    },
-                  },
-                ],
-              },
-            },
-          },
-          blocks_layout: { items: ['chart'] },
+          ...child('other'),
+          '@id': '/en/analysis/indicators/other/chart',
         },
-      ]),
-    ).toBe(`/en/analysis/maps-and-charts/chart/${previewDownload}`);
-  });
-
-  it('uses an external image referenced directly by embed content', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-    };
-    const previewUrl =
-      'https://www.eea.europa.eu/data-and-maps/figures/chart/chart.png';
-
-    expect(
-      getIndicatorPreviewUrl(indicator, [
         {
-          ...indicator,
-          blocks: {
-            chart: {
-              '@type': 'embed_content',
-              url: previewUrl,
-            },
-          },
-          blocks_layout: { items: ['chart'] },
+          ...child('nested'),
+          '@id': `${INDICATOR}/folder/chart`,
         },
+        child('own'),
       ]),
-    ).toBe(previewUrl);
+    ).toBe(previewOf('own'));
   });
 
-  it('uses the preview of a Plotly embed referenced by path', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/test-indicator',
-      '@type': 'ims_indicator',
-    };
-    const chartPath = '/en/analysis/maps-and-charts/chart';
-
+  it('uses app paths for the absolute urls of another host', () => {
+    const host = 'https://staging.eea.europa.eu';
     expect(
-      getIndicatorPreviewUrl(indicator, [
-        {
-          ...indicator,
-          blocks: {
-            chart: {
-              '@type': 'embed_visualization',
-              vis_url: chartPath,
-            },
-          },
-          blocks_layout: { items: ['chart'] },
-        },
+      getIndicatorPreviewUrl({ ...indicator, '@id': `${host}${INDICATOR}` }, [
+        { ...child('chart'), '@id': `${host}${INDICATOR}/chart` },
       ]),
-    ).toBe(`${chartPath}/@@plotly_preview.svg/soer_miniature`);
+    ).toBe(previewOf('chart'));
   });
 
-  it('uses the first Plotly preview when its internal URL is absolute', () => {
-    const indicator = {
-      '@id': '/en/analysis/indicators/status-of-marine-fish-and.1',
-      '@type': 'ims_indicator',
-    };
-    const firstChartPath =
-      '/en/analysis/indicators/status-of-marine-fish-and.1/state-of-assessed-commercially-exploited';
-    const firstChartUrl = `https://demo-www.eea.europa.eu${firstChartPath}`;
-
+  it('ignores a trailing slash of the indicator url', () => {
     expect(
-      getIndicatorPreviewUrl(indicator, [
-        {
-          ...indicator,
-          blocks: {
-            first: {
-              '@type': 'embed_visualization',
-              vis_url: firstChartUrl,
-            },
-            second: {
-              '@type': 'embed_content',
-              url: '/visualizations/second-chart.png',
-            },
-          },
-          blocks_layout: { items: ['first', 'second'] },
-        },
+      getIndicatorPreviewUrl({ ...indicator, '@id': `${INDICATOR}/` }, [
+        child('chart'),
       ]),
-    ).toBe(`${firstChartPath}/@@plotly_preview.svg/soer_miniature`);
+    ).toBe(previewOf('chart'));
   });
 
-  it('recognizes Plotly, legacy Plotly, and data figure references', () => {
-    expect(
-      getEmbedContentReferences({
-        blocks_layout: { items: ['plotly', 'legacy', 'figure'] },
-        blocks: {
-          plotly: {
-            '@type': 'embed_visualization',
-            vis_url: '/visualizations/plotly',
-          },
-          legacy: {
-            '@type': 'embed_chart',
-            vis_url: '/visualizations/legacy',
-          },
-          figure: {
-            '@type': 'dataFigure',
-            figureUrl: '/visualizations/data-figure',
-            url: '/visualizations/data-figure/preview.svg',
-          },
-        },
-      }),
-    ).toEqual([
-      {
-        path: '/visualizations/plotly',
-        url: '/visualizations/plotly',
-        previewUrl:
-          '/visualizations/plotly/@@plotly_preview.svg/soer_miniature',
-      },
-      {
-        path: '/visualizations/legacy',
-        url: '/visualizations/legacy',
-        previewUrl:
-          '/visualizations/legacy/@@plotly_preview.svg/soer_miniature',
-      },
-      {
-        path: '/visualizations/data-figure',
-        url: '/visualizations/data-figure',
-        previewUrl: '/visualizations/data-figure/preview.svg',
-      },
-    ]);
-  });
-
-  it('finds nested embed contents in block layout order', () => {
-    expect(
-      getEmbedContentReferences({
-        blocks_layout: { items: ['group'] },
-        blocks: {
-          group: {
-            '@type': 'group',
-            data: {
-              blocks_layout: { items: ['second', 'first'] },
-              blocks: {
-                first: {
-                  '@type': 'embed_content',
-                  url: '../../../../resolveuid/first-uid',
-                },
-                second: {
-                  '@type': 'embed_content',
-                  href: '../../../../resolveuid/second-uid',
-                },
-              },
-            },
-          },
-        },
-      }),
-    ).toEqual([
-      {
-        uid: 'second-uid',
-        url: '../../../../resolveuid/second-uid',
-      },
-      { uid: 'first-uid', url: '../../../../resolveuid/first-uid' },
-    ]);
+  it('has no preview without lead image and children', () => {
+    expect(getIndicatorPreviewUrl(indicator, [])).toBeUndefined();
+    expect(getIndicatorPreviewUrl(indicator)).toBeUndefined();
+    expect(getIndicatorPreviewUrl({}, [child('chart')])).toBeUndefined();
   });
 });
