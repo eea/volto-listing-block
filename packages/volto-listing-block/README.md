@@ -18,6 +18,24 @@ It provides several views and integrates with the Teaser Grid.
 
 ## Upgrade
 
+### Upgrading to 12.x
+
+> This version requires `Volto 18` or `Volto 19` and Node.js 22.
+
+No API or behaviour change: the block ids, the layouts, the card templates, the schema fields and
+the stored block data are the same as 11.x, so an upgrade renders the same pages. The release adds
+Volto 19 support and moves the repository to the Volto 19 layout, where the published package lives
+in `packages/volto-listing-block`.
+
+#### Breaking changes
+
+- **Node.js 22 or newer is required** (`engines.node >= 22`), 11.x declared no engine.
+- **React 18 is required.** The package declares `react` and `react-dom` as `^18.2.0` peers, 11.x
+  declared no peers.
+- **The package no longer ships the repository tooling.** The Cypress specs and the Jest setup are
+  gone and the unit tests moved to Vitest next to the add-on, so nothing a site imports was
+  removed.
+
 ### Upgrading to 11.x
 
 Version 11 replaces the many card templates and listing variations with two
